@@ -1,17 +1,24 @@
 <template>
+  <NConfigProvider :theme="theme">
     <div class="app">
-      <Home />
+      <router-view></router-view>
     </div>
+  </NConfigProvider>
 </template>
 
 <script lang="ts" setup>
-import Home from './views/hoem.vue'
+import { NConfigProvider, darkTheme } from 'naive-ui'
+import { ref } from 'vue'
+// 主题
+//  亮 null    暗：darkTheme
+const theme = ref(darkTheme)
 </script>
 
 <style lang="scss" scoped>
-.app{
+.app {
   position: relative;
   width: 100vw;
   height: 100vh;
+  user-select: none;
 }
 </style>

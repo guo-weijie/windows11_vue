@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "normalize.css": "^8.0.1",
+    "screenfull": "^6.0.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"

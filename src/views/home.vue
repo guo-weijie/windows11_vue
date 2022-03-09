@@ -6,6 +6,13 @@
 <script lang="ts" setup>
 import Desktop from "./desktop/index.vue";
 import Taskbar from './taskbar/index.vue'
+
+// 应用程序
+// {
+//   name, 程序名称
+//   img,  图标路径
+//   isShow, 是否在桌面显示
+// }
 </script>
 
 <style lang="scss" scoped>
