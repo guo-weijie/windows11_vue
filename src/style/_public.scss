@@ -4,3 +4,10 @@
   align-items: $a;
   flex-direction: $d;
 }
+
+// 小于12像素的字 -> 参数为想要设置的字体大小
+@mixin mini_font($size) {
+  font-size: 12px;
+  -webkit-transform-origin-x: 0;
+  -webkit-transform: scale($size/12);
+}

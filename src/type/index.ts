@@ -6,3 +6,12 @@ export interface allAppItem {
 }
 
 export type allAppType = allAppItem[]
+
+export interface timeType {
+  year: number,
+  month: number,
+  day: number,
+  hour: number,
+  minute: number|string,
+  second: number|string
+}

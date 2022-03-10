@@ -8,38 +8,37 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import {allAppType} from '@/type'
+import { computed, PropType } from 'vue';
+import { allAppType } from '@/type'
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
   appList: Array as PropType<allAppType>
 })
-const desktopList = props.appList?.filter(item => item.isDesktop)
-console.log(desktopList)
+const desktopList = computed(() => props.appList?.filter(item => item.isDesktop))
 
 </script>
 
 <style lang="scss" scoped>
-@import '@/style/public';
-.desktop{
-  @include flex(flex-start,flex-start,column);
+@import "@/style/public";
+.desktop {
+  @include flex(flex-start, flex-start, column);
 }
-.desktopApp{
+.desktopApp {
   text-align: center;
   padding: 3px;
   margin-top: 6px;
   margin-bottom: 22px;
   margin-left: 1px;
-  &:active{
+  &:active {
     border-top-right-radius: 2px;
     border-bottom-left-radius: 2px;
-    background-color: rgba(255,255,255,0.1);
+    background-color: rgba(255, 255, 255, 0.1);
   }
-  img{
+  img {
     height: 50px;
   }
-  p{
+  p {
     width: 80px;
     line-height: 16px;
     padding: 0;

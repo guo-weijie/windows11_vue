@@ -20,5 +20,10 @@ const theme = ref(darkTheme)
   width: 100vw;
   height: 100vh;
   user-select: none;
+  // 此处方便以后切换桌面图片使用，勿简写
+  background-image: url("~@/assets/wallpaper/default/img0.jpg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
 }
 </style>
