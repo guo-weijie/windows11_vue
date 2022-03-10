@@ -1,6 +1,6 @@
 export interface allAppItem {
   name: string,
-  url: any,
+  url: string,
   isDesktop: boolean,
   isPinned: boolean
 }

@@ -8,9 +8,10 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps,PropType } from 'vue';
+import { PropType } from 'vue';
 import {allAppType} from '@/type'
 
+// eslint-disable-next-line no-undef
 const props = defineProps({
   appList: Array as PropType<allAppType>
 })

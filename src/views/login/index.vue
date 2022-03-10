@@ -22,7 +22,7 @@
     router.push('/home')
   }
   document.onkeydown = function (e) {
-    if (window.event.keyCode === 13) {
+    if (e.key === 'Enter') {
       isShow.value=false
     }
   }
