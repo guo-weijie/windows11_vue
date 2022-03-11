@@ -1,4 +1,11 @@
 import { Ref } from "vue";
 
-export type Rstring = Ref<string>
-export type Rnumber = Ref<number>
+type Rstring = Ref<string>
+type Rnumber = Ref<number>
+type Rboolean = Ref<boolean>
+
+export {
+  Rstring,
+  Rnumber,
+  Rboolean
+}

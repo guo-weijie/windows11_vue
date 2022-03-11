@@ -27,9 +27,7 @@ const desktopList = computed(() => props.appList?.filter(item => item.isDesktop)
 .desktopApp {
   text-align: center;
   padding: 3px;
-  margin-top: 6px;
-  margin-bottom: 22px;
-  margin-left: 1px;
+  margin: 6px 0 22px 1px;
   &:active {
     border-top-right-radius: 2px;
     border-bottom-left-radius: 2px;

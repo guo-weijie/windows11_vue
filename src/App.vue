@@ -1,5 +1,5 @@
 <template>
-  <NConfigProvider :theme="theme">
+  <NConfigProvider :theme="theme" :date-locale="dateZhCN" :locale="zhCN">
     <div class="app">
       <router-view></router-view>
     </div>
@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import { NConfigProvider, darkTheme } from 'naive-ui'
+import { NConfigProvider, darkTheme, dateZhCN, zhCN } from 'naive-ui'
 import { ref } from 'vue'
 // 主题
 //  亮 null    暗：darkTheme
@@ -19,11 +19,14 @@ const theme = ref(darkTheme)
   position: relative;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
   user-select: none;
   // 此处方便以后切换桌面图片使用，勿简写
-  background-image: url("~@/assets/wallpaper/default/img0.jpg");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
+  background:{
+    image: url("~@/assets/wallpaper/default/img0.jpg");
+    repeat: no-repeat;
+    position: center center;
+    size: cover;
+  }
 }
 </style>
