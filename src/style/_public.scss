@@ -11,3 +11,10 @@
   -webkit-transform-origin-x: 0;
   -webkit-transform: scale($size/12);
 }
+
+@mixin grid($col,$row) {
+  display: grid;
+  grid-template-columns: repeat($col,1fr);
+  grid-template-rows: repeat($row,1fr);
+  align-items: center;
+}
