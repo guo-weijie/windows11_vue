@@ -16,5 +16,6 @@
   display: grid;
   grid-template-columns: repeat($col,1fr);
   grid-template-rows: repeat($row,1fr);
+  justify-items: center;
   align-items: center;
 }
