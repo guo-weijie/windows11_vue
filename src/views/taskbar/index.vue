@@ -1,6 +1,6 @@
 <template>
   <div class="taskbar">
-    <div class="taskbarBox" @click="taskbarBus">
+    <div class="taskbarBox" @click.stop="taskbarEvent">
       <!-- 开始菜单 -->
       <div class="start">123</div>
       <!-- 任务栏右侧 -->
@@ -24,14 +24,21 @@ import { timeType } from '@/type'
 import { Rstring } from '@/type/basic'
 import { PropType, ref, watchEffect } from 'vue';
 import MyCalendar from '@/components/myCalendar/index.vue'
+import bus from '@/utils/bus'
 // eslint-disable-next-line no-undef
 const props = defineProps({
   currentTime: Object as PropType<timeType>
 })
-// 任务来点击事件总代理
-const taskbarBus = e => {
-  console.log(e)
+// 任务栏点击事件
+//  -> 每一个具体的功能按钮都阻止事件冒泡传播，所以能触发事件的点击动作都是点击任务栏其余部分，此时直接执行弹窗关闭操作即可
+const taskbarEvent = () => {
+  bus.emit('claseTaskbarAll')
 }
+// 关闭所有任务栏弹窗
+bus.on('claseTaskbarAll', () => {
+  // 关闭事件弹窗
+  calendarBox.value.style.right = '-500px'
+})
 // 右下角时间相关
 const upTime: Rstring = ref('')
 const btmTime: Rstring = ref('')
@@ -57,7 +64,7 @@ const changeCalendarBoxStatus = () => {
 .taskbar {
   // overflow: hidden;
   position: relative;
-  &Box{
+  &Box {
     width: 100%;
     height: 100%;
     display: grid;

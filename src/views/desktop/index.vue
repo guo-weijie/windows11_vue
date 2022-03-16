@@ -1,5 +1,5 @@
 <template>
-  <div class="desktop">
+  <div class="desktop" @click="claseTaskbarAll">
     <div v-for="item in desktopList" :key="item.name" class="desktopApp">
       <img :src="item.url" :alt="item.name" />
       <p>{{ item.name }}</p>
@@ -10,12 +10,17 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
 import { allAppType } from '@/type'
+import bus from '@/utils/bus'
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
   appList: Array as PropType<allAppType>
 })
 const desktopList = computed(() => props.appList?.filter(item => item.isDesktop))
+
+const claseTaskbarAll=()=>{
+  bus.emit('claseTaskbarAll')
+}
 
 </script>
 
