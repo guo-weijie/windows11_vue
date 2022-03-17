@@ -20,7 +20,7 @@
     <div class="calendarListBox" ref="calendarBoxRef">
       <div class="boxHeader">
         <div
-          class="headerDate"
+          :class="{ headerDate: true, headerDateEnd: calendarFlag === 3 }"
           @click.stop="changeCalendar"
         >{{ calendarFlag === 2 ? `${year}年` : calendarFlag === 1 ? `${year}年${month}月` : `${integerTenYear.before}-${integerTenYear.after}` }}</div>
         <div>
@@ -101,12 +101,9 @@ function changeCalendarBoxStatus() {
  * 3 年历
  */
 const calendarFlag = ref(1)
-function changeCalendar() {
-  if (calendarFlag.value === 3) {
-    calendarFlag.value = 1
-  } else {
-    calendarFlag.value += 1
-  }
+const changeCalendar = () => {
+  if (calendarFlag.value === 3) return
+  calendarFlag.value += 1
 }
 watchEffect(() => {
   if (calendarFlag.value === 3) {
@@ -274,6 +271,9 @@ function dealTime(item: number, flag = 'solar') {
     font-weight: bold;
     .headerDate:active {
       color: #666;
+    }
+    .headerDateEnd {
+      color: #999da6;
     }
     .n-button {
       height: auto;

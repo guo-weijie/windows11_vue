@@ -160,6 +160,6 @@ const controlCenter = ref()
 }
 .controlCenterBox {
   @include icon;
-  right: 12px;
+  right: -500px;
 }
 </style>
