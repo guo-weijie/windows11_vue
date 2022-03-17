@@ -5,6 +5,14 @@
       <div class="start">123</div>
       <!-- 任务栏右侧 -->
       <div class="task">
+        <!-- 隐藏的图标 -->
+        <div class="hideIcon">
+          <n-icon size="24">
+            <KeyboardArrowUpTwotone />
+          </n-icon>
+        </div>
+        <!-- 语言 -->
+        <div class="language" @click="changeLanguage">{{ lang }}</div>
         <!-- 控制中心 -->
         <div
           id="controlCenter"
@@ -39,6 +47,8 @@ import { Rstring } from '@/type/basic'
 import { PropType, ref, watchEffect, reactive } from 'vue';
 import MyCalendar from '@/components/myCalendar/index.vue'
 import ControlCenter from './components/controlCenter.vue'
+import { KeyboardArrowUpTwotone } from '@vicons/material'
+import { NIcon } from 'naive-ui'
 import bus from '@/utils/bus'
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -79,7 +89,12 @@ const changeBoxStatus = (val: string) => {
   } else {
     controlCenter.value.style.right = '-500px'
   }
-  
+
+}
+// 语言栏相关
+const lang: Rstring = ref('中')
+const changeLanguage = () => {
+  lang.value = lang.value === '中' ? '英' : '中'
 }
 // 控制中心相关
 const controlCenterIcon = reactive({
@@ -136,15 +151,23 @@ const controlCenter = ref()
   line-height: normal;
   text-align: right;
   @include flex(flex-end, center);
+  .hideIcon {
+    @include taskbarFnStyle;
+    @include flex(center, center);
+  }
+  .language {
+    @extend .hideIcon;
+    font-size: 14px;
+  }
   .controlCenter {
     @include taskbarFnStyle;
     @include flex(flex-end, center);
     .centerWifi {
-      height: 17px;
-      margin-right: 8px;
+      height: 16px;
+      margin-right: 6px;
     }
     .centerAudio {
-      height: 19px;
+      height: 18px;
     }
   }
   .time_noti {
