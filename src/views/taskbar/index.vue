@@ -5,16 +5,30 @@
       <div class="start">123</div>
       <!-- 任务栏右侧 -->
       <div class="task">
-        <div class="time_noti" id="time_noti" @click.stop="changeCalendarBoxStatus">
+        <!-- 控制中心 -->
+        <div
+          id="controlCenter"
+          class="controlCenter"
+          @click.stop="changeBoxStatus('controlCneter')"
+        >
+          <img class="centerWifi" :src="controlCenterIcon.wifi" alt="网络连接" />
+          <img class="centerAudio" :src="controlCenterIcon.audio" alt="音量" />
+        </div>
+        <!-- 时间 -->
+        <div class="time_noti" id="time_noti" @click.stop="changeBoxStatus('calendar')">
           <div>{{ upTime }}</div>
           <div>{{ btmTime }}</div>
         </div>
       </div>
     </div>
 
-    <!-- 日历弹框 -->
+    <!-- 日历 -->
     <div class="calendarBox" ref="calendarBox">
       <MyCalendar />
+    </div>
+    <!-- 控制中心 -->
+    <div class="controlCenterBox" ref="controlCenter">
+      <ControlCenter />
     </div>
   </div>
 </template>
@@ -22,8 +36,9 @@
 <script lang="ts" setup>
 import { timeType } from '@/type'
 import { Rstring } from '@/type/basic'
-import { PropType, ref, watchEffect } from 'vue';
+import { PropType, ref, watchEffect, reactive } from 'vue';
 import MyCalendar from '@/components/myCalendar/index.vue'
+import ControlCenter from './components/controlCenter.vue'
 import bus from '@/utils/bus'
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -38,7 +53,40 @@ const taskbarEvent = () => {
 bus.on('claseTaskbarAll', () => {
   // 关闭事件弹窗
   calendarBox.value.style.right = '-500px'
+  controlCenter.value.style.right = '-500px'
 })
+// 任务栏弹窗状态更改
+//  -> 此处如果把 DOM 放在一个对象里遍历的话代码耦合度会降低，但是如何将 DOM 放在一个对象里？
+const changeBoxStatus = (val: string) => {
+  let boxDom
+  if (val === 'calendar') {
+    boxDom = calendarBox.value.style
+    if (parseInt(boxDom.right) > 0) {
+      boxDom.right = '-500px'
+    } else {
+      boxDom.right = '12px'
+    }
+  } else {
+    calendarBox.value.style.right = '-500px'
+  }
+  if (val === 'controlCneter') {
+    boxDom = controlCenter.value.style
+    if (parseInt(boxDom.right) > 0) {
+      boxDom.right = '-500px'
+    } else {
+      boxDom.right = '12px'
+    }
+  } else {
+    controlCenter.value.style.right = '-500px'
+  }
+  
+}
+// 控制中心相关
+const controlCenterIcon = reactive({
+  wifi: require('@/assets/icon/systemIcon/wifi.png'),
+  audio: require('@/assets/icon/systemIcon/audio.png')
+})
+
 // 右下角时间相关
 const upTime: Rstring = ref('')
 const btmTime: Rstring = ref('')
@@ -46,21 +94,24 @@ watchEffect(() => {
   upTime.value = `${props.currentTime?.hour}：${props.currentTime?.minute}`
   btmTime.value = `${props.currentTime?.year}/${props.currentTime?.month}/${props.currentTime?.day}`
 })
-// 日历弹框相关
+// 获取任务栏弹窗DOM
 const calendarBox = ref()
-const changeCalendarBoxStatus = () => {
-  const calendarBoxDom = calendarBox.value.style
-  if (parseInt(calendarBoxDom.right) > 0) {
-    calendarBoxDom.right = '-500px'
-  } else {
-    calendarBoxDom.right = '12px'
-  }
-}
+const controlCenter = ref()
 
 </script>
 
 <style lang="scss" scoped>
 @import "@/style/public";
+
+@mixin taskbarFnStyle {
+  height: 80%;
+  box-sizing: border-box;
+  padding: 6px 6px 7px;
+  &:hover {
+    background-color: #f1f7fc;
+    border-radius: 3px;
+  }
+}
 .taskbar {
   // overflow: hidden;
   position: relative;
@@ -78,25 +129,37 @@ const changeCalendarBoxStatus = () => {
   grid-area: center;
 }
 .task {
+  height: 100%;
   grid-area: right;
   justify-self: end;
-  padding-right: 12px;
+  padding-right: 1px;
   line-height: normal;
   text-align: right;
-  @include mini_font(11.5);
-  .time_noti {
-    padding: 7px 3px 7px 6px;
-    &:hover {
-      background-color: #f1f7fc;
-      border-radius: 3px;
+  @include flex(flex-end, center);
+  .controlCenter {
+    @include taskbarFnStyle;
+    @include flex(flex-end, center);
+    .centerWifi {
+      height: 17px;
+      margin-right: 8px;
     }
+    .centerAudio {
+      height: 19px;
+    }
+  }
+  .time_noti {
+    @include taskbarFnStyle;
+    @include flex(center, flex-end, column);
+    @include mini_font(11.5);
   }
 }
 
 .calendarBox {
-  position: absolute;
+  @include icon;
   right: -500px;
-  bottom: 60px;
-  transition: right 0.3s ease;
+}
+.controlCenterBox {
+  @include icon;
+  right: 12px;
 }
 </style>

@@ -1,3 +1,5 @@
+import { ComputedRef } from "vue"
+
 interface allAppItem {
   name: string,
   url: string,
@@ -27,10 +29,25 @@ interface RintegerYear {
   after: number
 }
 
+interface fnItemListType {
+  name: string,
+  icon: string,
+  show: boolean,
+  select: boolean,
+  menu: boolean
+}
+
+type fnItemType = fnItemListType[]
+
+type fnItemTypeCom = ComputedRef<fnItemType>
+
 export {
   allAppItem,
   timeObj,
   allAppType,
   timeType,
-  RintegerYear
+  RintegerYear,
+  fnItemListType,
+  fnItemType,
+  fnItemTypeCom
 }

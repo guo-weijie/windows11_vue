@@ -237,10 +237,7 @@ function dealTime(item: number, flag = 'solar') {
 .myCalendar {
   width: 334px;
   // height: 423px;
-  line-height: normal;
-  border-radius: 6px;
-  box-shadow: 1px 1px 5px #79848e;
-  overflow: hidden;
+  @include box_border;
 }
 .calendarNow {
   box-sizing: border-box;

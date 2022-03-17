@@ -44,17 +44,17 @@ setInterval(() => timeNumber.value += 1000, 1000)
 // }
 const allApp: allAppType = reactive([{
   name: '回收站',
-  url: require('@/assets/icon/bin1.png'),
+  url: require('@/assets/icon/appIcon/bin1.png'),
   isDesktop: true,
   isPinned: true
 }, {
   name: 'cortana',
-  url: require('@/assets/icon/cortana.png'),
+  url: require('@/assets/icon/appIcon/cortana.png'),
   isDesktop: false,
   isPinned: true
 }, {
   name: 'Visual Studio Code',
-  url: require('@/assets/icon/code.png'),
+  url: require('@/assets/icon/appIcon/code.png'),
   isDesktop: true,
   isPinned: true
 }])
