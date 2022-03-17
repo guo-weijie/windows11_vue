@@ -3,7 +3,7 @@
     <!-- 功能菜单 -->
     <div class="containerItem">
       <div class="itemBox" v-for="item in fnShowItem" :key="item.name">
-        <div :class="{ boxIcon: true, selectItem: item.select }" @click="selectFn(item)">
+        <div :class="{ boxIcon: true, selectItem: item.select && !item.menu }" @click="selectFn(item)">
           <img :src="item.icon" :alt="item.name" />
           <n-icon v-if="item.menu" size="16" style="margin-left: 8px;">
             <KeyboardArrowRightRound />

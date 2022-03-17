@@ -6,9 +6,10 @@
       <!-- 任务栏右侧 -->
       <div class="task">
         <!-- 隐藏的图标 -->
-        <div class="hideIcon">
-          <n-icon size="24">
-            <KeyboardArrowUpTwotone />
+        <div class="hideIcon" @click="changeHideIcon">
+          <n-icon size="22">
+            <KeyboardArrowUpTwotone v-show="hideIcon === 'up'" />
+            <KeyboardArrowDownTwotone v-show="hideIcon === 'down'" />
           </n-icon>
         </div>
         <!-- 语言 -->
@@ -47,7 +48,7 @@ import { Rstring } from '@/type/basic'
 import { PropType, ref, watchEffect, reactive } from 'vue';
 import MyCalendar from '@/components/myCalendar/index.vue'
 import ControlCenter from './components/controlCenter.vue'
-import { KeyboardArrowUpTwotone } from '@vicons/material'
+import { KeyboardArrowUpTwotone, KeyboardArrowDownTwotone } from '@vicons/material'
 import { NIcon } from 'naive-ui'
 import bus from '@/utils/bus'
 // eslint-disable-next-line no-undef
@@ -91,6 +92,9 @@ const changeBoxStatus = (val: string) => {
   }
 
 }
+// 隐藏图标相关
+const hideIcon: Rstring = ref('up')
+const changeHideIcon = () => hideIcon.value = hideIcon.value === 'up' ? 'down' : 'up'
 // 语言栏相关
 const lang: Rstring = ref('中')
 const changeLanguage = () => {
