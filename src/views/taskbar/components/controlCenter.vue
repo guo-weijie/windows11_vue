@@ -2,7 +2,7 @@
   <div class="controlCneterContainer">
     <!-- 功能菜单 -->
     <div class="containerItem">
-      <div class="itemBox" v-for="item in fnShowItem" :key="item.name">
+      <div :class="{ itemBox: true, itemBoxEdit: editOperate }" v-for="item in fnShowItem" :key="item.name">
         <div :class="{ boxIcon: true, selectItem: item.select && !item.menu }" @click="selectFn(item)">
           <img :src="item.icon" :alt="item.name" />
           <n-icon v-if="item.menu" size="16" style="margin-left: 8px;">
@@ -10,6 +10,14 @@
           </n-icon>
         </div>
         <p>{{ item.name }}</p>
+        <!-- 取消固定按钮 -->
+        <n-button circle secondary v-show="editOperate" @click="item.show = false">
+          <template #icon>
+            <n-icon size="16px" color="#696969">
+              <CloseRound />
+            </n-icon>
+          </template>
+        </n-button>
       </div>
     </div>
     <!-- 音量调节 -->
@@ -22,9 +30,39 @@
         <KeyboardArrowRightRound />
       </n-icon>
     </div>
-    <div class="containerSet">
-      <img class="setEdit" :src="require('@/assets/icon/systemIcon/edit.png')" alt="操作中心编辑" />
-      <img class="setSettings" :src="require('@/assets/icon/systemIcon/settings.png')" alt="操作中心设置" />
+    <div :class="{ containerSet: true, editSet: !editOperate, completeAdd: editOperate }">
+      <div v-show="!editOperate">
+        <img class="setEdit" :src="require('@/assets/icon/systemIcon/edit.png')" alt="操作中心编辑" @click="editOperate = true"/>
+        <img class="setSettings" :src="require('@/assets/icon/systemIcon/settings.png')" alt="操作中心设置"/>
+      </div>
+      <div v-show="editOperate">
+        <n-button secondary color="#18191a" @click="editOperate = false">
+          <template #icon>
+            <n-icon>
+              <CheckRound />
+            </n-icon>
+          </template>
+          完成
+        </n-button>
+        <n-popover placement="top" trigger="click" :show-arrow="false" class="myPopover">
+          <template #trigger>
+            <n-button secondary color="#18191a">
+              <template #icon>
+                <n-icon>
+                  <AddRound />
+                </n-icon>
+              </template>
+              添加
+            </n-button>
+          </template>
+          <div class="large-text">
+            <div v-for="item in fnAddItem" :key="item.name + 'a'" @click="item.show = true">
+              <img :src="item.icon" :alt="item.name" />
+              <span>{{ item.name }}</span>
+            </div>
+          </div>
+        </n-popover>
+      </div>
     </div>
   </div>
 </template>
@@ -32,11 +70,15 @@
 <script lang='ts' setup>
 import { reactive, computed, ref } from 'vue'
 import { fnItemType, fnItemTypeCom, fnItemListType } from '@/type/index'
-import { Rnumber } from '@/type/basic'
-import { KeyboardArrowRightRound } from '@vicons/material'
-import { NIcon, NSlider } from 'naive-ui'
+import { Rnumber, Rboolean } from '@/type/basic'
+import { KeyboardArrowRightRound, CloseRound, AddRound, CheckRound } from '@vicons/material'
+import { NIcon, NSlider, NButton, NPopover } from 'naive-ui'
 const audioValue: Rnumber = ref(50)
+// 不显示的数据，即添加按钮的选项
+const fnAddItem: fnItemTypeCom = computed(() => fnAllItem.filter(item => !item.show))
+// 固定显示的数据
 const fnShowItem: fnItemTypeCom = computed(() => fnAllItem.filter(item => item.show))
+// 暂无图标，以后找到了再补上
 const fnAllItem: fnItemType = reactive([{
   name: '夜间模式',
   icon: require('@/assets/icon/systemIcon/nightlight.png'),
@@ -58,7 +100,7 @@ const fnAllItem: fnItemType = reactive([{
 }, {
   name: '投放',
   icon: require('@/assets/icon/systemIcon/nightlight.png'),
-  show: true,
+  show: false,
   select: false,
   menu: false
 }, {
@@ -70,14 +112,18 @@ const fnAllItem: fnItemType = reactive([{
 }, {
   name: '投影',
   icon: require('@/assets/icon/systemIcon/nightlight.png'),
-  show: true,
+  show: false,
   select: false,
   menu: false
 },])
 // 点击功能菜单
 const selectFn = (item: fnItemListType) => {
+  if (editOperate.value) return
   item.select = !item.select
 }
+
+// 编辑操作状态
+const editOperate: Rboolean = ref(false)
 
 </script>
 
@@ -109,10 +155,8 @@ const selectFn = (item: fnItemListType) => {
   .containerSet {
     box-sizing: border-box;
     height: 47px;
-    padding-right: 16px;
     border-top: 1px solid #d4dde8;
     background-color: #e2ecf9;
-    @include flex(flex-end, center);
   }
 }
 .itemBox {
@@ -137,10 +181,10 @@ const selectFn = (item: fnItemListType) => {
   }
   .selectItem {
     background-color: #0067c0;
-    img{
+    img {
       filter: invert(100%);
     }
-    &:hover{
+    &:hover {
       background-color: #0067c0;
     }
   }
@@ -150,6 +194,36 @@ const selectFn = (item: fnItemListType) => {
     margin: 0;
   }
 }
+
+.itemBoxEdit {
+  position: relative;
+  .boxIcon {
+    background-color: #e9eef8;
+    &:hover {
+      background-color: #e9eef8;
+    }
+    img {
+      filter: invert(60%);
+    }
+    .n-icon {
+      color: #bcc1c5;
+    }
+  }
+  p {
+    color: #91969f;
+  }
+  .n-button {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    width: auto;
+    height: auto;
+    background-color: #fff;
+    // border-radius: 50%;
+    text-align: center;
+  }
+}
+
 .audioControl {
   @include flex(space-between, center);
   img {
@@ -175,7 +249,9 @@ const selectFn = (item: fnItemListType) => {
     }
   }
 }
-.containerSet {
+.editSet {
+  padding-right: 16px;
+  @include flex(flex-end, center);
   .setEdit {
     width: 16px;
     margin-right: 22px;
@@ -183,6 +259,24 @@ const selectFn = (item: fnItemListType) => {
   .setSettings {
     width: 18px;
     filter: invert(80%);
+  }
+}
+.completeAdd {
+  @include flex(center, center);
+}
+
+.n-popover {
+  .large-text {
+    color: #1a1a1b !important;
+    user-select: none;
+    & > div {
+      padding: 4px 0;
+    }
+    img {
+      width: 16px;
+      height: 12px;
+      margin-right: 12px;
+    }
   }
 }
 </style>
