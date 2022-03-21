@@ -236,7 +236,7 @@ const helpFn = reactive([{
   status: false
 }])
 // 辅助功能操作状态
-const helpFnOperaStatus = ref(true)
+const helpFnOperaStatus = ref(false)
 // 音量功能操作状态
 const audioFnOpearStatus = ref(false)
 // 键盘功能操作状态

@@ -6,7 +6,7 @@
       <!-- 任务栏右侧 -->
       <div class="task">
         <!-- 隐藏的图标 -->
-        <div class="hideIcon" @click="changeHideIcon">
+        <div class="hideIcon" @click.stop="changeBoxStatus('hideIcon')">
           <n-icon size="22">
             <KeyboardArrowUpTwotone v-show="hideIcon === 'up'" />
             <KeyboardArrowDownTwotone v-show="hideIcon === 'down'" />
@@ -39,6 +39,23 @@
     <div class="controlCenterBox" ref="controlCenter">
       <ControlCenter />
     </div>
+    <!-- 隐藏的图标 -->
+    <div class="hideIconBox" ref="hideIconBox">
+      <div class="iconBoxItem">
+        <img
+          :src="require('@/assets/icon/appIcon/security.png')"
+          alt="microsoft defender"
+          title="Windows 安全中心 - 不需要执行操作"
+        />
+      </div>
+      <div class="iconBoxItem">
+        <img
+          :src="require('@/assets/icon/appIcon/oneDrive.png')"
+          alt="microsoft oneDrive"
+          title="oneDrive 最新"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -65,6 +82,8 @@ bus.on('claseTaskbarAll', () => {
   // 关闭事件弹窗
   calendarBox.value.style.right = '-500px'
   controlCenter.value.style.right = '-500px'
+  hideIcon.value = 'up'
+  hideIconBox.value.style.height = '0px'
 })
 // 任务栏弹窗状态更改
 //  -> 此处如果把 DOM 放在一个对象里遍历的话代码耦合度会降低，但是如何将 DOM 放在一个对象里？
@@ -90,11 +109,32 @@ const changeBoxStatus = (val: string) => {
   } else {
     controlCenter.value.style.right = '-500px'
   }
+  if (val === 'hideIcon') {
+    boxDom = hideIconBox.value.style
+    if (boxDom.height === 'auto') {
+      hideIcon.value = 'up'
+      boxDom.height = '0px'
+    } else {
+      boxDom.height = 'auto'
+      hideIcon.value = 'down'
+    }
+  } else {
+    hideIconBox.value.style.height = '0px'
+  }
 
 }
 // 隐藏图标相关
 const hideIcon: Rstring = ref('up')
-const changeHideIcon = () => hideIcon.value = hideIcon.value === 'up' ? 'down' : 'up'
+// const changeHideIcon = () => {
+//   if(hideIcon.value==='up'){
+//     hideIcon.value='down'
+//     hideIconBox.value.style.height='auto'
+//     return
+//   }
+//   hideIcon.value='up'
+//   hideIconBox.value.style.height='0px'
+// }
+const hideIconBox = ref()
 // 语言栏相关
 const lang: Rstring = ref('中')
 const changeLanguage = () => {
@@ -187,7 +227,26 @@ const controlCenter = ref()
 }
 .controlCenterBox {
   @include icon;
-  // right: -500px;
-  right: 12px;
+  right: -500px;
+}
+.hideIconBox {
+  @include icon;
+  @include box_border;
+  max-width: 120px;
+  height: 0px;
+  right: 130px;
+  background-color: #e3eef9;
+  @include flex(flex-start, center);
+  flex-wrap: wrap;
+  .iconBoxItem {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    img {
+      height: 16px;
+      vertical-align: middle;
+    }
+  }
 }
 </style>
