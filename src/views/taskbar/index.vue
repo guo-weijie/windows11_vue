@@ -171,7 +171,7 @@ const controlCenter = ref()
       margin-right: 6px;
     }
     .centerAudio {
-      height: 18px;
+      height: 19px;
     }
   }
   .time_noti {
