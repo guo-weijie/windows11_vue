@@ -2,7 +2,12 @@
   <div class="taskbar">
     <div class="taskbarBox" @click.stop="taskbarEvent">
       <!-- 开始菜单 -->
-      <div class="start">123</div>
+      <div class="start">
+        <div v-for="item in startupAppList" :key="item.name">
+          <img :src="item.icon" alt="item.name" v-click-animal>
+          <i :class="{underLine:true, fullLine:item.open&&!item.mini, shortLine: item.mini}"></i>
+        </div>
+      </div>
       <!-- 任务栏右侧 -->
       <div class="task">
         <!-- 隐藏的图标 -->
@@ -31,6 +36,10 @@
       </div>
     </div>
 
+    <!-- 开始菜单 -->
+    <div class="startMenu center" ref="startMenu">
+      <StartMenu v-bind="$attrs" />
+    </div>
     <!-- 日历 -->
     <div class="calendarBox" ref="calendarBox">
       <MyCalendar />
@@ -65,6 +74,7 @@ import { Rstring } from '@/type/basic'
 import { PropType, ref, watchEffect, reactive } from 'vue';
 import MyCalendar from '@/components/myCalendar/index.vue'
 import ControlCenter from './components/controlCenter.vue'
+import StartMenu from './components/startMenu.vue'
 import { KeyboardArrowUpTwotone, KeyboardArrowDownTwotone } from '@vicons/material'
 import { NIcon } from 'naive-ui'
 import bus from '@/utils/bus'
@@ -121,19 +131,48 @@ const changeBoxStatus = (val: string) => {
   } else {
     hideIconBox.value.style.height = '0px'
   }
-
 }
+// 开始菜单---------------------------------
+// 任务栏图标列表
+const startupAppList = reactive([{
+  name: 'startup',
+  icon: require('@/assets/icon/appIcon/home.png')
+},{
+  name: 'search',
+  icon: require('@/assets/icon/appIcon/search.png')
+},{
+  name: 'widget',
+  icon: require('@/assets/icon/appIcon/widget.png')
+},{
+  name: 'explorer',
+  icon: require('@/assets/icon/appIcon/explorer.png'),
+  open: false,
+  mini: false
+},{
+  name: 'edge',
+  icon: require('@/assets/icon/appIcon/edge.png'),
+  open: false,
+  mini: false
+},{
+  name: 'store',
+  icon: require('@/assets/icon/appIcon/store.png'),
+  open: false,
+  mini: false
+}])
+// 图标点击动画
+const vClickAnimal = {
+  mounted(el:Element) {
+    el.addEventListener('mousedown', () => {
+      el.className = ' narrow'
+    })
+    el.addEventListener('click',()=>{
+      el.className = ' clickAniamtion'
+    })
+  }
+}
+// 任务栏右侧--------------------------------
 // 隐藏图标相关
 const hideIcon: Rstring = ref('up')
-// const changeHideIcon = () => {
-//   if(hideIcon.value==='up'){
-//     hideIcon.value='down'
-//     hideIconBox.value.style.height='auto'
-//     return
-//   }
-//   hideIcon.value='up'
-//   hideIconBox.value.style.height='0px'
-// }
 const hideIconBox = ref()
 // 语言栏相关
 const lang: Rstring = ref('中')
@@ -185,7 +224,41 @@ const controlCenter = ref()
   }
 }
 .start {
+  height: 100%;
+  line-height: normal;
   grid-area: center;
+  @include flex(center, center);
+  div{
+    position: relative;
+    margin-right: 6px;
+    @include taskbarFnStyle;
+    transition: all 0.5s;
+    &:hover {
+      background: #fff;
+    }
+  }
+  .underLine{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 0;
+    height: 3px;
+    border-radius: 1px;
+  }
+  .fullLine {
+    width: 16px;
+    background-color: #0078d4;
+  }
+  .shortLine {
+    width: 6px;
+    background-color: #7e848a;
+  }
+  img {
+    height: 24px;
+    vertical-align: middle;
+  }
 }
 .task {
   height: 100%;
@@ -247,6 +320,37 @@ const controlCenter = ref()
       height: 16px;
       vertical-align: middle;
     }
+  }
+}
+
+.startMenu{
+  @include icon;
+  @include box_border;
+  width: 640px;
+  height: 725px;
+}
+.center{
+  left: 50%;
+  transform: translateX(-50%);
+}
+.left{
+  left: 12px;
+}
+
+// 开始菜单按钮点击动画
+.narrow{
+  transition: all 200ms;
+  transform: scale(0.8);
+}
+.clickAniamtion{
+  animation: clickAniamtion 500ms ease-in-out;
+}
+@keyframes clickAniamtion {
+  0%{
+    transform: scale(0.8);
+  }
+  50%{
+    transform: scale(1);
   }
 }
 </style>

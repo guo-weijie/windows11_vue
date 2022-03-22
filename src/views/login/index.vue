@@ -4,7 +4,9 @@
         <div class="screenContent" @click="isShow=false">
           <div class="content">
             <div class="headPic"></div>
-            <div class="userName">Administrator</div>
+            <div class="userName">
+              {{store.state.userName}}
+            </div>
             <div :class="{ 'login': status === '登录', 'welcome': status === '欢迎' }">{{ status }}</div>
           </div>
         </div>
@@ -15,6 +17,8 @@
 <script lang="ts" setup>
   import { useRoute, useRouter } from 'vue-router';
   import {ref} from 'vue'
+  import {useStore} from 'vuex'
+  const store = useStore()
   const route = useRoute()
   const router = useRouter()
   const status: string = route.query.status ? '登录' : '欢迎'
@@ -53,7 +57,8 @@
   height: 0;
   padding-left: 165px;
   padding-top: 165px;
-  background: url("~@/assets/icon/defAccount.png") no-repeat center/cover;
+  border-radius: 50%;
+  background: url("~@/assets/icon/avatar.png") no-repeat center/cover;
   margin-bottom: 16px;
 }
 .userName {

@@ -1,6 +1,6 @@
 <template>
   <Desktop :appList="allApp" />
-  <Taskbar :currentTime="currentTime" />
+  <Taskbar :currentTime="currentTime" v-bind:allAppList="allApp" />
 </template>
 
 <script lang="ts" setup>
@@ -43,20 +43,50 @@ setInterval(() => timeNumber.value += 1000, 1000)
 //   isPinned, 是否固定
 // }
 const allApp: allAppType = reactive([{
+  name: 'Edge',
+  url: require('@/assets/icon/appIcon/edge.png'),
+  isDesktop: true,
+  isPinned: true
+},{
+  name: 'Microsoft Store',
+  url: require('@/assets/icon/appIcon/store.png'),
+  isDesktop: false,
+  isPinned: true
+},{
+  name: '照片',
+  url: require('@/assets/icon/appIcon/photos.png'),
+  isDesktop: false,
+  isPinned: true
+},{
+  name: '设置',
+  url: require('@/assets/icon/appIcon/settings.png'),
+  isDesktop: false,
+  isPinned: true
+},{
+  name: '时钟',
+  url: require('@/assets/icon/appIcon/alarm.png'),
+  isDesktop: false,
+  isPinned: true
+},{
+  name: '文件资源管理器',
+  url: require('@/assets/icon/appIcon/explorer.png'),
+  isDesktop: false,
+  isPinned: true
+},{
   name: '回收站',
   url: require('@/assets/icon/appIcon/bin1.png'),
   isDesktop: true,
-  isPinned: true
+  isPinned: false
 }, {
   name: 'cortana',
   url: require('@/assets/icon/appIcon/cortana.png'),
   isDesktop: false,
-  isPinned: true
+  isPinned: false
 }, {
   name: 'Visual Studio Code',
   url: require('@/assets/icon/appIcon/code.png'),
   isDesktop: true,
-  isPinned: true
+  isPinned: false
 }])
 </script>
 
