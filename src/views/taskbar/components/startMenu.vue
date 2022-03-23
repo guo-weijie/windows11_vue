@@ -287,7 +287,8 @@ $color: #18191b;
       box-sizing: border-box;
       width: 100%;
       height: 100%;
-      padding: 18px 0;
+      padding: 18px 0 18px 32px;
+      margin-left: -32px;
       @include flex(flex-start, center);
       @include bgHover;
       img {
