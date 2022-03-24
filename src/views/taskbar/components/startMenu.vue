@@ -10,7 +10,7 @@
   <div class="menuBody">
     <div class="bodyTitle">
       <div class="titleLeft">{{ isAllApps ? '所有应用' : '已固定' }}</div>
-      <div class="titleRight" @click="isAllApps = !isAllApps">
+      <div class="titleRight" @click="changeMenuBodyStatus">
         <n-icon v-show="isAllApps">
           <ChevronLeft16Regular />
         </n-icon>
@@ -45,6 +45,41 @@
             </div>
           </div>
         </div>
+      </div>
+      <!-- 所有应用 -->
+      <div class="containerAllApp" ref="containerAllApp">
+        <!-- 列表 -->
+        <transition name="fade">
+          <div v-show="!selectLetter" class="appItemBody" ref="appItemBody">
+            <div v-for="item in allAppList_sorted" :key="item.id" :id="item.id">
+              <div
+                class="itemBodyPublic itemBodyIndex"
+                @click="selectLetter = true"
+              >{{ item.id.toUpperCase() }}</div>
+              <div
+                v-for="appList in item.list"
+                :key="appList.name"
+                class="itemBodyPublic itemBodyBox"
+              >
+                <img :src="appList.url" alt="appList.name" />
+                <span>{{ appList.name }}</span>
+              </div>
+            </div>
+          </div>
+        </transition>
+        <!-- 首字母选择 -->
+        <transition name="fade">
+          <div v-show="selectLetter" class="appItemLetter">
+            <div class="itemLetterBox">
+              <div
+                v-for="item in letterData"
+                :key="item.id + 'l'"
+                :class="{ isFlag: item.flag }"
+                @click="selectThisLetter(item.id, item.flag)"
+              >{{ item.id.toUpperCase() }}</div>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
   </div>
@@ -92,14 +127,17 @@
 </template>
 
 <script lang='ts' setup>
-import { ref, useAttrs, computed } from 'vue'
+import { ref, useAttrs, computed, toRaw, nextTick, onMounted } from 'vue'
 import { NPopover, NIcon } from 'naive-ui'
 import { Settings20Regular, Power24Regular, WeatherMoon48Regular, ArrowCounterclockwise28Regular, ChevronRight16Regular, ChevronLeft16Regular } from '@vicons/fluent'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { allAppType, allAppItem } from '@/type'
+import { allAppType, allAppItem, allAppListBySort } from '@/type'
+// eslint-disable-next-line
+import { getSpell } from 'jian-pinyin'
 const store = useStore()
 const router = useRouter()
+const attrs = useAttrs()
 const powerEvent = (val: string) => {
   if (val === '关机') {
     console.log('会加的，再等等')
@@ -115,10 +153,82 @@ const powerEvent = (val: string) => {
   }
 }
 const isAllApps = ref(false)
-// 所有应用和已固定处理
+// 应用列表 ---------------------------------
+// [{
+//   id: #,
+//   list: [{}]
+// }]
+interface letterType {
+  id: string,
+  flag: boolean
+}
+const selectThisLetter = async (id: string, flag: boolean) => {
+  if (!flag) return
+  selectLetter.value = false
+  await nextTick()
+  const ele: HTMLElement | null = document.querySelector(`#${id}`)
+  containerAllApp.value.scrollTop = (ele as HTMLElement).offsetTop > maxScroll ? maxScroll : (ele as HTMLElement).offsetTop
+}
+const strIndex = '#abcdefghijklmnopqrstuvwxyz'
+const letterData: letterType[] = []
+let allAppList_sorted: allAppListBySort = []
+// DOM加载完成后获取 appItemBody 的高度
+onMounted(() => {
+  maxScroll = appItemBody.value.scrollHeight - 523
+})
+for (const value of strIndex) {
+  allAppList_sorted.push({
+    id: value,
+    list: []
+  })
+  letterData.push({
+    id: value,
+    flag: false
+  })
+}
+const dataDeal = () => {
+  // 应用列表是固定的，所有取消代理
+  // const noProxyData = toRaw(attrs.allAppList)
+  // 应用名称统一转为拼音
+  // const transData:allAppType = noProxyData.map((item: allAppItem)=>{
+  //   item.name = 
+  //   return item
+  // })
+  // 数据归类
+  allAppList_sorted.forEach((item, index) => {
+    toRaw(attrs.allAppList).forEach(iten => {
+      if (item.id === getSpell(iten.name, (charactor: string, spell: string) => spell[1], '').slice(0, 1).toLowerCase()) {
+        item.list.push(iten)
+        letterData[index].flag = true
+      }
+    })
+  })
+  // 过滤 & 排序
+  allAppList_sorted = allAppList_sorted.filter(item => item.list.length > 0).map(item => {
+    item.list.sort((a, b) => a.name.localeCompare(b.name))
+    return item
+  })
+}
+dataDeal()
+// 所有应用和已固定处理 --------------------------
 const containerPinned = ref()
-// 获取固定应用列表
-const attrs = useAttrs()
+const containerAllApp = ref()
+const appItemBody = ref()
+let maxScroll = 0
+const changeMenuBodyStatus = () => {
+  if (isAllApps.value) {
+    isAllApps.value = false
+    containerPinned.value.style.left = 0
+    containerAllApp.value.style.left = '110%'
+    selectLetter.value = false
+    return
+  }
+  isAllApps.value = true
+  containerPinned.value.style.left = '-110%'
+  containerAllApp.value.style.left = 0
+}
+const selectLetter = ref(false)
+// 获取固定应用列表 -----------------------
 const pinnedList = computed((): allAppType => attrs.allAppList.filter((item: allAppItem) => item.isPinned))
 </script>
 
@@ -248,9 +358,11 @@ $color: #18191b;
 // 开始菜单主体
 .containerPinned {
   width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
+  transition: left 300ms;
   .pinnedAppBox {
     width: 100%;
     height: 84px;
@@ -308,5 +420,83 @@ $color: #18191b;
       }
     }
   }
+}
+.containerAllApp {
+  box-sizing: border-box;
+  width: calc(100% + 28px);
+  height: 100%;
+  padding-left: 30px;
+  padding-bottom: 20px;
+  position: absolute;
+  top: 0;
+  left: 110%;
+  transition: left 300ms;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 2px;
+    height: 246px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #7c7e86;
+    border-radius: 1px;
+  }
+  .itemBodyPublic {
+    width: 90%;
+    height: 40px;
+    font-size: 12px;
+    color: $color;
+    padding-left: 20px;
+    margin-left: -20px;
+    @include bgHover;
+  }
+  .itemBodyIndex {
+    text-indent: 0.8em;
+    line-height: 40px;
+    font-weight: bold;
+  }
+  .itemBodyBox {
+    @include flex(flex-start, center);
+    img {
+      width: 24px;
+      margin-right: 20px;
+    }
+  }
+  .appItemBody {
+    width: 100%;
+  }
+}
+.appItemLetter {
+  box-sizing: border-box;
+  width: calc(100% - 28px);
+  height: 100%;
+  padding-right: 30px;
+  @include flex(center, center);
+  .itemLetterBox {
+    display: grid;
+    grid-template-columns: repeat(4, 48px);
+    grid-template-rows: repeat(7, 48px);
+    div {
+      width: 100%;
+      height: 48px;
+      line-height: 48px;
+      text-align: center;
+      font-size: 14px;
+      color: #9699a1;
+      font-weight: bold;
+    }
+    .isFlag {
+      color: #29292a;
+      @include bgHover;
+    }
+  }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-in;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

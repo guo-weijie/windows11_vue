@@ -37,9 +37,16 @@ interface fnItemListType {
   menu: boolean
 }
 
+interface dealAppList {
+  id: string,
+  list: allAppType
+}
+
 type fnItemType = fnItemListType[]
 
 type fnItemTypeCom = ComputedRef<fnItemType>
+
+type allAppListBySort = dealAppList[]
 
 export {
   allAppItem,
@@ -49,5 +56,7 @@ export {
   RintegerYear,
   fnItemListType,
   fnItemType,
-  fnItemTypeCom
+  fnItemTypeCom,
+  dealAppList,
+  allAppListBySort
 }

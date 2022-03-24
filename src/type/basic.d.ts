@@ -4,7 +4,7 @@ type Rstring = Ref<string>
 type Rnumber = Ref<number>
 type Rboolean = Ref<boolean>
 type REle = Ref<HTMLElement | null>
-type ele = Element
+type ele = HTMLElement
 
 export {
   Rstring,

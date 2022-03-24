@@ -1,6 +1,19 @@
 {
   "name": "win11_in_vue",
-  "version": "0.1.0",
+  "author": {
+    "name": "Ghosie",
+    "url": "https://github.com/guo-weijie"
+  },
+  "contributors": [
+    {
+      "name": "Ha aaaaaaaa666",
+      "url": "https://github.com/xiaoxianxv666"
+    }
+  ],
+  "description ": "使用Vue仿windows11",
+  "homepage": "https://guo-weijie.github.io/windows11-in-vue/#/",
+  "repository": "https://github.com/guo-weijie/windows11-in-vue",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
@@ -10,6 +23,7 @@
   "dependencies": {
     "chinese-lunar-calendar": "^1.0.1",
     "date-fns": "^2.28.0",
+    "jian-pinyin": "^0.2.3",
     "mitt": "^3.0.0",
     "normalize.css": "^8.0.1",
     "screenfull": "^6.0.1",
@@ -36,6 +50,12 @@
     "typescript": "~4.5.5",
     "vfonts": "0.0.3"
   },
+  "keywords": [
+    "vue3",
+    "typescript",
+    "naive-ui",
+    "windows11"
+  ],
   "eslintConfig": {
     "root": true,
     "env": {

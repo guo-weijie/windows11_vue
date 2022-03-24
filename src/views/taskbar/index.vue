@@ -3,9 +3,13 @@
     <div class="taskbarBox" @click.stop="taskbarEvent">
       <!-- 开始菜单 -->
       <div class="start">
-        <div v-for="item in startupAppList" :key="item.name">
-          <img :src="item.icon" alt="item.name" v-click-animal>
-          <i :class="{underLine:true, fullLine:item.open&&!item.mini, shortLine: item.mini}"></i>
+        <div
+          v-for="item in startupAppList"
+          :key="item.name"
+          @click.stop="changeStartupStatus(item.name)"
+        >
+          <img :src="item.icon" alt="item.name" v-click-animal />
+          <i :class="{ underLine: true, fullLine: item.open && !item.mini, shortLine: item.mini }"></i>
         </div>
       </div>
       <!-- 任务栏右侧 -->
@@ -37,7 +41,7 @@
     </div>
 
     <!-- 开始菜单 -->
-    <div class="startMenu center" ref="startMenu">
+    <div class="startMenu center" ref="startMenuR">
       <StartMenu v-bind="$attrs" />
     </div>
     <!-- 日历 -->
@@ -93,7 +97,8 @@ bus.on('claseTaskbarAll', () => {
   calendarBox.value.style.right = '-500px'
   controlCenter.value.style.right = '-500px'
   hideIcon.value = 'up'
-  hideIconBox.value.style.height = '0px'
+  hideIconBox.value.style.height = '0'
+  startMenuR.value.style.height = '0'
 })
 // 任务栏弹窗状态更改
 //  -> 此处如果把 DOM 放在一个对象里遍历的话代码耦合度会降低，但是如何将 DOM 放在一个对象里？
@@ -133,27 +138,29 @@ const changeBoxStatus = (val: string) => {
   }
 }
 // 开始菜单---------------------------------
+// 相关DOM
+const startMenuR = ref()
 // 任务栏图标列表
 const startupAppList = reactive([{
-  name: 'startup',
+  name: 'startMenuR',
   icon: require('@/assets/icon/appIcon/home.png')
-},{
+}, {
   name: 'search',
   icon: require('@/assets/icon/appIcon/search.png')
-},{
+}, {
   name: 'widget',
   icon: require('@/assets/icon/appIcon/widget.png')
-},{
+}, {
   name: 'explorer',
   icon: require('@/assets/icon/appIcon/explorer.png'),
   open: false,
   mini: false
-},{
+}, {
   name: 'edge',
   icon: require('@/assets/icon/appIcon/edge.png'),
   open: false,
   mini: false
-},{
+}, {
   name: 'store',
   icon: require('@/assets/icon/appIcon/store.png'),
   open: false,
@@ -161,13 +168,21 @@ const startupAppList = reactive([{
 }])
 // 图标点击动画
 const vClickAnimal = {
-  mounted(el:Element) {
+  mounted(el: Element) {
     el.addEventListener('mousedown', () => {
       el.className = ' narrow'
     })
-    el.addEventListener('click',()=>{
+    el.addEventListener('click', () => {
       el.className = ' clickAniamtion'
     })
+  }
+}
+// 打开或关闭
+const changeStartupStatus = (name: string) => {
+  if (name === 'startMenuR') {
+    startMenuR.value.style.height = parseInt(startMenuR.value.style.height) ? '0' : '725px'
+  }else{
+    startMenuR.value.style.height = '0'
   }
 }
 // 任务栏右侧--------------------------------
@@ -228,7 +243,7 @@ const controlCenter = ref()
   line-height: normal;
   grid-area: center;
   @include flex(center, center);
-  div{
+  div {
     position: relative;
     margin-right: 6px;
     @include taskbarFnStyle;
@@ -237,7 +252,7 @@ const controlCenter = ref()
       background: #fff;
     }
   }
-  .underLine{
+  .underLine {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -323,33 +338,34 @@ const controlCenter = ref()
   }
 }
 
-.startMenu{
+.startMenu {
   @include icon;
   @include box_border;
   width: 640px;
-  height: 725px;
+  height: 0px;
+  transition: height 200ms ease-in;
 }
-.center{
+.center {
   left: 50%;
   transform: translateX(-50%);
 }
-.left{
+.left {
   left: 12px;
 }
 
 // 开始菜单按钮点击动画
-.narrow{
+.narrow {
   transition: all 200ms;
   transform: scale(0.8);
 }
-.clickAniamtion{
+.clickAniamtion {
   animation: clickAniamtion 500ms ease-in-out;
 }
 @keyframes clickAniamtion {
-  0%{
+  0% {
     transform: scale(0.8);
   }
-  50%{
+  50% {
     transform: scale(1);
   }
 }
