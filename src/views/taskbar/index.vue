@@ -343,7 +343,7 @@ const controlCenter = ref()
   @include box_border;
   width: 640px;
   height: 0px;
-  transition: height 200ms ease-in;
+  transition: height 150ms ease-in;
 }
 .center {
   left: 50%;
