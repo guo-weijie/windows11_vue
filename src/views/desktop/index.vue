@@ -1,19 +1,39 @@
 <template>
   <div class="desktop" @click="claseTaskbarAll">
     <div class="desktopAppContainer">
-      <div v-for="item in desktopList" :key="item.name" class="desktopApp">
+      <div
+        v-for="item in desktopList"
+        :key="item.name"
+        class="desktopApp"
+        @dblclick="openApp(item)"
+      >
         <img :src="item.url" :alt="item.name" />
         <p>{{ item.name }}</p>
       </div>
     </div>
+
+    <!-- app -->
+    <Edge v-if="appIsOpen.edge" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, PropType, defineProps } from 'vue';
-import { allAppType } from '@/type'
+import { computed, PropType, reactive } from 'vue';
+import { allAppType, allAppItem } from '@/type'
 import bus from '@/utils/bus'
+import Edge from './app/edge.vue'
 
+// 关闭/打开 应用
+bus.on('appStatus', data => {
+  for(const key in appIsOpen){
+    if(key === data.name.toLowerCase()){
+      appIsOpen[key] = data.show
+      bus.emit('changeTaskbarStatus',data)
+    }
+  }
+})
+
+// eslint-disable-next-line no-undef
 const props = defineProps({
   appList: Array as PropType<allAppType>
 })
@@ -22,7 +42,17 @@ const desktopList = computed(() => props.appList?.filter(item => item.isDesktop)
 const claseTaskbarAll = () => {
   bus.emit('claseTaskbarAll')
 }
-
+// 点击应用图标
+const openApp = (data:allAppItem) => {
+  bus.emit('appStatus', {
+    ...data,
+    show: true
+  })
+}
+// 应用打开/关闭状态
+const appIsOpen = reactive({
+  edge: false
+})
 </script>
 
 <style lang="scss" scoped>
