@@ -6,10 +6,10 @@
         <div
           v-for="item in startupAppList"
           :key="item.name"
-          @click.stop="changeStartupStatus(item)"
+          @click.stop="changeTaskbarStatus(item)"
         >
           <img :src="item.icon" alt="item.name" v-click-animal />
-          <i :class="{ underLine: true, fullLine: item.long && item.open, shortLine: item.mini&& item.open }"></i>
+          <i :class="{ underLine: true, fullLine: item.open && item.underLine && !item.mini, shortLine: item.open && !item.underLine && item.mini }"></i>
         </div>
       </div>
       <!-- 任务栏右侧 -->
@@ -153,20 +153,20 @@ const startupAppList = reactive([{
 }, {
   name: 'explorer',
   icon: require('@/assets/icon/appIcon/explorer.png'),
-  open: false,
-  long: false,
-  mini: false
+  open: false, // 应用打开状态 打开/关闭
+  underLine: false, // 图标下划线状态 长 true / 短 fasle
+  mini: false // 应用窗口状态 是否最小化
 }, {
   name: 'edge',
   icon: require('@/assets/icon/appIcon/edge.png'),
   open: false,
-  long: false,
+  underLine: false,
   mini: false
 }, {
   name: 'store',
   icon: require('@/assets/icon/appIcon/store.png'),
   open: false,
-  long: false,
+  underLine: false,
   mini: false
 }])
 // 图标点击动画
@@ -180,48 +180,6 @@ const vClickAnimal = {
     })
   }
 }
-// 处理任务栏图标下划线
-const changeStartupStatus = data => {
-  startupAppList.forEach(item => {
-    if (item.name.toLowerCase() === data.name.toLowerCase()) {
-      if (item.name === 'startMenuR') {
-        startMenuR.value.style.height = parseInt(startMenuR.value.style.height) ? '0' : '725px'
-      } else {
-        if(!item.open){
-          item.open = true
-          bus.emit('appStatus',{...data,show: true})
-          return
-        }
-          item.mini = item.long
-          item.long = item.long? false:true
-      }
-    }else{
-      if(item.name==='startMenuR'){
-        startMenuR.value.style.height = '0'
-      }else{
-        if(!data.name){
-          item.open = false
-        }
-        item.long = false
-        item.mini = item.open && data.name
-      }
-    }
-    
-  })
-}
-// 发布事件 -> 打开应用时 任务栏有的话处理样式即可，没有添加图标，再处理样式
-bus.on('changeTaskbarStatus', data => {
-  if(data.show){
-    const flag = startupAppList.some(item=>item.name.toLowerCase()===data.name.toLowerCase())
-    if(flag){
-      changeStartupStatus(data)
-      return
-    }
-    startupAppList.push(data)
-    return
-  }
-  changeStartupStatus({name: ''})
-})
 
 // 任务栏右侧--------------------------------
 // 隐藏图标相关
@@ -248,6 +206,15 @@ watchEffect(() => {
 // 获取任务栏弹窗DOM
 const calendarBox = ref()
 const controlCenter = ref()
+
+// 图标下划线处理逻辑 ---------------------------------------------
+const changeTaskbarStatus = data => {
+  startupAppList.forEach(item=>{
+    if(item.name==='startMenuR'){
+      // startMenuR.value.style.height
+    }
+  })
+}
 
 </script>
 
