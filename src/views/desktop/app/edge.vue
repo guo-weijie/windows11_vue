@@ -1,5 +1,5 @@
 <template>
-  <div class="edge">
+  <div class="edge" :class="[myClass]">
     <!-- 标题栏 -->
     <div class="edgeTitle">
       <div class="titleLeft">
@@ -16,15 +16,7 @@
         </n-button>
       </div>
       <div class="titleRight">
-        <div class="beforeClose">
-          <img :src="require('@/assets/icon/systemIcon/minimize.png')" alt="windows11" />
-        </div>
-        <div class="beforeClose">
-          <img :src="require('@/assets/icon/systemIcon/maximize.png')" alt="windows11" />
-        </div>
-        <div class="close" @click.stop="closeApp">
-          <img :src="require('@/assets/icon/systemIcon/close.png')" alt="windows11" />
-        </div>
+        <NavBarRight name="edge" @changeSize="changeSize" />
       </div>
     </div>
     <!-- 导航栏 -->
@@ -75,7 +67,7 @@ import { CloseSharp } from '@vicons/material'
 import { ArrowLeft24Regular, ArrowRight24Regular, ArrowClockwise48Regular, LockClosed20Regular, Search20Regular } from '@vicons/fluent'
 import { NIcon, NButton, NInput } from 'naive-ui'
 import { ref, shallowRef, watch } from 'vue'
-import bus from '@/utils/bus';
+import NavBarRight from '@/components/navBarRight/index.vue'
 // 记录浏览器历史记录
 const historyData = ['https://www.bing.com']
 // 当前所在的历史记录的位置
@@ -112,20 +104,20 @@ const leftGray = ref('#cccccc')
 const rightGray = ref('#cccccc')
 // 后退、前进、刷新按钮
 const naviBtn = (flag: number) => {
-  if (flag === -1 && step.value === 0)return
+  if (flag === -1 && step.value === 0) return
 
-  if (flag === 1 && step.value > historyData.length - 1)return
+  if (flag === 1 && step.value > historyData.length - 1) return
   step.value += flag
   edgeUrl.value = historyData[step.value]
   inputValue.value = historyData[step.value]
 }
 // 监听 step 以控制箭头的颜色
-watch(step,()=> {
-  if(step.value===0){
+watch(step, () => {
+  if (step.value === 0) {
     leftGray.value = '#cccccc'
     rightGray.value = '#000'
   }
-  if(step.value ===historyData.length - 1 ){
+  if (step.value === historyData.length - 1) {
     leftGray.value = '#000'
     rightGray.value = '#ccc'
   }
@@ -134,9 +126,15 @@ watch(step,()=> {
 const onInput = () => {
   inputBarIcon.value = Search20Regular
 }
-// 关闭应用
-const closeApp = () => {
-  bus.emit('appStatus',{name: 'Edge',show: false})
+
+// 修改样式
+const myClass = ref('')
+const changeSize = (name: string) => {
+  if (!name && !myClass.value) {
+    myClass.value = 'centerCenter'
+    return
+  }
+  myClass.value = name
 }
 </script>
 
@@ -149,9 +147,10 @@ const closeApp = () => {
   width: 100%;
   height: 100%;
   background-color: #f7f7f7;
+  transition: all 200ms ease-in;
   .edgeTitle {
     width: 100%;
-    height: 41px;
+    height: 40px;
     background-color: #d7ae46;
     @include flex(space-between, flex-end);
     .titleLeft {
@@ -164,6 +163,9 @@ const closeApp = () => {
       border-radius: 4px 4px 0 0;
       @include flex(space-between, center);
       .leftTagName {
+        width: calc(100% - 26px);
+        white-space: nowrap;
+        overflow: hidden;
         font-size: 12px;
         color: #a24d4d;
         @include flex(flex-start, center);
@@ -175,23 +177,23 @@ const closeApp = () => {
     }
     .titleRight {
       @include flex(flex-end, center);
-      div {
-        box-sizing: border-box;
-        width: 41px;
-        height: 41px;
-        padding: 15px;
-        img {
-          width: 100%;
-          filter: invert(100%);
-          vertical-align: top;
-        }
-      }
-      .beforeClose:hover {
-        background-color: lightgray;
-      }
-      .close:hover {
-        background-color: #f00;
-      }
+      //   div {
+      //     box-sizing: border-box;
+      //     width: 40px;
+      //     height: 40px;
+      //     padding: 15px;
+      //     img {
+      //       width: 100%;
+      //       filter: invert(100%);
+      //       vertical-align: top;
+      //     }
+      //   }
+      //   .beforeClose:hover {
+      //     background-color: lightgray;
+      //   }
+      //   .close:hover {
+      //     background-color: #f00;
+      //   }
     }
   }
   .edgeNav {
@@ -212,11 +214,75 @@ const closeApp = () => {
   }
   .edgeBody {
     width: 100%;
-    height: calc(100% - 41px - 39px);
+    height: calc(100% - 40px - 39px);
     iframe {
       width: 100%;
       height: 100%;
     }
   }
+}
+
+// 应用窗口样式
+.halfOnLeft {
+  width: 50%;
+}
+.halfOnRight {
+  width: 50%;
+  left: 50%;
+}
+.moreOnLeft {
+  width: 60%;
+}
+.moreOnRight {
+  width: 40%;
+  left: 60%;
+}
+.thirdOnLeft {
+  width: 33%;
+}
+.thirdOnCenter {
+  width: 33%;
+  left: 33%;
+}
+.thirdOnRight {
+  width: 33%;
+  left: calc(100% - 33%);
+}
+.thirdOnTop {
+  width: 50%;
+  height: 50%;
+  left: 50%;
+}
+.thirdOnBottom {
+  width: 50%;
+  height: 50%;
+  left: 50%;
+  top: 50%;
+}
+.quarterOnLeftTop {
+  width: 50%;
+  height: 50%;
+}
+.quarterOnLeftBottom {
+  width: 50%;
+  height: 50%;
+  top: 50%;
+}
+.moreThirdLeft {
+  width: 25%;
+}
+.moreThirdCenter {
+  width: 50%;
+  left: 25%;
+}
+.moreThirdRight {
+  width: 25%;
+  left: 75%;
+}
+.centerCenter {
+  width: 50%;
+  height: 50%;
+  left: 25%;
+  top: 25%;
 }
 </style>

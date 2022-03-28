@@ -26,9 +26,8 @@ import Edge from './app/edge.vue'
 // 关闭/打开 应用
 bus.on('appStatus', data => {
   for(const key in appIsOpen){
-    if(key === data.name.toLowerCase()){
-      appIsOpen[key] = data.show
-      bus.emit('changeTaskbarStatus',data)
+    if(key.toLowerCase()===data.name.toLowerCase()){
+      appIsOpen[key] = data.flag==='open'?true:false
     }
   }
 })
@@ -44,10 +43,12 @@ const claseTaskbarAll = () => {
 }
 // 点击应用图标
 const openApp = (data:allAppItem) => {
-  bus.emit('appStatus', {
+  const obj = {
     ...data,
-    show: true
-  })
+    flag: 'open'
+  }
+  bus.emit('appStatus',obj)
+  bus.emit('changeOpenStatus',obj)
 }
 // 应用打开/关闭状态
 const appIsOpen = reactive({

@@ -10,7 +10,7 @@
   <div class="menuBody">
     <div class="bodyTitle">
       <div class="titleLeft">{{ isAllApps ? '所有应用' : '已固定' }}</div>
-      <div class="titleRight" @click="changeMenuBodyStatus">
+      <div class="titleRight" @click.stop="changeMenuBodyStatus">
         <n-icon v-show="isAllApps">
           <ChevronLeft16Regular />
         </n-icon>
@@ -23,7 +23,12 @@
     <div class="bodyContainer">
       <div class="containerPinned" ref="containerPinned">
         <div class="pinnedAppBox">
-          <div class="pinnedList" v-for="item in pinnedList" :key="item.name">
+          <div
+            class="pinnedList"
+            v-for="item in pinnedList"
+            :key="item.name"
+            @click.stop="pinnedOpenApp(item.name)"
+          >
             <img :src="item.url" :alt="item.name" />
             <span>{{ item.name }}</span>
           </div>
@@ -54,12 +59,13 @@
             <div v-for="item in allAppList_sorted" :key="item.id" :id="item.id">
               <div
                 class="itemBodyPublic itemBodyIndex"
-                @click="selectLetter = true"
+                @click.stop="selectLetter = true"
               >{{ item.id.toUpperCase() }}</div>
               <div
                 v-for="appList in item.list"
                 :key="appList.name"
                 class="itemBodyPublic itemBodyBox"
+                @click.stop="pinnedOpenApp(appList.name)"
               >
                 <img :src="appList.url" alt="appList.name" />
                 <span>{{ appList.name }}</span>
@@ -133,6 +139,7 @@ import { Settings20Regular, Power24Regular, WeatherMoon48Regular, ArrowCountercl
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { allAppType, allAppItem, allAppListBySort } from '@/type'
+import bus from '@/utils/bus'
 // eslint-disable-next-line
 import { getSpell } from 'jian-pinyin'
 const store = useStore()
@@ -228,6 +235,12 @@ const changeMenuBodyStatus = () => {
   containerAllApp.value.style.left = 0
 }
 const selectLetter = ref(false)
+const pinnedOpenApp = (name: string) => {
+  console.log(name)
+  bus.emit('appStatus', { name: name, flag: 'open' })
+  bus.emit('changeOpenStatus', { name: name, flag: 'open' })
+  bus.emit('claseTaskbarAll')
+}
 // 获取固定应用列表 -----------------------
 const pinnedList = computed((): allAppType => attrs.allAppList.filter((item: allAppItem) => item.isPinned))
 </script>

@@ -39,7 +39,7 @@ setInterval(() => timeNumber.value += 1000, 1000)
 // {
 //   name, 程序名称
 //   url,  图标路径
-//   isDesktop, 是否在桌面显示
+//   isDesktop, 是否在桌面显示。从桌面打开的应用图标放到任务栏上，关闭应用时处理任务栏图标以此字段为标识
 //   isPinned, 是否固定
 // }
 const allApp: allAppType = reactive([{

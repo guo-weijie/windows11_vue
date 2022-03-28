@@ -6,10 +6,10 @@
         <div
           v-for="item in startupAppList"
           :key="item.name"
-          @click.stop="changeTaskbarStatus(item)"
+          @click.stop="clickTaskbarIcon(item)"
         >
-          <img :src="item.icon" alt="item.name" v-click-animal />
-          <i :class="{ underLine: true, fullLine: item.open && item.underLine && !item.mini, shortLine: item.open && !item.underLine && item.mini }"></i>
+          <img :src="item.url" alt="item.name" v-click-animal />
+          <i :class="{ underLine: true, fullLine: item.open && !item.mini, shortLine: item.open && item.mini }"></i>
         </div>
       </div>
       <!-- 任务栏右侧 -->
@@ -138,33 +138,38 @@ const changeBoxStatus = (val: string) => {
   }
 }
 // 开始菜单---------------------------------
+interface appListType {
+  name: string,
+  url: string,
+  open?:boolean,
+  mini?:boolean
+}
 // 相关DOM
 const startMenuR = ref()
 // 任务栏图标列表
-const startupAppList = reactive([{
+const startupAppList:appListType[] = reactive([{
   name: 'startMenuR',
-  icon: require('@/assets/icon/appIcon/home.png')
+  url: require('@/assets/icon/appIcon/home.png')
 }, {
   name: 'search',
-  icon: require('@/assets/icon/appIcon/search.png')
+  url: require('@/assets/icon/appIcon/search.png')
 }, {
   name: 'widget',
-  icon: require('@/assets/icon/appIcon/widget.png')
+  url: require('@/assets/icon/appIcon/widget.png')
 }, {
   name: 'explorer',
-  icon: require('@/assets/icon/appIcon/explorer.png'),
-  open: false, // 应用打开状态 打开/关闭
-  underLine: false, // 图标下划线状态 长 true / 短 fasle
-  mini: false // 应用窗口状态 是否最小化
+  url: require('@/assets/icon/appIcon/explorer.png'),
+  open: false, // 应用打开状态 打开 长线/关闭 无线
+  mini: false // 应用窗口状态 是否 最小化 -> 短线
 }, {
   name: 'edge',
-  icon: require('@/assets/icon/appIcon/edge.png'),
+  url: require('@/assets/icon/appIcon/edge.png'),
   open: false,
   underLine: false,
   mini: false
 }, {
   name: 'store',
-  icon: require('@/assets/icon/appIcon/store.png'),
+  url: require('@/assets/icon/appIcon/store.png'),
   open: false,
   underLine: false,
   mini: false
@@ -208,13 +213,60 @@ const calendarBox = ref()
 const controlCenter = ref()
 
 // 图标下划线处理逻辑 ---------------------------------------------
-const changeTaskbarStatus = data => {
+// 点击任务栏图标
+const clickTaskbarIcon = (data:appListType) => {
   startupAppList.forEach(item=>{
     if(item.name==='startMenuR'){
-      // startMenuR.value.style.height
+      if(item.name.toLowerCase()===data.name.toLowerCase()){
+        startMenuR.value.style.height = parseInt(startMenuR.value.style.height)? '0' :'725px'
+      }else{
+        startMenuR.value.style.height = '0px'
+      }
+    }else{
+      if(item.name.toLowerCase()===data.name.toLowerCase()){
+        if(!item.open){ // open false 说明应用处于关闭状态
+          const obj = {
+            ...data,
+            flag: 'open'
+          }
+          bus.emit('appStatus',obj)
+          bus.emit('changeOpenStatus',obj)
+        }else{
+          if(item.mini){
+            bus.emit('appStatus',{...data,flag:'open'})
+            item.mini = false
+          }else{
+            bus.emit('appStatus',{...data,flag:'hide'})
+            item.mini = true
+          }
+          // item.mini = !item.mini
+        }
+      }else{
+        item.mini = true
+      }
     }
   })
 }
+// 发布一个修改 open 的事件
+bus.on('changeOpenStatus',data=>{
+  startupAppList.forEach(item=>{
+    if(item.name.toLowerCase()===data.name.toLowerCase()){
+      if(data.flag==='open'){
+        item.open = true
+        item.mini = false
+      }else if(data.flag ==='hide'){
+        item.open = true
+        item.mini = true
+      }else{
+        item.open = false
+      }
+      // item.open = data.flag==='close'?false:true
+      // if(item.open){
+      //   item.mini = false
+      // }
+    }
+  })
+})
 
 </script>
 
