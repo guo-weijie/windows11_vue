@@ -90,4 +90,68 @@ const appIsOpen = reactive({
     }
   }
 }
+
+// 应用窗口样式
+.halfOnLeft {
+  width: 50%;
+}
+.halfOnRight {
+  width: 50%;
+  left: 50%;
+}
+.moreOnLeft {
+  width: 60%;
+}
+.moreOnRight {
+  width: 40%;
+  left: 60%;
+}
+.thirdOnLeft {
+  width: 33%;
+}
+.thirdOnCenter {
+  width: 33%;
+  left: 33%;
+}
+.thirdOnRight {
+  width: 33%;
+  left: calc(100% - 33%);
+}
+.thirdOnTop {
+  width: 50%;
+  height: 50%;
+  left: 50%;
+}
+.thirdOnBottom {
+  width: 50%;
+  height: 50%;
+  left: 50%;
+  top: 50%;
+}
+.quarterOnLeftTop {
+  width: 50%;
+  height: 50%;
+}
+.quarterOnLeftBottom {
+  width: 50%;
+  height: 50%;
+  top: 50%;
+}
+.moreThirdLeft {
+  width: 25%;
+}
+.moreThirdCenter {
+  width: 50%;
+  left: 25%;
+}
+.moreThirdRight {
+  width: 25%;
+  left: 75%;
+}
+.centerCenter {
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+}
 </style>

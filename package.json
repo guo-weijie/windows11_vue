@@ -11,8 +11,8 @@
     }
   ],
   "description ": "使用Vue仿windows11",
-  "homepage": "https://guo-weijie.github.io/windows11-in-vue/#/",
-  "repository": "https://github.com/guo-weijie/windows11-in-vue",
+  "homepage": "https://guo-weijie.github.io/windows11_vue",
+  "repository": "https://github.com/guo-weijie/windows11_vue",
   "version": "1.0.0",
   "private": true,
   "scripts": {

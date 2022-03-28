@@ -1,10 +1,11 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import Login from '@/views/login/index.vue'
+import PowerOn from '@/views/powerOn/index.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: 'login'
+    component: PowerOn
   }, {
     path: '/login',
     component: Login

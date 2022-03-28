@@ -28,4 +28,4 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 预览地址
-[Github](https://guo-weijie.github.io/windows11_vue/#/)
+[Github](https://guo-weijie.github.io/windows11_vue)
