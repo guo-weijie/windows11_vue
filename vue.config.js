@@ -1,3 +1,4 @@
 module.exports = {
-  publicPath: '/windows11_vue'
+  publicPath: process.env.NODE_ENV === 'production' ? '/windows11_vue' : '/',
+  productionSourceMap: false
 }

@@ -40,9 +40,13 @@
       </div>
     </div>
 
+    <!-- 搜索 -->
+    <div class="search center" ref="searchR">
+      <Search />
+    </div>
     <!-- 开始菜单 -->
     <div class="startMenu center" ref="startMenuR">
-      <StartMenu v-bind="$attrs" />
+      <StartMenu v-bind="$attrs" @pleaseOpenSearch = "openSearch" />
     </div>
     <!-- 日历 -->
     <div class="calendarBox" ref="calendarBox">
@@ -79,6 +83,7 @@ import { PropType, ref, watchEffect, reactive } from 'vue';
 import MyCalendar from '@/components/myCalendar/index.vue'
 import ControlCenter from './components/controlCenter.vue'
 import StartMenu from './components/startMenu.vue'
+import Search from './components/search.vue'
 import { KeyboardArrowUpTwotone, KeyboardArrowDownTwotone } from '@vicons/material'
 import { NIcon } from 'naive-ui'
 import bus from '@/utils/bus'
@@ -86,6 +91,11 @@ import bus from '@/utils/bus'
 const props = defineProps({
   currentTime: Object as PropType<timeType>
 })
+// 关闭开始菜单并打开搜索框
+const openSearch = () => {
+  startMenuR.value.style.height = '0'
+  searchR.value.style.height = '724px'
+}
 // 任务栏点击事件
 //  -> 每一个具体的功能按钮都阻止事件冒泡传播，所以能触发事件的点击动作都是点击任务栏其余部分，此时直接执行弹窗关闭操作即可
 const taskbarEvent = () => {
@@ -99,6 +109,7 @@ bus.on('claseTaskbarAll', () => {
   hideIcon.value = 'up'
   hideIconBox.value.style.height = '0'
   startMenuR.value.style.height = '0'
+  searchR.value.style.height = '0'
 })
 // 任务栏弹窗状态更改
 //  -> 此处如果把 DOM 放在一个对象里遍历的话代码耦合度会降低，但是如何将 DOM 放在一个对象里？
@@ -146,6 +157,7 @@ interface appListType {
 }
 // 相关DOM
 const startMenuR = ref()
+const searchR = ref()
 // 任务栏图标列表
 const startupAppList:appListType[] = reactive([{
   name: 'startMenuR',
@@ -221,6 +233,12 @@ const clickTaskbarIcon = (data:appListType) => {
         startMenuR.value.style.height = parseInt(startMenuR.value.style.height)? '0' :'725px'
       }else{
         startMenuR.value.style.height = '0px'
+      }
+    }else if(item.name==='search'){
+      if(item.name.toLowerCase()===data.name.toLowerCase()){
+        searchR.value.style.height = parseInt(searchR.value.style.height)? '0' :'724px'
+      }else{
+        searchR.value.style.height = '0px'
       }
     }else{
       if(item.name.toLowerCase()===data.name.toLowerCase()){
@@ -399,7 +417,14 @@ bus.on('changeOpenStatus',data=>{
   @include icon;
   @include box_border;
   width: 640px;
-  height: 0px;
+  height: 0;
+  transition: height 150ms ease-in;
+}
+.search{
+  @include icon;
+  @include box_border;
+  width: 774px;
+  height: 0;
   transition: height 150ms ease-in;
 }
 .center {
