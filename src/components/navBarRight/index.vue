@@ -60,6 +60,7 @@ const changeWindowSize = (e: { target: { id: string } }) => {
 const changeAppStatus = (val:string) => {
     bus.emit('appStatus',{name: props.name,flag: val})
     bus.emit('changeOpenStatus', {name: props.name,flag: val})
+    bus.emit('claseTaskbarAll')
 }
 </script>
 

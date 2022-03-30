@@ -1,7 +1,7 @@
 <template>
   <div class="menuSearch">
     <!-- 搜索框：点击跳转搜索 -->
-    <div class="searchBox">
+    <div class="searchBox" @click.stop="openSearch">
       <img :src="require('@/assets/icon/systemIcon/search.png')" alt="搜索" />
       在此键入以搜索
     </div>
@@ -133,7 +133,7 @@
 </template>
 
 <script lang='ts' setup>
-import { ref, useAttrs, computed, toRaw, nextTick, onMounted } from 'vue'
+import { ref, useAttrs, computed, toRaw, nextTick, onMounted, defineEmits } from 'vue'
 import { NPopover, NIcon } from 'naive-ui'
 import { Settings20Regular, Power24Regular, WeatherMoon48Regular, ArrowCounterclockwise28Regular, ChevronRight16Regular, ChevronLeft16Regular } from '@vicons/fluent'
 import { useStore } from 'vuex'
@@ -158,6 +158,11 @@ const powerEvent = (val: string) => {
     console.log('会加的，再等等')
     return
   }
+}
+const emits = defineEmits(['pleaseOpenSearch'])
+// 跳转搜索框
+const openSearch = () => {
+  emits('pleaseOpenSearch')
 }
 const isAllApps = ref(false)
 // 应用列表 ---------------------------------
