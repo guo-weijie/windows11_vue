@@ -12,14 +12,13 @@
 
 <script lang='ts' setup>
 import bus from '@/utils/bus'
-import { defineProps } from 'vue'
 
 interface appListType {
   name: string,
   url: string
 }
 
-// eslint-disable-next-line vue/valid-define-props
+// eslint-disable-next-line no-undef
 const props = defineProps({
   title: String
 })

@@ -51,9 +51,9 @@ const props = defineProps({
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['changeSize'])
 
-const changeWindowSize = (e: { target: { id: string } }) => {
-  if(!e.target.id) return
-  emit('changeSize',e.target.id)
+const changeWindowSize = (e: MouseEvent) => {
+  if(!(e.target as HTMLInputElement).id) return
+  emit('changeSize',(e.target as HTMLInputElement).id)
 }
 
 // 隐藏/关闭应用
