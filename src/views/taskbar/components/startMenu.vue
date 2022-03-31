@@ -133,7 +133,7 @@
 </template>
 
 <script lang='ts' setup>
-import { ref, useAttrs, computed, toRaw, nextTick, onMounted, defineEmits } from 'vue'
+import { ref, useAttrs, computed, toRaw, nextTick, onMounted } from 'vue'
 import { NPopover, NIcon } from 'naive-ui'
 import { Settings20Regular, Power24Regular, WeatherMoon48Regular, ArrowCounterclockwise28Regular, ChevronRight16Regular, ChevronLeft16Regular } from '@vicons/fluent'
 import { useStore } from 'vuex'
@@ -159,6 +159,7 @@ const powerEvent = (val: string) => {
     return
   }
 }
+// eslint-disable-next-line no-undef
 const emits = defineEmits(['pleaseOpenSearch'])
 // 跳转搜索框
 const openSearch = () => {

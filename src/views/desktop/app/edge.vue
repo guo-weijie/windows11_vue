@@ -1,5 +1,5 @@
 <template>
-  <div class="edge" :class="[myClass]">
+  <div class="edge" :class="[myClass]" ref="edgeBox">
     <!-- 标题栏 -->
     <div class="edgeTitle">
       <div class="titleLeft">
@@ -66,8 +66,9 @@
 import { CloseSharp } from '@vicons/material'
 import { ArrowLeft24Regular, ArrowRight24Regular, ArrowClockwise48Regular, LockClosed20Regular, Search20Regular } from '@vicons/fluent'
 import { NIcon, NButton, NInput } from 'naive-ui'
-import { ref, shallowRef, watch } from 'vue'
+import { ref, shallowRef, watch, onMounted } from 'vue'
 import NavBarRight from '@/components/navBarRight/index.vue'
+import {Draggable} from '@/utils/draggable'
 // 记录浏览器历史记录
 const historyData = ['https://www.bing.com']
 // 当前所在的历史记录的位置
@@ -127,9 +128,17 @@ const onInput = () => {
   inputBarIcon.value = Search20Regular
 }
 
+const edgeBox = ref()
+// 页面加载完成后绑定移动事件
+onMounted(()=>{
+  new Draggable(edgeBox.value)
+})
+
 // 修改样式
 const myClass = ref('')
 const changeSize = (name: string) => {
+  edgeBox.value.style.left = ''
+  edgeBox.value.style.top = ''
   if (!name && !myClass.value) {
     myClass.value = 'centerCenter'
     return
