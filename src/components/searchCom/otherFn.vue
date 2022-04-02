@@ -9,7 +9,8 @@
 <script lang='ts' setup>
 import { NIcon } from 'naive-ui'
 import { GlobeSearch20Regular, Document20Regular, Mail20Regular, People20Regular, Settings20Regular, Video20Regular, Folder20Regular, MusicNote220Regular, Image20Regular } from '@vicons/fluent'
-import { defineProps,watchEffect, shallowRef } from 'vue'
+import { watchEffect, shallowRef } from 'vue'
+// eslint-disable-next-line no-undef
 const props = defineProps({
   title: String
 })

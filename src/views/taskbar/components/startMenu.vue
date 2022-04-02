@@ -140,7 +140,6 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { allAppType, allAppItem, allAppListBySort } from '@/type'
 import bus from '@/utils/bus'
-// eslint-disable-next-line
 import { getSpell } from 'jian-pinyin'
 const store = useStore()
 const router = useRouter()

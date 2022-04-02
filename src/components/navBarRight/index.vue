@@ -1,43 +1,45 @@
 <template>
-  <div class="btn beforeClose" @click.stop="changeAppStatus('hide')">
-    <img :src="require('@/assets/icon/systemIcon/minimize.png')" alt="windows11" />
-  </div>
-  <div class="btn beforeClose maximize" @click.stop="emit('changeSize','')">
-    <img :src="require('@/assets/icon/systemIcon/maximize.png')" alt="windows11" />
-    <div class="winBox" @click.stop="changeWindowSize">
-      <div class="item1">
-        <div id="halfOnLeft"></div>
-        <div id="halfOnRight"></div>
-      </div>
-      <div class="item2">
-        <div id="moreOnLeft"></div>
-        <div id="moreOnRight"></div>
-      </div>
-      <div class="item3">
-        <div id="thirdOnLeft"></div>
-        <div id="thirdOnCenter"></div>
-        <div id="thirdOnRight"></div>
-      </div>
-      <div class="item4">
-        <div id="halfOnLeft" class="item4A"></div>
-        <div id="thirdOnTop"></div>
-        <div id="thirdOnBottom"></div>
-      </div>
-      <div class="item5">
-        <div id="quarterOnLeftTop"></div>
-        <div id="thirdOnTop"></div>
-        <div id="quarterOnLeftBottom"></div>
-        <div id="thirdOnBottom"></div>
-      </div>
-      <div class="item6">
-        <div id="moreThirdLeft"></div>
-        <div id="moreThirdCenter"></div>
-        <div id="moreThirdRight"></div>
+  <div class="navBarRight">
+    <div class="btn beforeClose" :class="{edgeColor: props.name==='edge'}" @click.stop="changeAppStatus('hide')">
+      <img :src="require('@/assets/icon/systemIcon/minimize.png')" alt="windows11" />
+    </div>
+    <div class="btn beforeClose maximize" :class="{edgeColor: props.name==='edge'}" @click.stop="emit('changeSize', '')">
+      <img :src="require('@/assets/icon/systemIcon/maximize.png')" alt="windows11" />
+      <div class="winBox" @click.stop="changeWindowSize">
+        <div class="item1">
+          <div id="halfOnLeft"></div>
+          <div id="halfOnRight"></div>
+        </div>
+        <div class="item2">
+          <div id="moreOnLeft"></div>
+          <div id="moreOnRight"></div>
+        </div>
+        <div class="item3">
+          <div id="thirdOnLeft"></div>
+          <div id="thirdOnCenter"></div>
+          <div id="thirdOnRight"></div>
+        </div>
+        <div class="item4">
+          <div id="halfOnLeft" class="item4A"></div>
+          <div id="thirdOnTop"></div>
+          <div id="thirdOnBottom"></div>
+        </div>
+        <div class="item5">
+          <div id="quarterOnLeftTop"></div>
+          <div id="thirdOnTop"></div>
+          <div id="quarterOnLeftBottom"></div>
+          <div id="thirdOnBottom"></div>
+        </div>
+        <div class="item6">
+          <div id="moreThirdLeft"></div>
+          <div id="moreThirdCenter"></div>
+          <div id="moreThirdRight"></div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="btn close" @click.stop="changeAppStatus('close')">
-    <img :src="require('@/assets/icon/systemIcon/close.png')" alt="windows11" />
+    <div class="btn close" :class="{edgeColor: props.name==='edge'}" @click.stop="changeAppStatus('close')">
+      <img :src="require('@/assets/icon/systemIcon/close.png')" alt="windows11" />
+    </div>
   </div>
 </template>
 
@@ -52,19 +54,23 @@ const props = defineProps({
 const emit = defineEmits(['changeSize'])
 
 const changeWindowSize = (e: MouseEvent) => {
-  if(!(e.target as HTMLInputElement).id) return
-  emit('changeSize',(e.target as HTMLInputElement).id)
+  if (!(e.target as HTMLInputElement).id) return
+  emit('changeSize', (e.target as HTMLInputElement).id)
 }
 
 // 隐藏/关闭应用
-const changeAppStatus = (val:string) => {
-    bus.emit('appStatus',{name: props.name,flag: val})
-    bus.emit('changeOpenStatus', {name: props.name,flag: val})
-    bus.emit('claseTaskbarAll')
+const changeAppStatus = (val: string) => {
+  bus.emit('appStatus', { name: props.name, flag: val })
+  bus.emit('changeOpenStatus', { name: props.name, flag: val })
+  bus.emit('claseTaskbarAll')
 }
 </script>
 
 <style lang='scss' scoped>
+@import "@/style/public";
+.navBarRight {
+  @include flex(flex-end, center);
+}
 .btn {
   box-sizing: border-box;
   width: 40px;
@@ -72,8 +78,10 @@ const changeAppStatus = (val:string) => {
   padding: 15px;
   img {
     width: 100%;
-    filter: invert(100%);
     vertical-align: top;
+  }
+  .edgeColor{
+    filter: invert(100%);
   }
 }
 .beforeClose:hover {
@@ -85,8 +93,8 @@ const changeAppStatus = (val:string) => {
 
 .maximize {
   position: relative;
-  &:hover{
-    .winBox{
+  &:hover {
+    .winBox {
       display: grid;
     }
   }
