@@ -57,7 +57,7 @@ const props = defineProps({
     }
   }
   .listContent {
-    width: 1000px;
+    max-width: 1000px;
     height: 67px;
     background-color: #fafcfd;
     margin-bottom: 3px;
