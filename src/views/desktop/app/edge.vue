@@ -15,9 +15,7 @@
           </template>
         </n-button>
       </div>
-      <div class="titleRight">
-        <NavBarRight name="edge" @changeSize="changeSize" />
-      </div>
+      <NavBarRight name="edge" @changeSize="changeSize" />
     </div>
     <!-- 导航栏 -->
     <div class="edgeNav">
@@ -183,26 +181,6 @@ const changeSize = (name: string) => {
           margin-right: 10px;
         }
       }
-    }
-    .titleRight {
-      @include flex(flex-end, center);
-      //   div {
-      //     box-sizing: border-box;
-      //     width: 40px;
-      //     height: 40px;
-      //     padding: 15px;
-      //     img {
-      //       width: 100%;
-      //       filter: invert(100%);
-      //       vertical-align: top;
-      //     }
-      //   }
-      //   .beforeClose:hover {
-      //     background-color: lightgray;
-      //   }
-      //   .close:hover {
-      //     background-color: #f00;
-      //   }
     }
   }
   .edgeNav {

@@ -14,6 +14,7 @@
 
     <!-- app -->
     <Edge v-if="appIsOpen.edge" />
+    <Setup v-if="appIsOpen['设置']" />
   </div>
 </template>
 
@@ -22,6 +23,7 @@ import { computed, PropType, reactive } from 'vue';
 import { allAppType, allAppItem } from '@/type'
 import bus from '@/utils/bus'
 import Edge from './app/edge.vue'
+import Setup from '@/views/setUp/index.vue'
 
 // 关闭/打开 应用
 bus.on('appStatus', data => {
@@ -52,7 +54,8 @@ const openApp = (data:allAppItem) => {
 }
 // 应用打开/关闭状态
 const appIsOpen = reactive({
-  edge: false
+  edge: false,
+  '设置': false
 })
 </script>
 
