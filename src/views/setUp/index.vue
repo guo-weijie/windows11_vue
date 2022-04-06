@@ -692,6 +692,15 @@ const changeSize = (name: string) => {
     :deep(.n-layout-sider-scroll-container) {
       min-width: auto !important;
       padding-left: 16px;
+      overflow-y: auto;
+      &::-webkit-scrollbar {
+        width: 2px;
+        height: 303px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: #7c7e86;
+        border-radius: 1px;
+      }
     }
   }
   :deep(.n-layout-scroll-container){

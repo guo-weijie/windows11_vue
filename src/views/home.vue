@@ -1,6 +1,6 @@
 <template>
   <Desktop :appList="allApp" />
-  <Taskbar :currentTime="currentTime" v-bind:allAppList="allApp" />
+  <Taskbar :currentTime="currentTime" :allAppList="allApp" />
 </template>
 
 <script lang="ts" setup>

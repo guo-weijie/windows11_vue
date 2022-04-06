@@ -266,7 +266,35 @@ const clickTaskbarIcon = (data:appListType) => {
   })
 }
 // 发布一个修改 open 的事件
+const appendData: Array<appListType>| Array<null> = [] // 打开应用后添加到任务栏图标的应用集合
+/*
+ * flag 为 'open' 时：
+ * startupAppList 有且 appendData 有 -> 应用已打开且应用不是原本在任务栏 -> 应用打开操作无需处理
+ * startupAppList 有且 appendData 没有 -> 应用是固定在任务栏上的 -> 无需处理
+ * appendData 没有且 startupAppList 没有 -> 需要添加到 startupAppList 上的 -> 分别添加到 appendData 和 startupAppList -> 方便关闭应用时做删除处理
+ *  
+ * flag 为 'close' 时，
+ * startupAppList 有且 appendData 有 -> 两个都删除
+ * startupAppList 有且 appendData 没有 -> 不处理
+ * appendData 有且 startupAppList 没有 -> 出 bug 了
+ */
+
 bus.on('changeOpenStatus',data=>{
+  const aHave = appendData.some(item=>item.name.toLowerCase()===data.name.toLowerCase()),
+      sHave = startupAppList.some(item=>item.name.toLowerCase()===data.name.toLowerCase());
+  if(data.flag==='open'){
+    if(!aHave && !sHave){
+      appendData.push(data)
+      startupAppList.push(data)
+    }
+  }
+  if(data.flag==='close'){
+    if(aHave && sHave){
+      appendData.splice(appendData.findIndex(item=>item.name.toLowerCase()===data.name.toLowerCase()),1)
+      startupAppList.splice(startupAppList.findIndex(item=>item.name.toLowerCase()===data.name.toLowerCase()),1)
+    }
+  }
+
   startupAppList.forEach(item=>{
     if(item.name.toLowerCase()===data.name.toLowerCase()){
       if(data.flag==='open'){

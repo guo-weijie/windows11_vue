@@ -60,6 +60,7 @@ const changeWindowSize = (e: MouseEvent) => {
 
 // 隐藏/关闭应用
 const changeAppStatus = (val: string) => {
+  // 关闭应用窗口
   bus.emit('appStatus', { name: props.name, flag: val })
   bus.emit('changeOpenStatus', { name: props.name, flag: val })
   bus.emit('claseTaskbarAll')
