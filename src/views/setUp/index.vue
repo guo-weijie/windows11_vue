@@ -65,9 +65,7 @@
                 </template>
               </n-breadcrumb-item>
             </n-breadcrumb>
-            <div class="menuContent">
-              <MenuItemList :menuItemListData="menuItemListData.data" />
-            </div>
+            <MenuItemList :menuItemListData="menuItemListData.data" @changeItem="selectItem" />
           </n-layout-content>
         </n-layout>
       </n-layout>
@@ -623,7 +621,7 @@ const breadData = reactive(['系统'])
 
 // 菜单按钮对应的右侧列表数据
 const menuItemListData = shallowReactive({
-  data: menuItemData[0].children
+  data: menuItemData[0]
 })
 
 const listBar = ref()
@@ -634,7 +632,7 @@ const selectItem = (name:string,num: number) => {
   clickedIndex.value = num
   breadData[0] = name
   breadData.splice(1)
-  menuItemListData.data = menuItemData[num].children
+  menuItemListData.data = menuItemData[num]
 }
 
 // 修改样式
@@ -708,9 +706,6 @@ const changeSize = (name: string) => {
   }
   .n-breadcrumb{
     margin-bottom: 30px;
-  }
-  .menuContent{
-    height: calc(100% - 70px);
   }
 }
 .userAbout {

@@ -34,7 +34,6 @@ bus.on('appStatus', data => {
   }
 })
 
-// eslint-disable-next-line no-undef
 const props = defineProps({
   appList: Array as PropType<allAppType>
 })
@@ -55,7 +54,7 @@ const openApp = (data:allAppItem) => {
 // 应用打开/关闭状态
 const appIsOpen = reactive({
   edge: false,
-  '设置': false
+  '设置': true
 })
 </script>
 
