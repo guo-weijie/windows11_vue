@@ -54,7 +54,7 @@ const openApp = (data:allAppItem) => {
 // 应用打开/关闭状态
 const appIsOpen = reactive({
   edge: false,
-  '设置': true
+  '设置': false
 })
 </script>
 

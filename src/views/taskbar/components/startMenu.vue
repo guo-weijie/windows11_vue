@@ -92,7 +92,7 @@
   <!-- 底部用户头像和电源按钮 -->
   <div class="menuFooter">
     <div class="footerUser">
-      <img :src="require('@/assets/icon/avatar.png')" alt="ghosie的头像" />
+      <img :src="require('@/assets'+store.state.userAvatar)" :alt="store.state.userName" />
       <span :title="store.state.userName">{{ store.state.userName }}</span>
     </div>
     <div class="footerBattery">

@@ -15,10 +15,10 @@
       <n-layout has-sider>
         <n-layout-sider>
           <div class="userAbout">
-            <img :src="require('@/assets/icon/avatar.png')" alt="Ghosie" />
+            <img :src="require('@/assets'+store.state.userAvatar)" :alt="store.state.userName" />
             <div class="aboutInfo">
-              <div class="infoName">Ghosie</div>
-              <a href="mailto:weijie.g@outlook.com" class="infoMail">weijie.g@outlook.com</a>
+              <div class="infoName">{{store.state.userName}}</div>
+              <div class="infoMail">Administrator</div>
             </div>
           </div>
           <n-input placeholder="查找设置">
@@ -79,7 +79,9 @@ import { ArrowLeft20Regular, ChevronRight20Regular } from '@vicons/fluent'
 import NavBarRight from '@/components/navBarRight/index.vue'
 import { reactive, ref, shallowReactive } from 'vue';
 import MenuItemList from './components/menuItemList.vue'
+import { useStore } from 'vuex'
 
+const store = useStore()
 const menuItemData = [{
   url: require('@/assets/icon/systemIcon/System.webp'),
   name: '系统',
