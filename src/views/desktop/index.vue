@@ -34,7 +34,6 @@ bus.on('appStatus', data => {
   }
 })
 
-// eslint-disable-next-line no-undef
 const props = defineProps({
   appList: Array as PropType<allAppType>
 })

@@ -15,10 +15,10 @@
       <n-layout has-sider>
         <n-layout-sider>
           <div class="userAbout">
-            <img :src="require('@/assets/icon/avatar.png')" alt="Ghosie" />
+            <img :src="require('@/assets'+store.state.userAvatar)" :alt="store.state.userName" />
             <div class="aboutInfo">
-              <div class="infoName">Ghosie</div>
-              <a href="mailto:weijie.g@outlook.com" class="infoMail">weijie.g@outlook.com</a>
+              <div class="infoName">{{store.state.userName}}</div>
+              <div class="infoMail">Administrator</div>
             </div>
           </div>
           <n-input placeholder="查找设置">
@@ -65,9 +65,7 @@
                 </template>
               </n-breadcrumb-item>
             </n-breadcrumb>
-            <div class="menuContent">
-              <MenuItemList :menuItemListData="menuItemListData.data" />
-            </div>
+            <MenuItemList :menuItemListData="menuItemListData.data" @changeItem="selectItem" />
           </n-layout-content>
         </n-layout>
       </n-layout>
@@ -81,7 +79,9 @@ import { ArrowLeft20Regular, ChevronRight20Regular } from '@vicons/fluent'
 import NavBarRight from '@/components/navBarRight/index.vue'
 import { reactive, ref, shallowReactive } from 'vue';
 import MenuItemList from './components/menuItemList.vue'
+import { useStore } from 'vuex'
 
+const store = useStore()
 const menuItemData = [{
   url: require('@/assets/icon/systemIcon/System.webp'),
   name: '系统',
@@ -623,7 +623,7 @@ const breadData = reactive(['系统'])
 
 // 菜单按钮对应的右侧列表数据
 const menuItemListData = shallowReactive({
-  data: menuItemData[0].children
+  data: menuItemData[0]
 })
 
 const listBar = ref()
@@ -634,7 +634,7 @@ const selectItem = (name:string,num: number) => {
   clickedIndex.value = num
   breadData[0] = name
   breadData.splice(1)
-  menuItemListData.data = menuItemData[num].children
+  menuItemListData.data = menuItemData[num]
 }
 
 // 修改样式
@@ -692,6 +692,15 @@ const changeSize = (name: string) => {
     :deep(.n-layout-sider-scroll-container) {
       min-width: auto !important;
       padding-left: 16px;
+      overflow-y: auto;
+      &::-webkit-scrollbar {
+        width: 2px;
+        height: 303px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: #7c7e86;
+        border-radius: 1px;
+      }
     }
   }
   :deep(.n-layout-scroll-container){
@@ -699,9 +708,6 @@ const changeSize = (name: string) => {
   }
   .n-breadcrumb{
     margin-bottom: 30px;
-  }
-  .menuContent{
-    height: calc(100% - 70px);
   }
 }
 .userAbout {

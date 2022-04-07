@@ -27,7 +27,7 @@
             class="pinnedList"
             v-for="item in pinnedList"
             :key="item.name"
-            @click.stop="pinnedOpenApp(item.name)"
+            @click.stop="pinnedOpenApp(item)"
           >
             <img :src="item.url" :alt="item.name" />
             <span>{{ item.name }}</span>
@@ -65,7 +65,7 @@
                 v-for="appList in item.list"
                 :key="appList.name"
                 class="itemBodyPublic itemBodyBox"
-                @click.stop="pinnedOpenApp(appList.name)"
+                @click.stop="pinnedOpenApp(appList)"
               >
                 <img :src="appList.url" alt="appList.name" />
                 <span>{{ appList.name }}</span>
@@ -92,7 +92,7 @@
   <!-- 底部用户头像和电源按钮 -->
   <div class="menuFooter">
     <div class="footerUser">
-      <img :src="require('@/assets/icon/avatar.png')" alt="ghosie的头像" />
+      <img :src="require('@/assets'+store.state.userAvatar)" :alt="store.state.userName" />
       <span :title="store.state.userName">{{ store.state.userName }}</span>
     </div>
     <div class="footerBattery">
@@ -240,10 +240,9 @@ const changeMenuBodyStatus = () => {
   containerAllApp.value.style.left = 0
 }
 const selectLetter = ref(false)
-const pinnedOpenApp = (name: string) => {
-  console.log(name)
-  bus.emit('appStatus', { name: name, flag: 'open' })
-  bus.emit('changeOpenStatus', { name: name, flag: 'open' })
+const pinnedOpenApp = (data: allAppItem) => {
+  bus.emit('appStatus', { ...data, flag: 'open' })
+  bus.emit('changeOpenStatus', { ...data, flag: 'open' })
   bus.emit('claseTaskbarAll')
 }
 // 获取固定应用列表 -----------------------
