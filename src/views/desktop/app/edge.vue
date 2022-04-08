@@ -10,7 +10,7 @@
         <n-button size="tiny">
           <template #icon>
             <n-icon color="#000000">
-              <CloseSharp />
+              <Dismiss20Filled />
             </n-icon>
           </template>
         </n-button>
@@ -61,8 +61,7 @@
 </template>
 
 <script lang='ts' setup>
-import { CloseSharp } from '@vicons/material'
-import { ArrowLeft24Regular, ArrowRight24Regular, ArrowClockwise48Regular, LockClosed20Regular, Search20Regular } from '@vicons/fluent'
+import { ArrowLeft24Regular, ArrowRight24Regular, ArrowClockwise48Regular, LockClosed20Regular, Search20Regular, Dismiss20Filled } from '@vicons/fluent'
 import { NIcon, NButton, NInput } from 'naive-ui'
 import { ref, shallowRef, watch, onMounted } from 'vue'
 import NavBarRight from '@/components/navBarRight/index.vue'

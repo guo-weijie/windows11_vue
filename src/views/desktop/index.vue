@@ -15,6 +15,7 @@
     <!-- app -->
     <Edge v-if="appIsOpen.edge" />
     <Setup v-if="appIsOpen['设置']" />
+    <Terminal />
   </div>
 </template>
 
@@ -24,6 +25,7 @@ import { allAppType, allAppItem } from '@/type'
 import bus from '@/utils/bus'
 import Edge from './app/edge.vue'
 import Setup from '@/views/setUp/index.vue'
+import Terminal from './app/terminal.vue'
 
 // 关闭/打开 应用
 bus.on('appStatus', data => {
