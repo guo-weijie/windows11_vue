@@ -1,5 +1,5 @@
 <template>
-  <div class="setupBox" :class="[myClass]" ref="setupBox">
+  <div class="setupBox" :class="[myClass]" ref="setupBox" @click.stop="setupFn">
     <!-- 标题栏 -->
     <div class="titleBar">
       <div class="barLeft">
@@ -77,9 +77,10 @@
 import { NIcon, NLayout, NLayoutContent, NLayoutSider, NInput, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
 import { ArrowLeft20Regular, ChevronRight20Regular } from '@vicons/fluent'
 import NavBarRight from '@/components/navBarRight/index.vue'
-import { reactive, ref, shallowReactive } from 'vue';
+import { reactive, ref, shallowReactive, nextTick } from 'vue';
 import MenuItemList from './components/menuItemList.vue'
 import { useStore } from 'vuex'
+import bus from '@/utils/bus'
 
 const store = useStore()
 const menuItemData = [{
@@ -649,6 +650,16 @@ const changeSize = (name: string) => {
   }
   myClass.value = name
 }
+
+const setupFn = async () => {
+  await nextTick()
+  setupBox.value.style.zIndex = store.state.zIndex
+  store.dispatch('changeZIndex')
+}
+
+bus.on('设置',setupFn)
+
+
 
 </script>
 

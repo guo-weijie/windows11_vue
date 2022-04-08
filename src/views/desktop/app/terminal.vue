@@ -18,18 +18,17 @@
       <NavBarRight name="edge" @changeSize="changeSize" />
     </div>
     <!-- 主体 -->
-    <div class="terminalContainer" ref="terminalContainer"></div>
+    <div class="terminalContainer"></div>
   </div>
 </template>
 
 <script lang='ts' setup>
 import NavBarRight from '@/components/navBarRight/index.vue'
-import {NButton, NIcon} from 'naive-ui'
+import { NButton, NIcon } from 'naive-ui'
 import { Dismiss20Filled } from '@vicons/fluent'
 import { ref } from 'vue'
 
 const terminalBox = ref()
-const terminalContainer = ref()
 const myClass = ref('')
 const changeSize = (name: string) => {
   terminalBox.value.style.left = ''
@@ -44,9 +43,8 @@ const changeSize = (name: string) => {
 </script>
 
 <style lang='scss' scoped>
-
 @import "@/style/public";
-.terminal{
+.terminal {
   position: absolute;
   left: 0;
   top: 0;
@@ -81,6 +79,10 @@ const changeSize = (name: string) => {
         }
       }
     }
+  }
+  .terminalContainer{
+    width: 100%;
+    height: calc(100% - 40px);
   }
 }
 </style>
