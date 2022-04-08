@@ -1,5 +1,5 @@
 <template>
-  <div class="edge" :class="[myClass]" ref="edgeBox">
+  <div class="edge" :class="[myClass]" ref="edgeBox" @click.stop="edgeFn">
     <!-- 标题栏 -->
     <div class="edgeTitle">
       <div class="titleLeft">
@@ -10,7 +10,7 @@
         <n-button size="tiny">
           <template #icon>
             <n-icon color="#000000">
-              <CloseSharp />
+              <Dismiss20Filled />
             </n-icon>
           </template>
         </n-button>
@@ -61,12 +61,15 @@
 </template>
 
 <script lang='ts' setup>
-import { CloseSharp } from '@vicons/material'
-import { ArrowLeft24Regular, ArrowRight24Regular, ArrowClockwise48Regular, LockClosed20Regular, Search20Regular } from '@vicons/fluent'
+import { ArrowLeft24Regular, ArrowRight24Regular, ArrowClockwise48Regular, LockClosed20Regular, Search20Regular, Dismiss20Filled } from '@vicons/fluent'
 import { NIcon, NButton, NInput } from 'naive-ui'
-import { ref, shallowRef, watch, onMounted } from 'vue'
+import { ref, shallowRef, watch, onMounted, nextTick } from 'vue'
 import NavBarRight from '@/components/navBarRight/index.vue'
 import {Draggable} from '@/utils/draggable'
+import {useStore} from 'vuex'
+import bus from '@/utils/bus'
+
+const store = useStore()
 // 记录浏览器历史记录
 const historyData = ['https://www.bing.com']
 // 当前所在的历史记录的位置
@@ -125,6 +128,15 @@ watch(step, () => {
 const onInput = () => {
   inputBarIcon.value = Search20Regular
 }
+
+// 点击窗口时显示在上层
+const edgeFn = async () => {
+  await nextTick()
+  edgeBox.value.style.zIndex = store.state.zIndex
+  store.dispatch('changeZIndex')
+}
+
+bus.on('edge',edgeFn)
 
 const edgeBox = ref()
 // 页面加载完成后绑定移动事件

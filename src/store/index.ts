@@ -4,7 +4,8 @@ export default createStore({
   state: {
     userName: 'Ghosie',
     userAvatar: '/icon/avatar.png',
-    backgroundImgUrl: '/default/img0.jpg'
+    backgroundImgUrl: '/default/img0.jpg',
+    zIndex: 2
   },
   getters: {
   },
@@ -17,6 +18,9 @@ export default createStore({
     },
     CHANGE_BACKGROUND_IMG_URL(state,url) {
       state.backgroundImgUrl = url
+    },
+    CHANGE_ZINDEX(state) {
+      state.zIndex++
     }
   },
   actions: {
@@ -28,6 +32,9 @@ export default createStore({
     },
     changeBackgroundImgUrl({commit},url) {
       commit('CHANGE_BACKGROUND_IMG_URL', url)
+    },
+    changeZIndex({commit}){
+      commit('CHANGE_ZINDEX')
     }
   },
   modules: {

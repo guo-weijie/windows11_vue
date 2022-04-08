@@ -1,31 +1,17 @@
 # windows11-vue
 
-> 看到有大神用 react 写了一个 windows11 的界面，[仓库地址](https://github.com/blueedgetechno/windows11)，这段时间正好在学习 vue3，于是就试着用 vue3 写了个 windows11 的界面
+## 起因
 
-> 开发人员：[我](https://github.com/guo-weijie) & [Ha aaaaaaaa666](https://github.com/xiaoxianxv666)
+看到有大神用 react 写了一个 windows11 的界面，[仓库地址](https://github.com/blueedgetechno/windows11)，这段时间正好在学习 vue3，于是就试着用 vue3 写了个 windows11 的界面
 
-## 跑环境
-```
-npm install
-```
+## 预览地址
+[https://win11.keep-silence.com](https://win11.keep-silence.com)
 
-### 开发
-```
-npm run serve
-```
+开发人员：[我](https://github.com/guo-weijie) & [Ha aaaaaaaa666](https://github.com/xiaoxianxv666)
 
-### 生产
-```
-npm run build
-```
+## 技术栈
+- vue3 全家桶
+- typescript
+- sass
+- naive-ui
 
-### 格式化
-```
-npm run lint
-```
-
-### 配置
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-### 预览地址
-[Github](https://guo-weijie.github.io/windows11_vue)
