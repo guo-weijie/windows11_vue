@@ -1,0 +1,35 @@
+.myPopover{
+  background-color: #f6f9fc !important;
+  border-radius: 10px !important;
+}
+
+:root[theme='light']{
+  --global-theme-color: #0067c0;
+  --global-placeholder-font-color: #616161;
+  --global-font-color: #1a1a1a;
+  --global-bg-color: #f3f3f3;
+  --set-first-font-color: var(--global-font-color);
+  --set-first-select-bg-color: #eaeaea;
+  --set-second-bg-color: #fbfbfb;
+  --set-second-hover-bg-color: #f6f6f6;
+  --set-second-font-color: var(--global-font-color);
+  --set-second-desc-font-color: #5e5e5e;
+  --set-second-top-font-color: var(--global-font-color);
+  --set-second-top-desc-font-color: #565656;
+  --set-leftTop-bg-color: var(--global-bg-color);
+  --set-leftTop-userInfo-font-color: #000000;
+  --start-main-bg-color: #f5f5f5;
+  --start-bottom-bg-color: #f1f1f1;
+  --start-font-color: var(--global-font-color);
+  --start-desc-font-color: #5d5d5d;
+  --calendar-top-bg-color: #f0f0f0;
+  --calendar-main-bg-color: var(--global-bg-color);
+  --calendar-font-color: var(--global-font-color);
+  --calendar-select-font-color: #fefeff;
+  --calendar-lunar-font-color: #575757;
+  --calendar-lunar-select-font-color: #e3eef8;
+  --calendar-none-font-color: #939393;
+  --calendar-none-lunar-font-color: #c6c6c6;
+
+  color: var(--global-font-color);
+}

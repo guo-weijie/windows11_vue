@@ -95,7 +95,7 @@
       <div class="listTitle" v-if="item.title">{{ item.title }}</div>
       <div class="listContent" v-for="iten in item.itemList" :key="iten.name">
         <div class="contentList">
-          <span class="fontIcon">{{ iten.url }}</span>
+          <img :src="iten.url" class="fontIcon" :alt="item.name" />
           <div>
             <div class="contentTitle">{{ iten.name }}</div>
             <div class="contentDesc">{{ iten.desc }}</div>
@@ -170,10 +170,7 @@ const changeBgImg = (num:number) => {
 
 <style lang='scss' scoped>
 @import "@/style/public";
-@font-face {
-  font-family: SettingsIcons;
-  src: url("@/assets/SettingsIcons.woff2") format("woff2");
-}
+
 .menuItemList {
   width: calc(100% - 4px);
   // height: 100%;
@@ -225,9 +222,7 @@ const changeBgImg = (num:number) => {
   }
 }
 .fontIcon {
-  font-family: SettingsIcons;
-  font-size: 20px;
-  color: #1b1b1b;
+  width: 20px;
   margin-left: 18px;
   margin-right: 20px;
 }
