@@ -331,6 +331,7 @@ bus.on('changeOpenStatus',data=>{
 .taskbar {
   // overflow: hidden;
   position: relative;
+  z-index: 9999;
   &Box {
     width: 100%;
     height: 100%;

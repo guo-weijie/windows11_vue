@@ -77,10 +77,11 @@
 import { NIcon, NLayout, NLayoutContent, NLayoutSider, NInput, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
 import { ArrowLeft20Regular, ChevronRight20Regular } from '@vicons/fluent'
 import NavBarRight from '@/components/navBarRight/index.vue'
-import { reactive, ref, shallowReactive, nextTick } from 'vue';
+import { reactive, ref, shallowReactive, nextTick, onMounted } from 'vue';
 import MenuItemList from './components/menuItemList.vue'
 import { useStore } from 'vuex'
 import bus from '@/utils/bus'
+import { Draggable } from '@/utils/draggable'
 
 const store = useStore()
 const menuItemData = [{
@@ -638,6 +639,11 @@ const selectItem = (name:string,num: number) => {
   menuItemListData.data = menuItemData[num]
 }
 
+// 页面加载完成后绑定拖拽
+onMounted(()=>{
+  new Draggable(setupBox.value)
+})
+
 // 修改样式
 const setupBox = ref()
 const myClass = ref('')
@@ -653,6 +659,7 @@ const changeSize = (name: string) => {
 
 const setupFn = async () => {
   await nextTick()
+  
   setupBox.value.style.zIndex = store.state.zIndex
   store.dispatch('changeZIndex')
 }
