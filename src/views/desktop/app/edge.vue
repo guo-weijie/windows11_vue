@@ -141,6 +141,7 @@ bus.on('edge',edgeFn)
 const edgeBox = ref()
 // 页面加载完成后绑定移动事件
 onMounted(()=>{
+  edgeFn()
   new Draggable(edgeBox.value)
 })
 
