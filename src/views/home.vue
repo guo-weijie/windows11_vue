@@ -87,6 +87,11 @@ const allApp: allAppType = reactive([{
   url: require('@/assets/icon/appIcon/code.png'),
   isDesktop: true,
   isPinned: false
+}, {
+  name: '终端',
+  url: require('@/assets/icon/appIcon/terminal.png'),
+  isDesktop: false,
+  isPinned: false
 }])
 </script>
 

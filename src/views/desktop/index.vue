@@ -15,8 +15,7 @@
     <!-- app -->
     <Edge v-if="appIsOpen.edge" />
     <Setup v-if="appIsOpen['设置']" />
-    <!-- 等 vue-web-terminal vue3 版本发布再做 -->
-    <!-- <Terminal /> -->
+    <Terminal v-show="appIsOpen['终端']" />
   </div>
 </template>
 
@@ -26,7 +25,7 @@ import { allAppType, allAppItem } from '@/type'
 import bus from '@/utils/bus'
 import Edge from './app/edge.vue'
 import Setup from '@/views/setUp/index.vue'
-// import Terminal from './app/terminal.vue'
+import Terminal from './app/terminal.vue'
 
 // 关闭/打开 应用
 bus.on('appStatus', data => {
@@ -62,7 +61,8 @@ const openApp = (data:allAppItem) => {
 // 应用打开/关闭状态
 const appIsOpen = reactive({
   edge: false,
-  '设置': false
+  '设置': false,
+  '终端': false
 })
 </script>
 

@@ -7,7 +7,7 @@
           <img :src="require('@/assets/icon/appIcon/home.png')" alt="windows11" />
           Windows 11
         </div>
-        <n-button size="tiny">
+        <n-button size="tiny" :bordered="false">
           <template #icon>
             <n-icon color="#000000">
               <Dismiss20Filled />
@@ -19,21 +19,21 @@
     </div>
     <!-- 导航栏 -->
     <div class="edgeNav">
-      <n-button @click="naviBtn(-1)">
+      <n-button @click="naviBtn(-1)" :bordered="false">
         <template #icon>
           <n-icon :color="leftGray">
             <ArrowLeft24Regular />
           </n-icon>
         </template>
       </n-button>
-      <n-button @click="naviBtn(1)">
+      <n-button @click="naviBtn(1)" :bordered="false">
         <template #icon>
           <n-icon :color="rightGray">
             <ArrowRight24Regular />
           </n-icon>
         </template>
       </n-button>
-      <n-button @click="naviBtn(0)">
+      <n-button @click="naviBtn(0)" :bordered="false">
         <template #icon>
           <n-icon color="#000000">
             <ArrowClockwise48Regular />
@@ -141,6 +141,7 @@ bus.on('edge',edgeFn)
 const edgeBox = ref()
 // 页面加载完成后绑定移动事件
 onMounted(()=>{
+  edgeFn()
   new Draggable(edgeBox.value)
 })
 
