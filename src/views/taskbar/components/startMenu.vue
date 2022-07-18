@@ -251,14 +251,12 @@ const pinnedList = computed((): allAppType => attrs.allAppList.filter((item: all
 
 <style lang='scss' scoped>
 @import "@/style/public";
-$bg: #e0e7fa;
-$color: #18191b;
 @mixin bgHover {
   border-radius: 5px;
   background-color: inherit;
   transition: background-color 300ms;
   &:hover {
-    background-color: #f6fbfe;
+    background-color: var(--start-hover-bg-color);
   }
 }
 .menuSearch {
@@ -266,14 +264,14 @@ $color: #18191b;
   width: 100%;
   height: 70px;
   padding: 32px 32px 0;
-  background-color: $bg;
+  background-color: var(--start-main-bg-color);
   .searchBox {
     height: 100%;
-    background-color: #ffffff;
-    box-shadow: inset 0 -4px 0 -2px #0067c0;
+    background-color: var(--start-search-input-bg-color);
+    box-shadow: inset 0 -4px 0 -2px var(--global-theme-color);
     border-radius: 4px;
     font-size: 12px;
-    color: #616161;
+    color: var(--global-placeholder-font-color);
     @include flex(flex-start, center);
     img {
       height: 14px;
@@ -287,7 +285,7 @@ $color: #18191b;
   width: 100%;
   height: calc(100% - 70px - 64px);
   padding: 20px 32px 0;
-  background-color: $bg;
+  background-color: var(--start-main-bg-color);
   .bodyTitle {
     width: 100%;
     height: 48px;
@@ -296,13 +294,12 @@ $color: #18191b;
       width: 96px;
       font-size: 13px;
       text-align: center;
-      color: $color;
       font-weight: bold;
     }
     .titleRight {
       padding: 5px 8px 6px 7px;
-      background-color: #f6f8fe;
-      border: 1px solid #bec5d3;
+      background-color: var(--start-right-btn-bg-color);
+      border: 1px solid var(--start-right-btn-border-color);
       border-radius: 5px;
       margin-right: 32px;
       @include flex(center, center);
@@ -323,13 +320,12 @@ $color: #18191b;
   width: 100%;
   height: 63px;
   padding: 0 52px;
-  background-color: #d7e3fa;
-  border-top: 1px solid #afb8c5;
+  background-color: var(--start-footer-bg-color);
+  border-top: 1px solid var(--global-window-division-color);
   @include flex(space-between, center);
   .footerUser {
     height: 40px;
     line-height: 40px;
-    color: $color;
     padding-left: 12px;
     padding-right: 12px;
     @include bgHover;
@@ -357,7 +353,6 @@ $color: #18191b;
   }
 }
 @at-root .poperBody {
-  color: $color;
   > div {
     @include flex(center, center);
     user-select: none;
@@ -397,12 +392,10 @@ $color: #18191b;
     }
     span {
       font-size: 12px;
-      color: $color;
     }
   }
   .pinnedRecommend {
     font-size: 13px;
-    color: $color;
     font-weight: bold;
     padding-left: 32px;
     margin-bottom: 20px;
@@ -427,11 +420,10 @@ $color: #18191b;
       .itemDesc {
         font-size: 12px;
         div {
-          color: $color;
           margin-bottom: 3px;
         }
         span {
-          color: #717171;
+          color: var(--start-desc-font-color);
           font-size: 12px;
         }
       }
@@ -454,14 +446,13 @@ $color: #18191b;
     height: 246px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #7c7e86;
+    background-color: var(--global-scrollbar-color);
     border-radius: 1px;
   }
   .itemBodyPublic {
     width: 90%;
     height: 40px;
     font-size: 12px;
-    color: $color;
     padding-left: 20px;
     margin-left: -20px;
     @include bgHover;
@@ -498,11 +489,11 @@ $color: #18191b;
       line-height: 48px;
       text-align: center;
       font-size: 14px;
-      color: #9699a1;
+      color: var(--start-letterlist-none-color);
       font-weight: bold;
     }
     .isFlag {
-      color: #29292a;
+      color: var(--start-letterlist-have-color);
       @include bgHover;
     }
   }

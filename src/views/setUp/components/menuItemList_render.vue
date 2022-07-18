@@ -1,127 +1,9 @@
-<template>
-  <div class="menuItemList">
-    <!-- 系统 -->
-    <div class="system" v-show="(props.menuItemListData as Record<string, any>).name==='系统'">
-      <div class="systemLeft">
-        <img :src="require('@/assets/wallpaper'+store.state.backgroundImgUrl)" alt="windows11 背景图片">
-        <div>
-          <div class="first">Windows 11</div>
-          <div class="second">My PC</div>
-          <div class="rename">重命名</div>
-        </div>
-      </div>
-      <div class="systemRight" @click="toItem('Windows 更新', 10)">
-        <img :src="require('@/assets/icon/systemIcon/Windows Update.webp')" alt="windows 更新">
-        <div>
-          <div class="updated">Windows 更新</div>
-          <div class="lastTimeUpdate">上次检查时间：2 小时前</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 网络和 Internet -->
-    <div class="network" v-show="(props.menuItemListData as Record<string, any>).name==='网络和 Internet'">
-      <div class="networkLeft">
-        <n-icon size="92" color="#138fdb">
-          <TvUsb20Regular />
-        </n-icon>
-        <div>
-          <div class="networkTitle">网络</div>
-          <div class="networkDesc">
-            <n-icon size="14" color="#36bfc4">
-              <Globe20Regular />
-            </n-icon>
-            已连接
-          </div>
-        </div>
-      </div>
-      <div class="networkCenter hoverStyle">
-        <n-icon size="28" color="#000000">
-          <Info20Regular />
-        </n-icon>
-        <div>
-          <div class="networkTitle">属性</div>
-          <div class="networkDesc">公用网络</div>
-        </div>
-      </div>
-      <div class="networkRight hoverStyle">
-        <n-icon size="30" color="#000000">
-          <DataPie20Regular />
-        </n-icon>
-        <div>
-          <div class="networkTitle">数据使用量</div>
-          <div class="networkDesc">1MB，过去 1 天</div>
-        </div>
-        <n-icon size="16" color="#000000">
-          <ChevronRight20Regular />
-        </n-icon>
-      </div>
-    </div>
-
-    <!-- 个性化 -->
-    <div class="personalize" v-show="(props.menuItemListData as Record<string, any>).name==='个性化'">
-      <img :src="require('@/assets/wallpaper'+store.state.backgroundImgUrl)" class="viewBox" alt="windows11 背景图片" />
-      <div class="selectBox">
-        <div class="boxTitle">选择要应用的主题</div>
-        <div class="bgImgBox">
-          <img v-for="(item,index) in imgListData" :class="{selected: item.select}" :src="require('@/assets/wallpaper'+ item.url)" :key="item.url" alt="windows11 桌面背景图片" @click.stop="changeBgImg(index)">
-        </div>
-      </div>
-    </div>
-
-    <!-- 账户 -->
-    <div class="account" v-show="(props.menuItemListData as Record<string, any>).name==='账户'">
-      <img :src="require('@/assets'+store.state.userAvatar)" :alt="store.state.userName" />
-      <div>
-        <div class="userName">{{store.state.userName}}</div>
-        <div class="accountType">本地账户</div>
-        <div class="accountAuth">管理员</div>
-      </div>
-    </div>
-
-    <!-- windows 更新 -->
-    <div class="update" v-show="(props.menuItemListData as Record<string, any>).name==='Windows 更新'">
-      <div class="updateLeft">
-        <img :src="require('@/assets/icon/systemIcon/updatec.png')" alt="windows11 更新">
-        <div>
-          <div class="lastedVer">你使用的是最新版本</div>
-          <div class="lastCheck">上次检查时间：今天，00:00</div>
-        </div>
-      </div>
-      <n-button color="#0067c0" text-color="#ffffff">检查更新</n-button>
-    </div>
-
-    <!-- windows 更新 -->
-    <div class="updateLess" v-show="(props.menuItemListData as Record<string, any>).name==='Windows 更新'">
-      <n-icon size="16" color="#191a1a">
-        <ChatBubblesQuestion20Filled />
-      </n-icon>
-      获取帮助
-    </div>
-
-    <div v-for="(item, index) in (props.menuItemListData as Record<string, any>).children" :key="item + index" class="listContainer">
-      <div class="listTitle" v-if="item.title">{{ item.title }}</div>
-      <div class="listContent" v-for="iten in item.itemList" :key="iten.name">
-        <div class="contentList">
-          <img :src="iten.url" class="fontIcon" :alt="item.name" />
-          <div>
-            <div class="contentTitle">{{ iten.name }}</div>
-            <div class="contentDesc">{{ iten.desc }}</div>
-          </div>
-        </div>
-        <n-icon color="#484848">
-          <ChevronRight20Regular />
-        </n-icon>
-      </div>
-    </div>
-  </div>
-</template>
 
 <script lang='ts' setup>
 import { NIcon, NButton } from 'naive-ui'
 import { ChevronRight20Regular, ChatBubblesQuestion20Filled, Info20Regular, DataPie20Regular, Globe20Regular, TvUsb20Regular } from '@vicons/fluent'
 import { useStore } from 'vuex';
-import { reactive } from 'vue'
+import { reactive, h } from 'vue'
 
 // 处理系统右侧顶栏左侧图片问题 -> 需要与桌面背景图片保持一致
 const store = useStore()
@@ -165,6 +47,57 @@ const changeBgImg = (num:number) => {
     }
   })
 }
+
+h('div',{
+  class: 'menuItemList'
+})
+
+// 创建图片
+const createImg = (url: string,alt:string) => {
+  return h('img',{
+    src: url,
+    alt: alt
+  })
+}
+
+// 创建系统部分
+const createSystem = () => {
+  // 创建 系统左
+  // const leftImg = h('img',{
+  //   src: require('@/assets/wallpaper'+store.state.backgroundImgUrl),
+  //   alt: "windows11 背景图片"
+  // })
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const leftImg = createImg(require('@/assets/wallpaper'+store.state.backgroundImgUrl),"windows11 背景图片")
+  const leftDiv = h('div',[h('div',{
+    class: 'first'
+  },'Windows 11'),h('div',{
+    class: 'second'
+  },'My PC'),h('div',{
+    class: 'rename'
+  },'重命名')])
+  const systemLeft = h('div',{
+    class: 'systemLeft'
+  },[leftImg,leftDiv])
+
+  // 创建系统右
+   // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const RightImg = createImg(require('@/assets/icon/systemIcon/Windows Update.webp'),"windows 更新")
+  const rightDiv = h('div',[h('div',{
+    class: 'updated'
+  },'Windows 更新'),h('div',{
+    class: 'lastTimeUpdate'
+  },'上次检查时间：2 小时前')])
+  const systemRight = h('div',{
+    class: 'systemRight',
+    onClick: toItem('Windows 更新', 10)
+  },[RightImg,rightDiv])
+
+  return h('div',{
+    class: 'system'
+  },[systemLeft,systemRight])
+}
+
 
 </script>
 

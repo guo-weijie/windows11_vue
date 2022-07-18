@@ -678,8 +678,7 @@ bus.on('设置',setupFn)
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: #f3f3f3;
-  color: #353535;
+  background-color: var(--set-bg-color);
   transition: all 200ms ease-in;
   .mainBox{
     height: calc(100% - 58px);
@@ -696,7 +695,7 @@ bus.on('设置',setupFn)
     }
     span {
       font-size: 12px;
-      color: #373737;
+      color: var(--title-block-color);
     }
   }
 }
@@ -716,7 +715,7 @@ bus.on('设置',setupFn)
         height: 303px;
       }
       &::-webkit-scrollbar-thumb {
-        background-color: #7c7e86;
+        background-color: var(--global-scrollbar-color);
         border-radius: 1px;
       }
     }
@@ -738,26 +737,25 @@ bus.on('设置',setupFn)
   .infoName {
     font-size: 14px;
     font-weight: bold;
-    color: #212121;
+    color: var(--set-second-top-font-color);
   }
   .infoMail {
     text-decoration: none;
     font-size: 12px;
-    color: #444444;
+    color: var(--set-second-desc-font-color);
   }
 }
 .n-input {
-  border: 1px solid #e4e4e4;
-  border-bottom: 2px solid #0067c0;
-  background-color: #fff !important;
+  border: 1px solid var(--global-searchbox-border);
+  border-bottom: 2px solid var(--global-theme-color);
+  background-color: var(--global-background-color) !important;
   margin-bottom: 22px;
   ::-webkit-input-placeholder {
-    color: #616161;
+    color: var(--global-placeholder-font-color);
   }
   :deep(.n-input__input-el) {
-    color: #333;
     &:focus {
-      background-color: #fff;
+      background-color: var(--global-background-color);
     }
   }
 }
@@ -770,7 +768,7 @@ bus.on('设置',setupFn)
     @include flex(flex-start, center);
     transition: background-color 200ms ease-in;
     &:hover {
-      background-color: #eaeaea;
+      background-color: var(--set-first-select-bg-color);
     }
     img {
       width: 18px;
@@ -779,17 +777,16 @@ bus.on('设置',setupFn)
     }
     div {
       font-size: 14px;
-      color: #191919;
     }
   }
   .listItemBgC{
-    background-color: #eaeaea;
+    background-color: var(--set-first-select-bg-color);
   }
   .listBar {
     width: 3px;
     height: 16px;
     border-radius: 1px;
-    background-color: #0067c0;
+    background-color: var(--global-theme-color);
     position: absolute;
     left: 0;
     top: 10px;
@@ -802,14 +799,8 @@ bus.on('设置',setupFn)
   }
   :deep(.n-breadcrumb-item){
     @include flex(space-around,center);
-    span{
-      color: #5c5c5c;
-    }
     .n-breadcrumb-item__link{
       font-size: 26px;
-    }
-    &:last-child span{
-      color: #1a1a1a;
     }
   }
 }

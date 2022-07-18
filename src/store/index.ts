@@ -5,7 +5,8 @@ export default createStore({
     userName: 'Ghosie',
     userAvatar: '/icon/avatar.png',
     backgroundImgUrl: '/default/img0.jpg',
-    zIndex: 2
+    zIndex: 2,
+    theme: 'default'
   },
   getters: {
   },
@@ -21,6 +22,9 @@ export default createStore({
     },
     CHANGE_ZINDEX(state) {
       state.zIndex++
+    },
+    CHANGE_THEME(state,name){
+      state.theme=name
     }
   },
   actions: {
@@ -35,6 +39,9 @@ export default createStore({
     },
     changeZIndex({commit}){
       commit('CHANGE_ZINDEX')
+    },
+    changeTheme({commit},name){
+      commit('CHANGE_THEME',name)
     }
   },
   modules: {

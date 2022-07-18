@@ -233,7 +233,6 @@ function dealTime(item: number, flag = 'solar') {
 @import "@/style/public";
 .myCalendar {
   width: 334px;
-  // height: 423px;
   @include box_border;
 }
 .calendarNow {
@@ -242,8 +241,8 @@ function dealTime(item: number, flag = 'solar') {
   height: 68px;
   font-size: 12px;
   padding: 13px 17px 15px;
-  background-color: #e1eef9;
-  border-bottom: 1px solid #d3dfe9;
+  background-color: var(--calendar-top-bg-color);
+  border-bottom: 1px solid var(--global-window-division-color);
   .nowSolar {
     height: 22px;
     @include flex(space-between, center);
@@ -261,7 +260,7 @@ function dealTime(item: number, flag = 'solar') {
 }
 .calendarListBox {
   height: 354px;
-  background-color: #e7f1f9;
+  background-color: var(--calendar-main-bg-color);
   transition: height 0.3s ease;
   .boxHeader {
     box-sizing: border-box;
@@ -270,10 +269,10 @@ function dealTime(item: number, flag = 'solar') {
     font-size: 14px;
     font-weight: bold;
     .headerDate:active {
-      color: #666;
+      color: var(--calendar-font-color);
     }
     .headerDateEnd {
-      color: #999da6;
+      color: var(--calendar-header-end-color);
     }
     .n-button {
       height: auto;
@@ -295,15 +294,15 @@ function dealTime(item: number, flag = 'solar') {
       text-align: center;
       &:hover {
         border-radius: 50%;
-        background-color: #e0e8f0;
+        background-color: var(--calendar-date-hover-color);
       }
     }
     .other {
-      color: #a5abb1;
+      color: var(--calendar-none-now-month-color);
     }
     .current {
-      color: #ffffff;
-      background-color: #0067c0 !important;
+      color: var(--calendar-now-day-color);
+      background-color: var(--global-theme-color) !important;
       border-radius: 50%;
     }
   }
