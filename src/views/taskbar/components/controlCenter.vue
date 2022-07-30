@@ -1,116 +1,116 @@
 <template>
   <div class="controlCneterContainer">
-    <div class="itemContainer">
-      <!-- 功能菜单 -->
-      <div class="containerItem">
-        <div
-          :class="{ itemBox: true, itemBoxEdit: editOperate }"
-          v-for="item in fnShowItem"
-          :key="item.name"
-        >
+      <div class="itemContainer">
+        <!-- 功能菜单 -->
+        <div class="containerItem">
           <div
-            :class="{ boxIcon: true, selectItem: item.select && !item.menu }"
-            @click="selectFn(item)"
+            :class="{ itemBox: true, itemBoxEdit: editOperate }"
+            v-for="item in fnShowItem"
+            :key="item.name"
           >
-            <img :src="item.icon" :alt="item.name" />
-            <n-icon v-if="item.menu" size="16" style="margin-left: 8px;">
-              <KeyboardArrowRightRound />
-            </n-icon>
-          </div>
-          <p>{{ item.name }}</p>
-          <!-- 取消固定按钮 -->
-          <n-button circle secondary v-show="editOperate" @click="item.show = false">
-            <template #icon>
-              <n-icon size="16px" color="#696969">
-                <CloseRound />
-              </n-icon>
-            </template>
-          </n-button>
-        </div>
-      </div>
-      <!-- 音量调节 -->
-      <div class="audioControl">
-        <img :src="require('@/assets/icon/systemIcon/audio.png')" alt="音量" />
-        <div class="controlSlider">
-          <n-slider v-model:value="audioValue" />
-        </div>
-        <n-icon size="26" @click="audioFnOpearStatus = true">
-          <KeyboardArrowRightRound />
-        </n-icon>
-      </div>
-    </div>
-    <!-- 功能更多操作 -->
-    <div class="moreOpera" v-show="helpFnOperaStatus || audioFnOpearStatus || keyBoardOpearStatus">
-      <div class="opearHeader">
-        <n-icon size="16px" @click="backFnMenu">
-          <ArrowBackRound />
-        </n-icon>
-        <div v-if="keyBoardOpearStatus" class="keyboardStyle">
-          键盘布局
-          <n-icon size="15px">
-            <svg
-              t="1647585985521"
-              class="icon"
-              viewBox="0 0 1024 1024"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              p-id="8197"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              width="64"
-              height="64"
+            <div
+              :class="{ boxIcon: true, selectItem: item.select && !item.menu }"
+              @click="selectFn(item)"
             >
-              <defs />
-              <path
-                d="M490.666667 128v362.666667H128V128h362.666667z m0 768H128v-362.666667h362.666667V896z m42.666666-768H896v362.666667h-362.666667V128z m362.666667 405.333333V896h-362.666667v-362.666667H896z"
-                p-id="8198"
-                fill="#5b5d60"
-              />
-            </svg>
-          </n-icon>
-          <span>空格键</span>
-        </div>
-        <div v-if="helpFnOperaStatus">辅助功能</div>
-        <div v-if="audioFnOpearStatus">音量</div>
-      </div>
-      <!-- 辅助功能 -->
-      <div v-if="helpFnOperaStatus" class="opearBody">
-        <div v-for="item in helpFn" :key="item.name" class="bodyHelpFn">
-          <n-button text-color="#191a1b">
-            <template #icon>
-              <n-icon :component="item.icon" size="18px"></n-icon>
-            </template>
-            {{ item.name }}
-          </n-button>
-          <div>
-            {{ item.status ? '开' : '关' }}
-            <n-switch v-model:value="item.status" />
+              <img :src="item.icon" :alt="item.name" />
+              <n-icon v-if="item.menu" size="16" style="margin-left: 8px;">
+                <KeyboardArrowRightRound />
+              </n-icon>
+            </div>
+            <p>{{ item.name }}</p>
+            <!-- 取消固定按钮 -->
+            <n-button circle secondary v-show="editOperate" @click="item.show = false">
+              <template #icon>
+                <n-icon size="16px" color="#696969">
+                  <CloseRound />
+                </n-icon>
+              </template>
+            </n-button>
           </div>
         </div>
-      </div>
-      <!-- 音量 -->
-      <div v-if="audioFnOpearStatus" class="opearBody bodyAudio">
-        <div class="audioItem">
-          <n-h4 prefix="bar" type="info" style="color:#18191a;font-size: 14px;">
-            <n-icon color="#18191a" size="18">
-              <SpeakerOutlined />
-            </n-icon>扬声器（High Definition Audio Device）
-          </n-h4>
+        <!-- 音量调节 -->
+        <div class="audioControl">
+          <img :src="require('@/assets/icon/systemIcon/audio.png')" alt="音量" />
+          <div class="controlSlider">
+            <n-slider v-model:value="audioValue" />
+          </div>
+          <n-icon size="26" @click="audioFnOpearStatus = true">
+            <KeyboardArrowRightRound />
+          </n-icon>
         </div>
       </div>
-      <!-- 键盘 -->
-      <div v-if="keyBoardOpearStatus" class="opearBody bodyKeyboard">
-        <div class="audioItem">
-          <n-h4 prefix="bar" type="info" style="color:#18191a;font-size: 14px;">
-            <div class="pinyin">拼</div>
-            <div class="itemDesc">
-              <div>中文(简体，中国)</div>
-              <span>微软拼音</span>
+      <!-- 功能更多操作 -->
+      <div class="moreOpera" v-show="helpFnOperaStatus || audioFnOpearStatus || keyBoardOpearStatus">
+        <div class="opearHeader">
+          <n-icon size="16px" @click="backFnMenu">
+            <ArrowBackRound />
+          </n-icon>
+          <div v-if="keyBoardOpearStatus" class="keyboardStyle">
+            键盘布局
+            <n-icon size="15px">
+              <svg
+                t="1647585985521"
+                class="icon"
+                viewBox="0 0 1024 1024"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                p-id="8197"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                width="64"
+                height="64"
+              >
+                <defs />
+                <path
+                  d="M490.666667 128v362.666667H128V128h362.666667z m0 768H128v-362.666667h362.666667V896z m42.666666-768H896v362.666667h-362.666667V128z m362.666667 405.333333V896h-362.666667v-362.666667H896z"
+                  p-id="8198"
+                  fill="#5b5d60"
+                />
+              </svg>
+            </n-icon>
+            <span>空格键</span>
+          </div>
+          <div v-if="helpFnOperaStatus">辅助功能</div>
+          <div v-if="audioFnOpearStatus">音量</div>
+        </div>
+        <!-- 辅助功能 -->
+        <div v-if="helpFnOperaStatus" class="opearBody">
+          <div v-for="item in helpFn" :key="item.name" class="bodyHelpFn">
+            <n-button text text-color="#191a1b">
+              <template #icon>
+                <n-icon :component="item.icon" size="18px"></n-icon>
+              </template>
+              {{ item.name }}
+            </n-button>
+            <div>
+              {{ item.status ? '开' : '关' }}
+              <n-switch v-model:value="item.status" />
             </div>
-          </n-h4>
+          </div>
         </div>
+        <!-- 音量 -->
+        <div v-if="audioFnOpearStatus" class="opearBody bodyAudio">
+          <div class="audioItem">
+            <n-h4 prefix="bar" type="info" style="color:#18191a;font-size: 14px;">
+              <n-icon color="#18191a" size="18">
+                <SpeakerOutlined />
+              </n-icon>扬声器（High Definition Audio Device）
+            </n-h4>
+          </div>
+        </div>
+        <!-- 键盘 -->
+        <div v-if="keyBoardOpearStatus" class="opearBody bodyKeyboard">
+          <div class="audioItem">
+            <n-h4 prefix="bar" type="info" style="color:#18191a;font-size: 14px;">
+              <div class="pinyin">拼</div>
+              <div class="itemDesc">
+                <div>中文(简体，中国)</div>
+                <span>微软拼音</span>
+              </div>
+            </n-h4>
+          </div>
+        </div>
+        <div class="operaFooter">更多{{ helpFnOperaStatus ? '辅助功能' : audioFnOpearStatus ? '音量' : '键盘' }}设置</div>
       </div>
-      <div class="operaFooter">更多{{ helpFnOperaStatus ? '辅助功能' : audioFnOpearStatus ? '音量' : '键盘' }}设置</div>
-    </div>
     <div :class="{ containerSet: true, editSet: !editOperate, completeAdd: editOperate }">
       <div v-show="!editOperate">
         <img class="setEdit" :src="require('@/assets/icon/systemIcon/edit.png')" alt="操作中心编辑" @click="editOperate = true"/>
@@ -125,7 +125,7 @@
           </template>
           完成
         </n-button>
-        <n-popover placement="top" trigger="click" :show-arrow="false" class="myPopover">
+        <n-popover placement="top" trigger="click" :show-arrow="false" class="myPopover" :z-index="zIndex">
           <template #trigger>
             <n-button secondary color="#18191a">
               <template #icon>
@@ -156,6 +156,7 @@ import { KeyboardArrowRightRound, CloseRound, AddRound, CheckRound, ArrowBackRou
 import {DesktopSpeaker20Regular,Speaker248Regular} from '@vicons/fluent'
 import { NIcon, NSlider, NButton, NPopover, NSwitch, NH4 } from 'naive-ui'
 const audioValue: Rnumber = ref(50)
+const zIndex = 9999
 // 不显示的数据，即添加按钮的选项
 const fnAddItem: fnItemTypeCom = computed(() => fnAllItem.filter(item => !item.show))
 // 固定显示的数据
@@ -253,10 +254,12 @@ const backFnMenu = () => {
 @import "@/style/public";
 .controlCneterContainer {
   width: 358px;
+  height: 337px;
   position: relative;
   @include box_border;
 
   .containerItem {
+    height: 241px;
     box-sizing: border-box;
     padding: 22px 24px;
     background-color: #e9f2fa;
@@ -274,6 +277,10 @@ const backFnMenu = () => {
     box-sizing: border-box;
     padding: 0 24px 22px 24px;
     background-color: #e9f2fa;
+  }
+  .containerBody{
+    width: 100%;
+    height: calc(100% - 48px);
   }
   .containerSet {
     box-sizing: border-box;
@@ -443,12 +450,12 @@ const backFnMenu = () => {
     }
   }
   .opearBody {
-    height: calc(100% - 98px);
+    height: 238px;
     .bodyHelpFn {
       height: 45px;
       @include flex(space-between, center);
       color: #191a1b;
-      padding-right: 16px;
+      padding: 0 16px;
       .n-button {
         font-size: 14px;
         &:hover {

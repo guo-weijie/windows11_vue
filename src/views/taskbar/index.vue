@@ -1,52 +1,49 @@
 <template>
   <div class="taskbar">
     <div class="taskbarBox" @click.stop="taskbarEvent">
-      <!-- 开始菜单 -->
-      <div class="start">
-        <div
-          v-for="item in startupAppList"
-          :key="item.name"
-          @click.stop="clickTaskbarIcon(item)"
-        >
+      <!-- 任务栏左侧 -->
+      <div class="taskBarLeft">
+        <!-- 无下划线应用 -->
+        <div v-for="item in noUnderLineApp" :key="item.name" @click.stop="taskBarLeftNoLine(item,'clear')">
           <img :src="item.url" alt="item.name" v-click-animal />
-          <i :class="{ underLine: true, fullLine: item.open && !item.mini, shortLine: item.open && item.mini }"></i>
+        </div>
+        <!-- 有下划线应用 -->
+        <div v-for="item in underLineApp" :key="item.name" @click.stop="taskBarLeftHaveLine(item)">
+          <img :src="item.url" alt="item.name" v-click-animal />
+          <i class="underLine" :class="{ fullLine: item.open, shortLine: item.mini }"></i>
         </div>
       </div>
       <!-- 任务栏右侧 -->
-      <div class="task">
+      <div class="taskRight">
         <!-- 隐藏的图标 -->
-        <div class="hideIcon" @click.stop="changeBoxStatus('hideIcon')">
+        <div class="hideIcon" @click.stop="taskBarRight('hideIcon','clear')">
           <n-icon size="22">
             <KeyboardArrowUpTwotone v-show="hideIcon === 'up'" />
             <KeyboardArrowDownTwotone v-show="hideIcon === 'down'" />
           </n-icon>
         </div>
         <!-- 语言 -->
-        <div class="language" @click="changeLanguage">{{ lang }}</div>
+        <div class="language" @click.stop="taskBarRight('language','clear')">{{ lang }}</div>
         <!-- 控制中心 -->
-        <div
-          id="controlCenter"
-          class="controlCenter"
-          @click.stop="changeBoxStatus('controlCneter')"
-        >
+        <div class="controlCenter" @click.stop="taskBarRight('controlCenter','clear')">
           <img class="centerWifi" :src="controlCenterIcon.wifi" alt="网络连接" />
           <img class="centerAudio" :src="controlCenterIcon.audio" alt="音量" />
         </div>
         <!-- 时间 -->
-        <div class="time_noti" id="time_noti" @click.stop="changeBoxStatus('calendar')">
+        <div class="time_noti" @click.stop="taskBarRight('calendar','clear')">
           <div>{{ upTime }}</div>
           <div>{{ btmTime }}</div>
         </div>
       </div>
     </div>
 
-    <!-- 搜索 -->
-    <div class="search center" ref="searchR">
-      <Search />
-    </div>
     <!-- 开始菜单 -->
-    <div class="startMenu center" ref="startMenuR">
-      <StartMenu v-bind="$attrs" @pleaseOpenSearch = "openSearch" />
+    <div class="startMenu center" :class="{startMenuHeight:openStart}">
+      <StartMenu @pleaseOpenSearch = "taskBarLeftNoLine({name:'search', open:flase})" />
+    </div>
+    <!-- 搜索 -->
+    <div class="search center" :class="{searchHeight:openSearch}">
+      <Search />
     </div>
     <!-- 日历 -->
     <div class="calendarBox" ref="calendarBox">
@@ -79,113 +76,84 @@
 <script lang="ts" setup>
 import { timeType } from '@/type'
 import { Rstring } from '@/type/basic'
-import { PropType, ref, watchEffect, reactive } from 'vue';
+import { PropType, ref, watchEffect, reactive, computed } from 'vue';
 import MyCalendar from '@/components/myCalendar/index.vue'
 import ControlCenter from './components/controlCenter.vue'
 import StartMenu from './components/startMenu.vue'
 import Search from './components/search.vue'
 import { KeyboardArrowUpTwotone, KeyboardArrowDownTwotone } from '@vicons/material'
 import { NIcon } from 'naive-ui'
+import store from '@/store'
 import bus from '@/utils/bus'
-// eslint-disable-next-line no-undef
+
 const props = defineProps({
   currentTime: Object as PropType<timeType>
 })
-// 关闭开始菜单并打开搜索框
-const openSearch = () => {
-  startMenuR.value.style.height = '0'
-  searchR.value.style.height = '724px'
-}
+
+/**
+ * 抛出一个事件：关闭所有任务栏的弹框
+ */
 // 任务栏点击事件
 //  -> 每一个具体的功能按钮都阻止事件冒泡传播，所以能触发事件的点击动作都是点击任务栏其余部分，此时直接执行弹窗关闭操作即可
 const taskbarEvent = () => {
-  bus.emit('claseTaskbarAll')
+  taskBarLeftNoLine()
+  taskBarRight()
 }
-// 关闭所有任务栏弹窗
-bus.on('claseTaskbarAll', () => {
-  // 关闭事件弹窗
-  calendarBox.value.style.right = '-500px'
-  controlCenter.value.style.right = '-500px'
-  hideIcon.value = 'up'
-  hideIconBox.value.style.height = '0'
-  startMenuR.value.style.height = '0'
-  searchR.value.style.height = '0'
+bus.on('closeTaskbar', ()=>{
+  taskbarEvent()
 })
-// 任务栏弹窗状态更改
-//  -> 此处如果把 DOM 放在一个对象里遍历的话代码耦合度会降低，但是如何将 DOM 放在一个对象里？
-const changeBoxStatus = (val: string) => {
-  let boxDom
-  if (val === 'calendar') {
-    boxDom = calendarBox.value.style
-    if (parseInt(boxDom.right) > 0) {
-      boxDom.right = '-500px'
-    } else {
-      boxDom.right = '12px'
-    }
-  } else {
-    calendarBox.value.style.right = '-500px'
-  }
-  if (val === 'controlCneter') {
-    boxDom = controlCenter.value.style
-    if (parseInt(boxDom.right) > 0) {
-      boxDom.right = '-500px'
-    } else {
-      boxDom.right = '12px'
-    }
-  } else {
-    controlCenter.value.style.right = '-500px'
-  }
-  if (val === 'hideIcon') {
-    boxDom = hideIconBox.value.style
-    if (boxDom.height === 'auto') {
-      hideIcon.value = 'up'
-      boxDom.height = '0px'
-    } else {
-      boxDom.height = 'auto'
-      hideIcon.value = 'down'
-    }
-  } else {
-    hideIconBox.value.style.height = '0px'
-  }
-}
-// 开始菜单---------------------------------
-interface appListType {
-  name: string,
-  url: string,
-  open?:boolean,
-  mini?:boolean
-}
-// 相关DOM
-const startMenuR = ref()
-const searchR = ref()
-// 任务栏图标列表
-const startupAppList:appListType[] = reactive([{
-  name: 'startMenuR',
-  url: require('@/assets/icon/appIcon/home.png')
+
+/**
+ * 任务栏左侧
+ */
+// 无下划线应用 -> 开始按钮，搜索按钮，小组件
+const noUnderLineApp = reactive([{
+  name: 'start',
+  url: require('@/assets/icon/appIcon/home.png'),
+  open: false
 }, {
   name: 'search',
-  url: require('@/assets/icon/appIcon/search.png')
+  url: require('@/assets/icon/appIcon/search.png'),
+  open: false
 }, {
   name: 'widget',
-  url: require('@/assets/icon/appIcon/widget.png')
-}, {
-  name: 'explorer',
-  url: require('@/assets/icon/appIcon/explorer.png'),
-  open: false, // 应用打开状态 打开 长线/关闭 无线
-  mini: false // 应用窗口状态 是否 最小化 -> 短线
-}, {
-  name: 'edge',
-  url: require('@/assets/icon/appIcon/edge.png'),
-  open: false,
-  underLine: false,
-  mini: false
-}, {
-  name: 'store',
-  url: require('@/assets/icon/appIcon/store.png'),
-  open: false,
-  underLine: false,
-  mini: false
+  url: require('@/assets/icon/appIcon/widget.png'),
+  open: false
 }])
+
+const openStart = computed(()=>noUnderLineApp[0].open)
+const openSearch = computed(()=>noUnderLineApp[1].open)
+
+// 无下划线应用点击事件
+const taskBarLeftNoLine=(value,clear:string)=>{
+  if(clear){
+    taskBarRight()
+  }
+  noUnderLineApp.forEach(item=>{
+    if(item.name===value?.name){
+      item.open = !item.open
+    }else{
+      item.open = false
+    }
+  })
+}
+// 有下划线应用 -> 包括常驻和打开时驻留的
+const underLineApp = computed(()=>store.getters.app.filter(item=>item.isTaskBar))
+// 有下划线应用点击事件
+const taskBarLeftHaveLine = value => {
+  taskBarRight()
+  underLineApp.value.forEach(item=>{
+    if(item.name===value?.name){
+      if(item.open){
+        item.mini = true
+      }else{
+        item.open = true
+      }
+    }else{
+      item.open ? item.mini = true : null
+    }
+  })
+}
 // 图标点击动画
 const vClickAnimal = {
   mounted(el: Element) {
@@ -198,14 +166,56 @@ const vClickAnimal = {
   }
 }
 
-// 任务栏右侧--------------------------------
-// 隐藏图标相关
-const hideIcon: Rstring = ref('up')
+/**
+ * 任务栏右侧
+ */
+// 任务栏右侧弹窗DOM & 值
+const calendarBox = ref()
+const controlCenter = ref()
 const hideIconBox = ref()
-// 语言栏相关
+const hideIcon: Rstring = ref('up')
 const lang: Rstring = ref('中')
-const changeLanguage = () => {
-  lang.value = lang.value === '中' ? '英' : '中'
+// 任务栏弹窗状态更改
+const taskBarRight = (id:string,clear:string) => {
+  if(clear){
+    taskBarLeftNoLine()
+  }
+  let boxDom
+  if (id === 'calendar') {
+    boxDom = calendarBox.value.style
+    if (parseInt(boxDom.right) > 0) {
+      boxDom.right = '-500px'
+    } else {
+      boxDom.right = '12px'
+    }
+  } else {
+    calendarBox.value.style.right = '-500px'
+  }
+  if (id === 'controlCenter') {
+    boxDom = controlCenter.value.style
+    if (parseInt(boxDom.right) > 0) {
+      boxDom.right = '-500px'
+    } else {
+      boxDom.right = '12px'
+    }
+  } else {
+    controlCenter.value.style.right = '-500px'
+  }
+  if (id === 'hideIcon') {
+    boxDom = hideIconBox.value.style
+    if (boxDom.height === 'auto') {
+      hideIcon.value = 'up'
+      boxDom.height = '0px'
+    } else {
+      boxDom.height = 'auto'
+      hideIcon.value = 'down'
+    }
+  } else {
+    hideIconBox.value.style.height = '0px'
+  }
+  if(id==='language'){
+    lang.value = lang.value === '中' ? '英' : '中'
+  }
 }
 // 控制中心相关
 const controlCenterIcon = reactive({
@@ -216,102 +226,10 @@ const controlCenterIcon = reactive({
 // 右下角时间相关
 const upTime: Rstring = ref('')
 const btmTime: Rstring = ref('')
+
 watchEffect(() => {
   upTime.value = `${props.currentTime?.hour}：${props.currentTime?.minute}`
   btmTime.value = `${props.currentTime?.year}/${props.currentTime?.month}/${props.currentTime?.day}`
-})
-// 获取任务栏弹窗DOM
-const calendarBox = ref()
-const controlCenter = ref()
-
-// 图标下划线处理逻辑 ---------------------------------------------
-// 点击任务栏图标
-const clickTaskbarIcon = (data:appListType) => {
-  startupAppList.forEach(item=>{
-    if(item.name==='startMenuR'){
-      if(item.name.toLowerCase()===data.name.toLowerCase()){
-        startMenuR.value.style.height = parseInt(startMenuR.value.style.height)? '0' :'725px'
-      }else{
-        startMenuR.value.style.height = '0px'
-      }
-    }else if(item.name==='search'){
-      if(item.name.toLowerCase()===data.name.toLowerCase()){
-        searchR.value.style.height = parseInt(searchR.value.style.height)? '0' :'724px'
-      }else{
-        searchR.value.style.height = '0px'
-      }
-    }else{
-      if(item.name.toLowerCase()===data.name.toLowerCase()){
-        if(!item.open){ // open false 说明应用处于关闭状态
-          const obj = {
-            ...data,
-            flag: 'open'
-          }
-          bus.emit('appStatus',obj)
-          bus.emit('changeOpenStatus',obj)
-        }else{
-          if(item.mini){
-            bus.emit('appStatus',{...data,flag:'open'})
-            item.mini = false
-          }else{
-            bus.emit('appStatus',{...data,flag:'hide'})
-            item.mini = true
-          }
-          // item.mini = !item.mini
-        }
-      }else{
-        item.mini = true
-      }
-    }
-  })
-}
-// 发布一个修改 open 的事件
-const appendData: Array<appListType>| Array<null> = [] // 打开应用后添加到任务栏图标的应用集合
-/*
- * flag 为 'open' 时：
- * startupAppList 有且 appendData 有 -> 应用已打开且应用不是原本在任务栏 -> 应用打开操作无需处理
- * startupAppList 有且 appendData 没有 -> 应用是固定在任务栏上的 -> 无需处理
- * appendData 没有且 startupAppList 没有 -> 需要添加到 startupAppList 上的 -> 分别添加到 appendData 和 startupAppList -> 方便关闭应用时做删除处理
- *  
- * flag 为 'close' 时，
- * startupAppList 有且 appendData 有 -> 两个都删除
- * startupAppList 有且 appendData 没有 -> 不处理
- * appendData 有且 startupAppList 没有 -> 出 bug 了
- */
-
-bus.on('changeOpenStatus',data=>{
-  const aHave = appendData.some(item=>item.name.toLowerCase()===data.name.toLowerCase()),
-      sHave = startupAppList.some(item=>item.name.toLowerCase()===data.name.toLowerCase());
-  if(data.flag==='open'){
-    if(!aHave && !sHave){
-      appendData.push(data)
-      startupAppList.push(data)
-    }
-  }
-  if(data.flag==='close'){
-    if(aHave && sHave){
-      appendData.splice(appendData.findIndex(item=>item.name.toLowerCase()===data.name.toLowerCase()),1)
-      startupAppList.splice(startupAppList.findIndex(item=>item.name.toLowerCase()===data.name.toLowerCase()),1)
-    }
-  }
-
-  startupAppList.forEach(item=>{
-    if(item.name.toLowerCase()===data.name.toLowerCase()){
-      if(data.flag==='open'){
-        item.open = true
-        item.mini = false
-      }else if(data.flag ==='hide'){
-        item.open = true
-        item.mini = true
-      }else{
-        item.open = false
-      }
-      // item.open = data.flag==='close'?false:true
-      // if(item.open){
-      //   item.mini = false
-      // }
-    }
-  })
 })
 
 </script>
@@ -342,7 +260,7 @@ bus.on('changeOpenStatus',data=>{
     position: absolute;
   }
 }
-.start {
+.taskBarLeft {
   height: 100%;
   line-height: normal;
   grid-area: center;
@@ -379,7 +297,7 @@ bus.on('changeOpenStatus',data=>{
     vertical-align: middle;
   }
 }
-.task {
+.taskRight {
   height: 100%;
   grid-area: right;
   justify-self: end;
@@ -449,12 +367,18 @@ bus.on('changeOpenStatus',data=>{
   height: 0;
   transition: height 150ms ease-in;
 }
+.startMenuHeight {
+  height: 725px;
+}
 .search{
   @include icon;
   @include box_border;
   width: 774px;
   height: 0;
   transition: height 150ms ease-in;
+}
+.searchHeight{
+  height: 724px;
 }
 .center {
   left: 50%;

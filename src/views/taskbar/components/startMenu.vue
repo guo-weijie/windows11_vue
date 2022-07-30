@@ -92,16 +92,16 @@
   <!-- 底部用户头像和电源按钮 -->
   <div class="menuFooter">
     <div class="footerUser">
-      <img :src="require('@/assets'+store.state.userAvatar)" :alt="store.state.userName" />
+      <img :src="require('@/assets'+ userAvatar)" :alt="store.state.userName" />
       <span :title="store.state.userName">{{ store.state.userName }}</span>
     </div>
     <div class="footerBattery">
-      <div class="batterySet" title="设置">
+      <div class="batterySet" title="设置" @click="openSet">
         <n-icon size="19px">
           <Settings20Regular />
         </n-icon>
       </div>
-      <n-popover trigger="click" :show-arrow="false" class="myPopover">
+      <n-popover trigger="click" :show-arrow="false" class="myPopover" :z-index="zIndex">
         <template #trigger>
           <n-icon size="19px" title="电源">
             <Power24Regular />
@@ -133,17 +133,21 @@
 </template>
 
 <script lang='ts' setup>
-import { ref, useAttrs, computed, toRaw, nextTick, onMounted } from 'vue'
+import { ref, computed, toRaw, nextTick, onMounted } from 'vue'
 import { NPopover, NIcon } from 'naive-ui'
 import { Settings20Regular, Power24Regular, WeatherMoon48Regular, ArrowCounterclockwise28Regular, ChevronRight16Regular, ChevronLeft16Regular } from '@vicons/fluent'
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { allAppType, allAppItem, allAppListBySort } from '@/type'
+import { allAppListBySort } from '@/type'
 import bus from '@/utils/bus'
 import { getSpell } from 'jian-pinyin'
-const store = useStore()
+import store from '@/store'
 const router = useRouter()
-const attrs = useAttrs()
+
+// 用户头像
+const userAvatar = computed(()=>store.getters.userAvatar)
+
+// popover 层级
+const zIndex = 9999
 const powerEvent = (val: string) => {
   if (val === '关机') {
     console.log('会加的，再等等')
@@ -157,6 +161,22 @@ const powerEvent = (val: string) => {
     console.log('会加的，再等等')
     return
   }
+}
+// 打开设置
+const openSet = () => {
+  const closeMini = {
+    name: '设置',
+    key: 'mini',
+    value: 'false'
+  }
+  const obj = {
+    name: '设置',
+    key: 'open',
+    value: 'true'
+  }
+  store.dispatch('changeAppStatus', closeMini)
+  store.dispatch('changeAppStatus', obj)
+  bus.emit('closeTaskbar')
 }
 // eslint-disable-next-line no-undef
 const emits = defineEmits(['pleaseOpenSearch'])
@@ -200,15 +220,16 @@ for (const value of strIndex) {
 }
 const dataDeal = () => {
   // 应用列表是固定的，所有取消代理
-  // const noProxyData = toRaw(attrs.allAppList)
+  // const noProxyData = toRaw(app)
   // 应用名称统一转为拼音
-  // const transData:allAppType = noProxyData.map((item: allAppItem)=>{
+  // const transData = noProxyData.map((item)=>{
   //   item.name = 
   //   return item
   // })
+  const app = store.getters.app
   // 数据归类
   allAppList_sorted.forEach((item, index) => {
-    toRaw(attrs.allAppList).forEach(iten => {
+    toRaw(app).forEach(iten => {
       if (item.id === getSpell(iten.name, (charactor: string, spell: string) => spell[1], '').slice(0, 1).toLowerCase()) {
         item.list.push(iten)
         letterData[index].flag = true
@@ -240,13 +261,22 @@ const changeMenuBodyStatus = () => {
   containerAllApp.value.style.left = 0
 }
 const selectLetter = ref(false)
-const pinnedOpenApp = (data: allAppItem) => {
-  bus.emit('appStatus', { ...data, flag: 'open' })
-  bus.emit('changeOpenStatus', { ...data, flag: 'open' })
-  bus.emit('claseTaskbarAll')
+const pinnedOpenApp = data => {
+  const obj = {
+    name: data.name
+  }
+  if(data.mini){
+    obj.key = 'mini'
+    obj.value = false
+  }else{
+    obj.key = 'open'
+    obj.value = true
+  }
+  store.dispatch('changeAppStatus',obj)
+  bus.emit('closeTaskbar')
 }
 // 获取固定应用列表 -----------------------
-const pinnedList = computed((): allAppType => attrs.allAppList.filter((item: allAppItem) => item.isPinned))
+const pinnedList = computed(() => store.getters.app.filter((item) => item.isPinned))
 </script>
 
 <style lang='scss' scoped>
@@ -366,6 +396,7 @@ const pinnedList = computed((): allAppType => attrs.allAppList.filter((item: all
     margin-right: 12px;
   }
 }
+
 
 // 开始菜单主体
 .containerPinned {

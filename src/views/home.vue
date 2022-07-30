@@ -1,13 +1,13 @@
 <template>
-  <Desktop :appList="allApp" />
-  <Taskbar :currentTime="currentTime" :allAppList="allApp" />
+  <Desktop />
+  <Taskbar :currentTime="currentTime" />
 </template>
 
 <script lang="ts" setup>
 import Desktop from "./desktop/index.vue";
 import Taskbar from './taskbar/index.vue'
 import { reactive, ref, watchEffect } from "vue";
-import { allAppType, timeType } from '@/type'
+import { timeType } from '@/type'
 
 // 右下角时间 和 小组件时间
 const timeNumber = ref(new Date().getTime())
@@ -35,64 +35,6 @@ watchEffect(() => {
 
 setInterval(() => timeNumber.value += 1000, 1000)
 
-// 应用程序
-// {
-//   name, 程序名称
-//   url,  图标路径
-//   isDesktop, 是否在桌面显示。从桌面打开的应用图标放到任务栏上，关闭应用时处理任务栏图标以此字段为标识
-//   isPinned, 是否固定
-// }
-const allApp: allAppType = reactive([{
-  name: 'Edge',
-  url: require('@/assets/icon/appIcon/edge.png'),
-  isDesktop: true,
-  isPinned: true
-},{
-  name: 'Microsoft Store',
-  url: require('@/assets/icon/appIcon/store.png'),
-  isDesktop: false,
-  isPinned: true
-},{
-  name: '照片',
-  url: require('@/assets/icon/appIcon/photos.png'),
-  isDesktop: false,
-  isPinned: true
-},{
-  name: '设置',
-  url: require('@/assets/icon/appIcon/settings.png'),
-  isDesktop: false,
-  isPinned: true
-},{
-  name: '时钟',
-  url: require('@/assets/icon/appIcon/alarm.png'),
-  isDesktop: false,
-  isPinned: true
-},{
-  name: '文件资源管理器',
-  url: require('@/assets/icon/appIcon/explorer.png'),
-  isDesktop: false,
-  isPinned: true
-},{
-  name: '回收站',
-  url: require('@/assets/icon/appIcon/bin1.png'),
-  isDesktop: true,
-  isPinned: false
-}, {
-  name: 'cortana',
-  url: require('@/assets/icon/appIcon/cortana.png'),
-  isDesktop: false,
-  isPinned: false
-}, {
-  name: 'Visual Studio Code',
-  url: require('@/assets/icon/appIcon/code.png'),
-  isDesktop: true,
-  isPinned: false
-}, {
-  name: '终端',
-  url: require('@/assets/icon/appIcon/terminal.png'),
-  isDesktop: false,
-  isPinned: false
-}])
 </script>
 
 <style lang="scss" scoped>

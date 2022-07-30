@@ -5,7 +5,7 @@
           <div class="content">
             <div class="headPic"></div>
             <div class="userName">
-              {{store.state.userName}}
+              {{userName}}
             </div>
             <div :class="{ 'login': status === '登录', 'welcome': status === '欢迎' }">{{ status }}</div>
           </div>
@@ -17,11 +17,12 @@
 <script lang="ts" setup>
   import { useRoute, useRouter } from 'vue-router';
   import {ref} from 'vue'
-  import {useStore} from 'vuex'
-  const store = useStore()
+  import store from '@/store'
+
   const route = useRoute()
   const router = useRouter()
   const status: string = route.query.status ? '登录' : '欢迎'
+  const userName = store.getters.userName
   function toHome() {
     router.push('/home')
   }

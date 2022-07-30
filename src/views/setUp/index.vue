@@ -15,9 +15,9 @@
       <n-layout has-sider>
         <n-layout-sider>
           <div class="userAbout">
-            <img :src="require('@/assets'+store.state.userAvatar)" :alt="store.state.userName" />
+            <img :src="require('@/assets'+ userAvatar)" :alt="userName" />
             <div class="aboutInfo">
-              <div class="infoName">{{store.state.userName}}</div>
+              <div class="infoName">{{userName}}</div>
               <div class="infoMail">Administrator</div>
             </div>
           </div>
@@ -77,13 +77,15 @@
 import { NIcon, NLayout, NLayoutContent, NLayoutSider, NInput, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
 import { ArrowLeft20Regular, ChevronRight20Regular } from '@vicons/fluent'
 import NavBarRight from '@/components/navBarRight/index.vue'
-import { reactive, ref, shallowReactive, nextTick, onMounted } from 'vue';
+import { reactive, ref, shallowReactive, nextTick, onMounted, computed } from 'vue';
 import MenuItemList from './components/menuItemList.vue'
-import { useStore } from 'vuex'
 import bus from '@/utils/bus'
 import { Draggable } from '@/utils/draggable'
+import store from '@/store'
 
-const store = useStore()
+const userAvatar = computed(()=>store.getters.userAvatar)
+const userName = computed(()=>store.getters.userName)
+
 const menuItemData = [{
   url: require('@/assets/icon/systemIcon/System.webp'),
   name: '系统',
@@ -660,7 +662,7 @@ const changeSize = (name: string) => {
 const setupFn = async () => {
   await nextTick()
   
-  setupBox.value.style.zIndex = store.state.zIndex
+  setupBox.value.style.zIndex = store.getters.zIndex
   store.dispatch('changeZIndex')
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="edge" :class="[myClass]" ref="edgeBox" @click.stop="edgeFn">
+  <div class="edge" v-show="!edgeStatus.mini" :class="[myClass]" ref="edgeBox" @click.stop="edgeFn">
     <!-- 标题栏 -->
     <div class="edgeTitle">
       <div class="titleLeft">
@@ -63,13 +63,14 @@
 <script lang='ts' setup>
 import { ArrowLeft24Regular, ArrowRight24Regular, ArrowClockwise48Regular, LockClosed20Regular, Search20Regular, Dismiss20Filled } from '@vicons/fluent'
 import { NIcon, NButton, NInput } from 'naive-ui'
-import { ref, shallowRef, watch, onMounted, nextTick } from 'vue'
+import { ref, shallowRef, watch, onMounted, nextTick, computed } from 'vue'
 import NavBarRight from '@/components/navBarRight/index.vue'
 import {Draggable} from '@/utils/draggable'
-import {useStore} from 'vuex'
 import bus from '@/utils/bus'
+import store from '@/store'
 
-const store = useStore()
+const edgeStatus = computed(()=>store.getters.app.filter(item => item.name === 'Edge'))
+
 // 记录浏览器历史记录
 const historyData = ['https://www.bing.com']
 // 当前所在的历史记录的位置
@@ -132,7 +133,7 @@ const onInput = () => {
 // 点击窗口时显示在上层
 const edgeFn = async () => {
   await nextTick()
-  edgeBox.value.style.zIndex = store.state.zIndex
+  edgeBox.value.style.zIndex = store.getters.zIndex
   store.dispatch('changeZIndex')
 }
 
