@@ -1,9 +1,9 @@
 <template>
   <div class="navBarRight">
-    <div class="btn beforeClose" :class="{edgeColor: props.name==='edge'}" @click.stop="changeAppStatus('hide')">
+    <div class="btn beforeClose" @click.stop="changeAppStatus('hide')">
       <img :src="require('@/assets/icon/systemIcon/minimize.png')" alt="windows11" />
     </div>
-    <div class="btn beforeClose maximize" :class="{edgeColor: props.name==='edge'}" @click.stop="emit('changeSize', '')">
+    <div class="btn beforeClose maximize" @click.stop="emit('changeSize', '')">
       <img :src="require('@/assets/icon/systemIcon/maximize.png')" alt="windows11" />
       <div class="winBox" @click.stop="changeWindowSize">
         <div class="item1">
@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-    <div class="btn close" :class="{edgeColor: props.name==='edge'}" @click.stop="changeAppStatus('close')">
+    <div class="btn close" @click.stop="changeAppStatus('close')">
       <img :src="require('@/assets/icon/systemIcon/close.png')" alt="windows11" />
     </div>
   </div>
@@ -80,9 +80,6 @@ const changeAppStatus = (val: string) => {
   img {
     width: 100%;
     vertical-align: top;
-  }
-  .edgeColor{
-    filter: invert(100%);
   }
 }
 .beforeClose:hover {

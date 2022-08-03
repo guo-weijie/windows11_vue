@@ -1,7 +1,7 @@
 <template>
   <div class="setupBox" :class="[myClass]" ref="setupBox" @click.stop="setupFn">
     <!-- 标题栏 -->
-    <div class="titleBar">
+    <!-- <div class="titleBar">
       <div class="barLeft">
         <n-icon size="16" color="#c3c3c3">
           <ArrowLeft20Regular />
@@ -9,7 +9,8 @@
         <span>设置</span>
       </div>
       <NavBarRight name="设置" @changeSize="changeSize" />
-    </div>
+    </div> -->
+    <TitleBlock name="设置" ></TitleBlock>
     <!-- 主体 -->
     <div class="mainBox">
       <n-layout has-sider>
@@ -76,12 +77,13 @@
 <script lang='ts' setup>
 import { NIcon, NLayout, NLayoutContent, NLayoutSider, NInput, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
 import { ArrowLeft20Regular, ChevronRight20Regular } from '@vicons/fluent'
-import NavBarRight from '@/components/navBarRight/index.vue'
+// import NavBarRight from '@/components/navBarRight/index.vue'
 import { reactive, ref, shallowReactive, nextTick, onMounted, computed } from 'vue';
 import MenuItemList from './components/menuItemList.vue'
 import bus from '@/utils/bus'
 import { Draggable } from '@/utils/draggable'
 import store from '@/store'
+import TitleBlock from '@/components/titleBlock'
 
 const userAvatar = computed(()=>store.getters.userAvatar)
 const userName = computed(()=>store.getters.userName)

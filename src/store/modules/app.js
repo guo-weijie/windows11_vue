@@ -49,7 +49,7 @@ const state = {
     isDesktop: false,
     isPinned: true,
     isTaskBar: false,
-    open: false,
+    open: true,
     mini: false
   }, {
     name: '时钟',

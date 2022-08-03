@@ -1,7 +1,10 @@
 <template>
   <div class="edge" v-show="!edgeStatus.mini" :class="[myClass]" ref="edgeBox" @click.stop="edgeFn">
     <!-- 标题栏 -->
-    <div class="edgeTitle">
+    <TitleBlock>
+      Edge浏览器
+    </TitleBlock>
+    <!-- <div class="edgeTitle">
       <div class="titleLeft">
         <div class="leftTagName">
           <img :src="require('@/assets/icon/appIcon/home.png')" alt="windows11" />
@@ -16,7 +19,7 @@
         </n-button>
       </div>
       <NavBarRight name="edge" @changeSize="changeSize" />
-    </div>
+    </div> -->
     <!-- 导航栏 -->
     <div class="edgeNav">
       <n-button @click="naviBtn(-1)" :bordered="false">
@@ -64,10 +67,10 @@
 import { ArrowLeft24Regular, ArrowRight24Regular, ArrowClockwise48Regular, LockClosed20Regular, Search20Regular, Dismiss20Filled } from '@vicons/fluent'
 import { NIcon, NButton, NInput } from 'naive-ui'
 import { ref, shallowRef, watch, onMounted, nextTick, computed } from 'vue'
-import NavBarRight from '@/components/navBarRight/index.vue'
 import {Draggable} from '@/utils/draggable'
 import bus from '@/utils/bus'
 import store from '@/store'
+import TitleBlock from '@/components/titleBlock'
 
 const edgeStatus = computed(()=>store.getters.app.filter(item => item.name === 'Edge'))
 
