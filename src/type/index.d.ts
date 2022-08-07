@@ -1,19 +1,22 @@
 import { ComputedRef } from "vue"
 
-interface allAppItem {
+interface appItem {
   name: string,
   url: string,
   isDesktop: boolean,
-  isPinned: boolean
+  isPinned: boolean,
+  isTaskBar: boolean,
+  open: boolean,
+  mini: boolean
 }
+
+type app = appItem[]
 
 interface timeObj {
   year: number | undefined,
   month: number | undefined,
   date: number | undefined
 }
-
-type allAppType = allAppItem[]
 
 interface timeType {
   year: number,
@@ -39,7 +42,7 @@ interface fnItemListType {
 
 interface dealAppList {
   id: string,
-  list: allAppType
+  list: app
 }
 
 type fnItemType = fnItemListType[]
@@ -49,9 +52,8 @@ type fnItemTypeCom = ComputedRef<fnItemType>
 type allAppListBySort = dealAppList[]
 
 export {
-  allAppItem,
+  app,
   timeObj,
-  allAppType,
   timeType,
   RintegerYear,
   fnItemListType,

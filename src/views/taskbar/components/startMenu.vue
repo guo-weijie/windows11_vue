@@ -92,16 +92,16 @@
   <!-- 底部用户头像和电源按钮 -->
   <div class="menuFooter">
     <div class="footerUser">
-      <img :src="require('@/assets'+store.state.userAvatar)" :alt="store.state.userName" />
+      <img :src="require('@/assets'+ userAvatar)" :alt="store.state.userName" />
       <span :title="store.state.userName">{{ store.state.userName }}</span>
     </div>
     <div class="footerBattery">
-      <div class="batterySet" title="设置">
+      <div class="batterySet" title="设置" @click="openSet">
         <n-icon size="19px">
           <Settings20Regular />
         </n-icon>
       </div>
-      <n-popover trigger="click" :show-arrow="false" class="myPopover">
+      <n-popover trigger="click" :show-arrow="false" class="myPopover" :z-index="zIndex">
         <template #trigger>
           <n-icon size="19px" title="电源">
             <Power24Regular />
@@ -133,17 +133,21 @@
 </template>
 
 <script lang='ts' setup>
-import { ref, useAttrs, computed, toRaw, nextTick, onMounted } from 'vue'
+import { ref, computed, toRaw, nextTick, onMounted } from 'vue'
 import { NPopover, NIcon } from 'naive-ui'
 import { Settings20Regular, Power24Regular, WeatherMoon48Regular, ArrowCounterclockwise28Regular, ChevronRight16Regular, ChevronLeft16Regular } from '@vicons/fluent'
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { allAppType, allAppItem, allAppListBySort } from '@/type'
+import { allAppListBySort } from '@/type'
 import bus from '@/utils/bus'
 import { getSpell } from 'jian-pinyin'
-const store = useStore()
+import store from '@/store'
 const router = useRouter()
-const attrs = useAttrs()
+
+// 用户头像
+const userAvatar = computed(()=>store.getters.userAvatar)
+
+// popover 层级
+const zIndex = 9999
 const powerEvent = (val: string) => {
   if (val === '关机') {
     console.log('会加的，再等等')
@@ -157,6 +161,22 @@ const powerEvent = (val: string) => {
     console.log('会加的，再等等')
     return
   }
+}
+// 打开设置
+const openSet = () => {
+  const closeMini = {
+    name: '设置',
+    key: 'mini',
+    value: 'false'
+  }
+  const obj = {
+    name: '设置',
+    key: 'open',
+    value: 'true'
+  }
+  store.dispatch('changeAppStatus', closeMini)
+  store.dispatch('changeAppStatus', obj)
+  bus.emit('closeTaskbar')
 }
 // eslint-disable-next-line no-undef
 const emits = defineEmits(['pleaseOpenSearch'])
@@ -200,15 +220,16 @@ for (const value of strIndex) {
 }
 const dataDeal = () => {
   // 应用列表是固定的，所有取消代理
-  // const noProxyData = toRaw(attrs.allAppList)
+  // const noProxyData = toRaw(app)
   // 应用名称统一转为拼音
-  // const transData:allAppType = noProxyData.map((item: allAppItem)=>{
+  // const transData = noProxyData.map((item)=>{
   //   item.name = 
   //   return item
   // })
+  const app = store.getters.app
   // 数据归类
   allAppList_sorted.forEach((item, index) => {
-    toRaw(attrs.allAppList).forEach(iten => {
+    toRaw(app).forEach(iten => {
       if (item.id === getSpell(iten.name, (charactor: string, spell: string) => spell[1], '').slice(0, 1).toLowerCase()) {
         item.list.push(iten)
         letterData[index].flag = true
@@ -240,25 +261,32 @@ const changeMenuBodyStatus = () => {
   containerAllApp.value.style.left = 0
 }
 const selectLetter = ref(false)
-const pinnedOpenApp = (data: allAppItem) => {
-  bus.emit('appStatus', { ...data, flag: 'open' })
-  bus.emit('changeOpenStatus', { ...data, flag: 'open' })
-  bus.emit('claseTaskbarAll')
+const pinnedOpenApp = data => {
+  const obj = {
+    name: data.name
+  }
+  if(data.mini){
+    obj.key = 'mini'
+    obj.value = false
+  }else{
+    obj.key = 'open'
+    obj.value = true
+  }
+  store.dispatch('changeAppStatus',obj)
+  bus.emit('closeTaskbar')
 }
 // 获取固定应用列表 -----------------------
-const pinnedList = computed((): allAppType => attrs.allAppList.filter((item: allAppItem) => item.isPinned))
+const pinnedList = computed(() => store.getters.app.filter((item) => item.isPinned))
 </script>
 
 <style lang='scss' scoped>
 @import "@/style/public";
-$bg: #e0e7fa;
-$color: #18191b;
 @mixin bgHover {
   border-radius: 5px;
   background-color: inherit;
   transition: background-color 300ms;
   &:hover {
-    background-color: #f6fbfe;
+    background-color: var(--start-hover-bg-color);
   }
 }
 .menuSearch {
@@ -266,14 +294,14 @@ $color: #18191b;
   width: 100%;
   height: 70px;
   padding: 32px 32px 0;
-  background-color: $bg;
+  background-color: var(--start-main-bg-color);
   .searchBox {
     height: 100%;
-    background-color: #ffffff;
-    box-shadow: inset 0 -4px 0 -2px #0067c0;
+    background-color: var(--start-search-input-bg-color);
+    box-shadow: inset 0 -4px 0 -2px var(--global-theme-color);
     border-radius: 4px;
     font-size: 12px;
-    color: #616161;
+    color: var(--global-placeholder-font-color);
     @include flex(flex-start, center);
     img {
       height: 14px;
@@ -287,7 +315,7 @@ $color: #18191b;
   width: 100%;
   height: calc(100% - 70px - 64px);
   padding: 20px 32px 0;
-  background-color: $bg;
+  background-color: var(--start-main-bg-color);
   .bodyTitle {
     width: 100%;
     height: 48px;
@@ -296,13 +324,12 @@ $color: #18191b;
       width: 96px;
       font-size: 13px;
       text-align: center;
-      color: $color;
       font-weight: bold;
     }
     .titleRight {
       padding: 5px 8px 6px 7px;
-      background-color: #f6f8fe;
-      border: 1px solid #bec5d3;
+      background-color: var(--start-right-btn-bg-color);
+      border: 1px solid var(--start-right-btn-border-color);
       border-radius: 5px;
       margin-right: 32px;
       @include flex(center, center);
@@ -323,13 +350,12 @@ $color: #18191b;
   width: 100%;
   height: 63px;
   padding: 0 52px;
-  background-color: #d7e3fa;
-  border-top: 1px solid #afb8c5;
+  background-color: var(--start-footer-bg-color);
+  border-top: 1px solid var(--global-window-division-color);
   @include flex(space-between, center);
   .footerUser {
     height: 40px;
     line-height: 40px;
-    color: $color;
     padding-left: 12px;
     padding-right: 12px;
     @include bgHover;
@@ -357,7 +383,6 @@ $color: #18191b;
   }
 }
 @at-root .poperBody {
-  color: $color;
   > div {
     @include flex(center, center);
     user-select: none;
@@ -371,6 +396,7 @@ $color: #18191b;
     margin-right: 12px;
   }
 }
+
 
 // 开始菜单主体
 .containerPinned {
@@ -397,12 +423,10 @@ $color: #18191b;
     }
     span {
       font-size: 12px;
-      color: $color;
     }
   }
   .pinnedRecommend {
     font-size: 13px;
-    color: $color;
     font-weight: bold;
     padding-left: 32px;
     margin-bottom: 20px;
@@ -427,11 +451,10 @@ $color: #18191b;
       .itemDesc {
         font-size: 12px;
         div {
-          color: $color;
           margin-bottom: 3px;
         }
         span {
-          color: #717171;
+          color: var(--start-desc-font-color);
           font-size: 12px;
         }
       }
@@ -454,14 +477,13 @@ $color: #18191b;
     height: 246px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #7c7e86;
+    background-color: var(--global-scrollbar-color);
     border-radius: 1px;
   }
   .itemBodyPublic {
     width: 90%;
     height: 40px;
     font-size: 12px;
-    color: $color;
     padding-left: 20px;
     margin-left: -20px;
     @include bgHover;
@@ -498,11 +520,11 @@ $color: #18191b;
       line-height: 48px;
       text-align: center;
       font-size: 14px;
-      color: #9699a1;
+      color: var(--start-letterlist-none-color);
       font-weight: bold;
     }
     .isFlag {
-      color: #29292a;
+      color: var(--start-letterlist-have-color);
       @include bgHover;
     }
   }

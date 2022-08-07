@@ -4,11 +4,13 @@ export class Draggable {
   startTop: number | undefined;
   startY:number | undefined;
   startX: number | undefined;
+  dragStyle: string | undefined;
   constructor(el:HTMLElement) {
     this.ele = el
     el.onmousedown = this.down.bind(this)
   }
   down(e:MouseEvent) {
+    this.dragStyle = this.ele.className
     this.ele.style.transition = 'none'
     this.startLeft = this.ele.offsetLeft
     this.startTop = this.ele.offsetTop
@@ -18,6 +20,9 @@ export class Draggable {
     document.onmouseup = this.up.bind(this)
   }
   move(e:MouseEvent) {
+    if(this.dragStyle==='appContainer'){
+      this.ele.className = 'appContainer dragStyle'
+    }
     const curLeft = e.pageX - (this.startX as number) + (this.startLeft as number),
       curTop = e.pageY - (this.startY as number) + (this.startTop as number);
     this.ele.style.left = curLeft + 'px';

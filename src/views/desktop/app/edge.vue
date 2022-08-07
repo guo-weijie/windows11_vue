@@ -1,7 +1,7 @@
 <template>
-  <div class="edge" :class="[myClass]" ref="edgeBox" @click.stop="edgeFn">
+  <div class="appContainer" v-drag ref="edgeBox" @click.stop="edgeFn">
     <!-- 标题栏 -->
-    <div class="edgeTitle">
+    <TitleBlock title="Edge" bgColor="#cdcdcd">
       <div class="titleLeft">
         <div class="leftTagName">
           <img :src="require('@/assets/icon/appIcon/home.png')" alt="windows11" />
@@ -15,8 +15,7 @@
           </template>
         </n-button>
       </div>
-      <NavBarRight name="edge" @changeSize="changeSize" />
-    </div>
+    </TitleBlock>
     <!-- 导航栏 -->
     <div class="edgeNav">
       <n-button @click="naviBtn(-1)" :bordered="false">
@@ -63,13 +62,11 @@
 <script lang='ts' setup>
 import { ArrowLeft24Regular, ArrowRight24Regular, ArrowClockwise48Regular, LockClosed20Regular, Search20Regular, Dismiss20Filled } from '@vicons/fluent'
 import { NIcon, NButton, NInput } from 'naive-ui'
-import { ref, shallowRef, watch, onMounted, nextTick } from 'vue'
-import NavBarRight from '@/components/navBarRight/index.vue'
-import {Draggable} from '@/utils/draggable'
-import {useStore} from 'vuex'
+import { ref, shallowRef, watch, nextTick } from 'vue'
 import bus from '@/utils/bus'
+import store from '@/store'
+import TitleBlock from '@/components/titleBlock'
 
-const store = useStore()
 // 记录浏览器历史记录
 const historyData = ['https://www.bing.com']
 // 当前所在的历史记录的位置
@@ -132,51 +129,25 @@ const onInput = () => {
 // 点击窗口时显示在上层
 const edgeFn = async () => {
   await nextTick()
-  edgeBox.value.style.zIndex = store.state.zIndex
+  console.log(edgeBox.value)
+  edgeBox.value.style.zIndex = store.getters.zIndex
   store.dispatch('changeZIndex')
 }
 
-bus.on('edge',edgeFn)
+bus.on('Edge',edgeFn)
 
 const edgeBox = ref()
-// 页面加载完成后绑定移动事件
-onMounted(()=>{
-  edgeFn()
-  new Draggable(edgeBox.value)
-})
 
-// 修改样式
-const myClass = ref('')
-const changeSize = (name: string) => {
-  edgeBox.value.style.left = ''
-  edgeBox.value.style.top = ''
-  if (!name && !myClass.value) {
-    myClass.value = 'centerCenter'
-    return
-  }
-  myClass.value = name
-}
+
 </script>
 
 <style lang='scss' scoped>
 @import "@/style/public";
-.edge {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #f7f7f7;
-  transition: all 200ms ease-in;
-  .edgeTitle {
-    width: 100%;
-    height: 40px;
-    background-color: #d7ae46;
-    @include flex(space-between, flex-end);
-    .titleLeft {
+
+  .titleLeft {
       box-sizing: border-box;
       width: 12.5%;
-      height: 32px;
+      height: 40px;
       padding: 0 12px;
       margin-left: 8px;
       background-color: #f7f7f7;
@@ -195,7 +166,6 @@ const changeSize = (name: string) => {
         }
       }
     }
-  }
   .edgeNav {
     width: 100%;
     height: 38px;
@@ -220,5 +190,4 @@ const changeSize = (name: string) => {
       height: 100%;
     }
   }
-}
 </style>

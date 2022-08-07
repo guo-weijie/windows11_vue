@@ -36,7 +36,7 @@
       >
         <n-tab v-for="item in searchTitle" :key="item" :name="item">{{ item }}</n-tab>
         <n-tab name="更多">
-          <n-popover trigger="click" placement="bottom-start" :show-arrow="false" class="myPopover">
+          <n-popover trigger="click" placement="bottom-start" :show-arrow="false" class="myPopover" :z-index="zIndex" >
             <template #trigger>
               <n-button icon-placement="right">
                 <template #icon>
@@ -64,7 +64,7 @@
             <PersonFeedback20Regular />
           </n-icon>
         </n-button>
-        <n-popover trigger="click" placement="bottom-end" :show-arrow="false" class="myPopover">
+        <n-popover trigger="click" placement="bottom-end" :show-arrow="false" class="myPopover" :z-index="zIndex">
           <template #trigger>
             <n-button text style="font-size: 20px" color="#18191b" title="提供反馈">
               <n-icon>
@@ -105,6 +105,7 @@ import All_app from '@/components/searchCom/all_app.vue'
 import OtherFn from '@/components/searchCom/otherFn.vue'
 
 const inputValue = ref('')
+const zIndex = 9999
 
 
 // 搜索标题数据

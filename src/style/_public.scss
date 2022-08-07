@@ -1,4 +1,4 @@
-@mixin flex($j, $a, $d:row) {
+@mixin flex($j, $a:center, $d:row) {
   display: flex;
   justify-content: $j;
   align-items: $a;
@@ -24,7 +24,7 @@
 @mixin box_border {
   line-height: normal;
   border-radius: 6px;
-  box-shadow: 1px 1px 5px #79848e;
+  box-shadow: 1px 1px 5px var(--global-window-shandow-color);
   overflow: hidden;
 }
 

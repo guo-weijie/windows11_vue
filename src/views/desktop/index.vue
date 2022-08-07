@@ -1,69 +1,54 @@
 <template>
   <div class="desktop" @click="claseTaskbarAll">
     <div class="desktopAppContainer">
-      <div
-        v-for="item in desktopList"
-        :key="item.name"
-        class="desktopApp"
-        @dblclick="openApp(item)"
-      >
+      <div v-for="item in desktopApp" :key="item.name" class="desktopApp" @dblclick="openApp(item)">
         <img :src="item.url" :alt="item.name" />
         <p>{{ item.name }}</p>
       </div>
     </div>
 
     <!-- app -->
-    <Edge v-if="appIsOpen.edge" />
-    <Setup v-if="appIsOpen['设置']" />
-    <Terminal v-show="appIsOpen['终端']" />
+    <Edge v-if="edgeStatus.open" v-show="!edgeStatus.hidden" />
+    <Setup v-if="setStatus.open" v-show="!setStatus.hidden" />
+    <!-- <TerminalApp v-show="appIsOpen['终端']" /> -->
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, PropType, reactive } from 'vue';
-import { allAppType, allAppItem } from '@/type'
-import bus from '@/utils/bus'
+import { computed } from 'vue';
 import Edge from './app/edge.vue'
 import Setup from '@/views/setUp/index.vue'
-import Terminal from './app/terminal.vue'
+// import TerminalApp from './app/terminal.vue'
+import store from '@/store'
+import bus from '@/utils/bus'
 
-// 关闭/打开 应用
-bus.on('appStatus', data => {
-  for(const key in appIsOpen){
-    if(key.toLowerCase()===data.name.toLowerCase()){
-      if(data.flag==='open'){
-        appIsOpen[key] = true
-        bus.emit(key)
-        return
-      }
-      appIsOpen[key] = false
-    }
-  }
-})
+const desktopApp = computed(() => store.getters.app.filter(item => item.isDesktop))
 
-const props = defineProps({
-  appList: Array as PropType<allAppType>
-})
-const desktopList = computed(() => props.appList?.filter(item => item.isDesktop))
-
-const claseTaskbarAll = () => {
-  bus.emit('claseTaskbarAll')
-}
-// 点击应用图标
-const openApp = (data:allAppItem) => {
+/**
+ * 如果应用为关闭状态 提交 open 为 true
+ * 如果应用为最小化状态，此时 open 为 true，mini 为 true，提交 mini 为 fasle
+ */
+const openApp = value => {
   const obj = {
-    ...data,
-    flag: 'open'
+    name: value.name
   }
-  bus.emit('appStatus',obj)
-  bus.emit('changeOpenStatus',obj)
+  if(value.mini){
+    obj.key = 'mini'
+    obj.value = false
+  }else{
+    obj.key = 'open'
+    obj.value = true
+  }
+  store.dispatch('changeAppStatus',obj)
 }
-// 应用打开/关闭状态
-const appIsOpen = reactive({
-  edge: false,
-  '设置': false,
-  '终端': false
-})
+
+const edgeStatus = computed(()=>store.getters.app.filter(item => item.name === 'Edge')[0])
+const setStatus = computed(()=>store.getters.app.filter(item => item.name === '设置')[0])
+
+// 点击桌面时关闭所有任务栏打开的窗口
+const claseTaskbarAll = () => {
+  bus.emit('closeTaskbar')
+}
 </script>
 
 <style lang="scss" scoped>
@@ -99,6 +84,21 @@ const appIsOpen = reactive({
       color: #ffffff;
     }
   }
+}
+
+.appContainer{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--set-bg-color);
+  transition: all 100ms ease-in;
+}
+
+.dragStyle{
+  width: 50%;
+  height: 60%;
 }
 
 // 应用窗口样式

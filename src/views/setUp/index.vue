@@ -1,23 +1,15 @@
 <template>
-  <div class="setupBox" :class="[myClass]" ref="setupBox" @click.stop="setupFn">
+  <div class="appContainer" v-drag ref="setupBox" @click.stop="setupFn">
     <!-- 标题栏 -->
-    <div class="titleBar">
-      <div class="barLeft">
-        <n-icon size="16" color="#c3c3c3">
-          <ArrowLeft20Regular />
-        </n-icon>
-        <span>设置</span>
-      </div>
-      <NavBarRight name="设置" @changeSize="changeSize" />
-    </div>
+    <TitleBlock title="设置" ></TitleBlock>
     <!-- 主体 -->
     <div class="mainBox">
       <n-layout has-sider>
         <n-layout-sider>
           <div class="userAbout">
-            <img :src="require('@/assets'+store.state.userAvatar)" :alt="store.state.userName" />
+            <img :src="require('@/assets'+ userAvatar)" :alt="userName" />
             <div class="aboutInfo">
-              <div class="infoName">{{store.state.userName}}</div>
+              <div class="infoName">{{userName}}</div>
               <div class="infoMail">Administrator</div>
             </div>
           </div>
@@ -75,15 +67,17 @@
 
 <script lang='ts' setup>
 import { NIcon, NLayout, NLayoutContent, NLayoutSider, NInput, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
-import { ArrowLeft20Regular, ChevronRight20Regular } from '@vicons/fluent'
-import NavBarRight from '@/components/navBarRight/index.vue'
-import { reactive, ref, shallowReactive, nextTick, onMounted } from 'vue';
+import { ChevronRight20Regular } from '@vicons/fluent'
+// import NavBarRight from '@/components/navBarRight/index.vue'
+import { reactive, ref, shallowReactive, nextTick, computed } from 'vue';
 import MenuItemList from './components/menuItemList.vue'
-import { useStore } from 'vuex'
 import bus from '@/utils/bus'
-import { Draggable } from '@/utils/draggable'
+import store from '@/store'
+import TitleBlock from '@/components/titleBlock'
 
-const store = useStore()
+const userAvatar = computed(()=>store.getters.userAvatar)
+const userName = computed(()=>store.getters.userName)
+
 const menuItemData = [{
   url: require('@/assets/icon/systemIcon/System.webp'),
   name: '系统',
@@ -639,28 +633,13 @@ const selectItem = (name:string,num: number) => {
   menuItemListData.data = menuItemData[num]
 }
 
-// 页面加载完成后绑定拖拽
-onMounted(()=>{
-  new Draggable(setupBox.value)
-})
-
 // 修改样式
 const setupBox = ref()
-const myClass = ref('')
-const changeSize = (name: string) => {
-  setupBox.value.style.left = ''
-  setupBox.value.style.top = ''
-  if (!name && !myClass.value) {
-    myClass.value = 'centerCenter'
-    return
-  }
-  myClass.value = name
-}
 
 const setupFn = async () => {
   await nextTick()
-  
-  setupBox.value.style.zIndex = store.state.zIndex
+  console.log(setupBox.value)
+  setupBox.value.style.zIndex = store.getters.zIndex
   store.dispatch('changeZIndex')
 }
 
@@ -672,33 +651,9 @@ bus.on('设置',setupFn)
 
 <style lang='scss' scoped>
 @import "@/style/public";
-.setupBox {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #f3f3f3;
-  color: #353535;
-  transition: all 200ms ease-in;
-  .mainBox{
-    height: calc(100% - 58px);
-  }
-}
-.titleBar {
-  @include flex(space-between, center);
-  margin-bottom: 18px;
-  .barLeft {
-    @include flex(flex-start, center);
-    .n-icon {
-      margin-left: 18px;
-      margin-right: 20px;
-    }
-    span {
-      font-size: 12px;
-      color: #373737;
-    }
-  }
+
+.mainBox{
+  height: calc(100% - 58px);
 }
 .n-layout {
   height: 100%;
@@ -716,7 +671,7 @@ bus.on('设置',setupFn)
         height: 303px;
       }
       &::-webkit-scrollbar-thumb {
-        background-color: #7c7e86;
+        background-color: var(--global-scrollbar-color);
         border-radius: 1px;
       }
     }
@@ -738,26 +693,25 @@ bus.on('设置',setupFn)
   .infoName {
     font-size: 14px;
     font-weight: bold;
-    color: #212121;
+    color: var(--set-second-top-font-color);
   }
   .infoMail {
     text-decoration: none;
     font-size: 12px;
-    color: #444444;
+    color: var(--set-second-desc-font-color);
   }
 }
 .n-input {
-  border: 1px solid #e4e4e4;
-  border-bottom: 2px solid #0067c0;
-  background-color: #fff !important;
+  border: 1px solid var(--global-searchbox-border);
+  border-bottom: 2px solid var(--global-theme-color);
+  background-color: var(--global-background-color) !important;
   margin-bottom: 22px;
   ::-webkit-input-placeholder {
-    color: #616161;
+    color: var(--global-placeholder-font-color);
   }
   :deep(.n-input__input-el) {
-    color: #333;
     &:focus {
-      background-color: #fff;
+      background-color: var(--global-background-color);
     }
   }
 }
@@ -770,7 +724,7 @@ bus.on('设置',setupFn)
     @include flex(flex-start, center);
     transition: background-color 200ms ease-in;
     &:hover {
-      background-color: #eaeaea;
+      background-color: var(--set-first-select-bg-color);
     }
     img {
       width: 18px;
@@ -779,17 +733,16 @@ bus.on('设置',setupFn)
     }
     div {
       font-size: 14px;
-      color: #191919;
     }
   }
   .listItemBgC{
-    background-color: #eaeaea;
+    background-color: var(--set-first-select-bg-color);
   }
   .listBar {
     width: 3px;
     height: 16px;
     border-radius: 1px;
-    background-color: #0067c0;
+    background-color: var(--global-theme-color);
     position: absolute;
     left: 0;
     top: 10px;
@@ -802,14 +755,8 @@ bus.on('设置',setupFn)
   }
   :deep(.n-breadcrumb-item){
     @include flex(space-around,center);
-    span{
-      color: #5c5c5c;
-    }
     .n-breadcrumb-item__link{
       font-size: 26px;
-    }
-    &:last-child span{
-      color: #1a1a1a;
     }
   }
 }

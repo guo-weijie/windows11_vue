@@ -13,10 +13,10 @@
   "description ": "使用Vue仿windows11",
   "homepage": "https://guo-weijie.github.io/windows11_vue",
   "repository": "https://github.com/guo-weijie/windows11_vue",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
-    "dev": "vue-cli-service serve --open",
+    "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },

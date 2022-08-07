@@ -1,19 +1,16 @@
 <template>
-  <div class="app" ref="app" :style="{ backgroundImage: 'url(' + require('@/assets/wallpaper' + store.state.backgroundImgUrl) + ')' }">
+  <div class="app" :data-theme="theme" ref="app" :style="{ backgroundImage: 'url(' + require('@/assets/wallpaper' + bgurl) + ')' }">
     <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { useStore } from 'vuex';
+import { computed, ref } from 'vue'
+import store from '@/store'
 
 const app = ref()
-
-
-
-// 桌面背景图片
-const store = useStore()
+const bgurl = computed(()=>store.getters.backgroundImgUrl)
+const theme = computed(()=>store.getters.theme)
 
 </script>
 
