@@ -1,16 +1,7 @@
 <template>
-  <div class="setupBox" :class="[myClass]" ref="setupBox" @click.stop="setupFn">
+  <div class="appContainer" v-drag ref="setupBox" @click.stop="setupFn">
     <!-- 标题栏 -->
-    <!-- <div class="titleBar">
-      <div class="barLeft">
-        <n-icon size="16" color="#c3c3c3">
-          <ArrowLeft20Regular />
-        </n-icon>
-        <span>设置</span>
-      </div>
-      <NavBarRight name="设置" @changeSize="changeSize" />
-    </div> -->
-    <TitleBlock name="设置" ></TitleBlock>
+    <TitleBlock title="设置" ></TitleBlock>
     <!-- 主体 -->
     <div class="mainBox">
       <n-layout has-sider>
@@ -76,12 +67,11 @@
 
 <script lang='ts' setup>
 import { NIcon, NLayout, NLayoutContent, NLayoutSider, NInput, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
-import { ArrowLeft20Regular, ChevronRight20Regular } from '@vicons/fluent'
+import { ChevronRight20Regular } from '@vicons/fluent'
 // import NavBarRight from '@/components/navBarRight/index.vue'
-import { reactive, ref, shallowReactive, nextTick, onMounted, computed } from 'vue';
+import { reactive, ref, shallowReactive, nextTick, computed } from 'vue';
 import MenuItemList from './components/menuItemList.vue'
 import bus from '@/utils/bus'
-import { Draggable } from '@/utils/draggable'
 import store from '@/store'
 import TitleBlock from '@/components/titleBlock'
 
@@ -643,27 +633,12 @@ const selectItem = (name:string,num: number) => {
   menuItemListData.data = menuItemData[num]
 }
 
-// 页面加载完成后绑定拖拽
-onMounted(()=>{
-  new Draggable(setupBox.value)
-})
-
 // 修改样式
 const setupBox = ref()
-const myClass = ref('')
-const changeSize = (name: string) => {
-  setupBox.value.style.left = ''
-  setupBox.value.style.top = ''
-  if (!name && !myClass.value) {
-    myClass.value = 'centerCenter'
-    return
-  }
-  myClass.value = name
-}
 
 const setupFn = async () => {
   await nextTick()
-  
+  console.log(setupBox.value)
   setupBox.value.style.zIndex = store.getters.zIndex
   store.dispatch('changeZIndex')
 }
@@ -676,32 +651,9 @@ bus.on('设置',setupFn)
 
 <style lang='scss' scoped>
 @import "@/style/public";
-.setupBox {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--set-bg-color);
-  transition: all 200ms ease-in;
-  .mainBox{
-    height: calc(100% - 58px);
-  }
-}
-.titleBar {
-  @include flex(space-between, center);
-  margin-bottom: 18px;
-  .barLeft {
-    @include flex(flex-start, center);
-    .n-icon {
-      margin-left: 18px;
-      margin-right: 20px;
-    }
-    span {
-      font-size: 12px;
-      color: var(--title-block-color);
-    }
-  }
+
+.mainBox{
+  height: calc(100% - 58px);
 }
 .n-layout {
   height: 100%;

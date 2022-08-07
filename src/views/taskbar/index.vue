@@ -141,16 +141,36 @@ const taskBarLeftNoLine=(value,clear:string)=>{
 const underLineApp = computed(()=>store.getters.app.filter(item=>item.isTaskBar))
 // 有下划线应用点击事件
 const taskBarLeftHaveLine = value => {
-  taskBarRight()
+  taskbarEvent()
   underLineApp.value.forEach(item=>{
     if(item.name===value?.name){
       if(item.open){
-        item.mini = true
+        store.dispatch('changeAppStatus',{
+          name: item.name,
+          key: 'mini',
+          value: !item.mini
+        })
+        store.dispatch('changeAppStatus',{
+          name: item.name,
+          key: 'hidden',
+          value: item.mini
+        })
       }else{
-        item.open = true
+        store.dispatch('changeAppStatus',{
+          name: item.name,
+          key: 'open',
+          value: true
+        })
       }
+      bus.emit(value.name)
     }else{
-      item.open ? item.mini = true : null
+      if(item.open){
+        store.dispatch('changeAppStatus',{
+          name: item.name,
+          key: 'mini',
+          value: true
+        })
+      }
     }
   })
 }
@@ -176,7 +196,7 @@ const hideIconBox = ref()
 const hideIcon: Rstring = ref('up')
 const lang: Rstring = ref('中')
 // 任务栏弹窗状态更改
-const taskBarRight = (id:string,clear:string) => {
+const taskBarRight = (id?:string,clear?:string) => {
   if(clear){
     taskBarLeftNoLine()
   }

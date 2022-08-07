@@ -16,26 +16,23 @@
   }
   .titleBlockLeft{
     font-size: 12px;
-    color: var(--title-block-color);
+    color: #373737;
     margin-left: 18px;
+  }
+
+  .n-popover{
+    padding: 0;
   }
 }
 
 // 调整尺寸窗口
 .winBox {
-  position: absolute;
-  top: 34px;
-  right: -30px;
   width: 342px;
   height: 164px;
-  display: none;
-  z-index: 99;
+  display: grid;
   grid-template-columns: repeat(3, auto);
   grid-template-rows: repeat(2, 5fr);
   grid-gap: 12px;
-  background-color: var(--winBox-bg-color);
-  border-radius: 5px;
-  padding: 8px;
 
   &>div {
     border-radius: 5px;
@@ -44,11 +41,11 @@
     grid-gap: 4px;
 
     div {
-      background: var(--winBox-per-bg-color);
-      border: 1px solid var(--winBox-pre-border-color);
+      background: #f3f3f3;
+      border: 1px solid #d3dfe9;
 
       &:hover {
-        background: var(--global-theme-color);
+        background: #0067c0;
       }
     }
   }

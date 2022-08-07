@@ -8,8 +8,8 @@
     </div>
 
     <!-- app -->
-    <Edge v-if="edgeStatus.open" />
-    <Setup v-if="setStatus.open" />
+    <Edge v-if="edgeStatus.open" v-show="!edgeStatus.hidden" />
+    <Setup v-if="setStatus.open" v-show="!setStatus.hidden" />
     <!-- <TerminalApp v-show="appIsOpen['终端']" /> -->
   </div>
 </template>
@@ -84,6 +84,21 @@ const claseTaskbarAll = () => {
       color: #ffffff;
     }
   }
+}
+
+.appContainer{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--set-bg-color);
+  transition: all 100ms ease-in;
+}
+
+.dragStyle{
+  width: 50%;
+  height: 60%;
 }
 
 // 应用窗口样式

@@ -8,5 +8,10 @@ import store from './store'
 import 'normalize.css/normalize.css'
 import '@/style/index.css'
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { myDirective } from '@/directive/index.js'
 
-createApp(App).use(store).use(router).mount('#app')
+const app = createApp(App)
+myDirective(app)
+app.use(store).use(router).mount('#app')

@@ -31,9 +31,7 @@
    * 标题栏颜色
    */
   /* 调整窗口尺寸主窗口背景颜色 */
-  --winBox-bg-color: var(--global-bg-color);
   /* 每一个窗格的颜色 */
-  --winBox-per-bg-color: var(--global-window-division-color);
   /* 边框颜色 */
   --winBox-pre-border-color: #827f83;
   /*

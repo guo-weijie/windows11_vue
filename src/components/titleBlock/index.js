@@ -1,21 +1,26 @@
-import { h } from 'vue'
+import { h, defineComponent, getCurrentInstance, onMounted } from 'vue'
 import store from '@/store'
 import './style.scss'
 import { Subtract16Regular, Dismiss20Regular, SquareMultiple16Regular } from '@vicons/fluent'
-import { NButton, NIcon } from 'naive-ui'
+import { NButton, NIcon, NPopover } from 'naive-ui'
 
-export default {
+export default defineComponent({
   props: {
-    name: {
+    title: {
+      type: String
+    },
+    bgColor: {
       type: String
     }
   },
-  setup(props, { slots, attrs, emit }) {
-    let zIndex = 2
-    const navBarClick = () => {
-      zIndex = store.getters.zIndex
-      store.dispatch('changeZIndex')
-    }
+  setup(props, { slots }) {
+    /**
+     * 获取父实例
+     */
+    let parentInstance
+    onMounted(()=>{
+      parentInstance = getCurrentInstance().parent.ctx.$el
+    })
     /**
      * 生成标题栏右侧
      */
@@ -52,9 +57,40 @@ export default {
         ]
       },
     ]
+
+    // 右侧按钮点击事件
+    const rightBtn = value => {
+      if(value==='mini'){
+        store.dispatch('changeAppStatus',{
+          name: props.title,
+          key: 'hidden',
+          value: true
+        })
+        store.dispatch('changeAppStatus',{
+          name: props.title,
+          key: 'mini',
+          value: true
+        })
+      }else if(value==='close'){
+        store.dispatch('changeAppStatus',{
+          name: props.title,
+          key: 'open',
+          value: false
+        })
+      }else{
+        parentInstance.style.left = ''
+        parentInstance.style.top = ''
+        if(parentInstance.className === 'appContainer'){
+          parentInstance.className = 'appContainer centerCenter'
+        }else{
+          parentInstance.className = 'appContainer'
+        }
+      }
+    }
+
     // 窗口点击事件
-    const changeWinSize = id => {
-      console.log(id);
+    const changeWinSize = className => {
+      parentInstance.className = `appContainer ${className}`
     }
     /**
      * 创建调整窗口尺寸的节点
@@ -65,14 +101,14 @@ export default {
         return h('div',{
           class: item.class?item.class:'',
           id: item.id,
-          onClick: changeWinSize(item.id)
+          onClick: ()=>changeWinSize(item.id)
         })
       })
     }
     // 一级
     function createWinSize(){
-      windowSizeObj.map(item=>{
-        h('div',{
+      return windowSizeObj.map(item=>{
+        return h('div',{
           class: item.class
         },createSecondStepSize(item.children))
       })
@@ -95,7 +131,7 @@ export default {
         title: '关闭'
       }]
       const btn =  ary.map(item=>{
-        return h(NButton,{
+        const btn = h(NButton,{
           style: {
             width: '40px',
             height: '40px',
@@ -108,8 +144,29 @@ export default {
           size: 'tiny',
           title: item.title,
           bordered: false,
+          onClick: event=>{
+            event.stopPropagation()
+            rightBtn(item.type)
+          },
           text: true
         },()=>h(NIcon,null,()=>h(item.icon)))
+
+        if(item.type==='win'){
+          return h(NPopover,{
+            trigger: 'hover',
+            class: 'myPopover',
+            style: {
+              padding: '8px'
+            },
+            'show-arrow': false
+          },{
+            trigger: ()=>btn,
+            default: ()=>h('div',{
+              class: 'winBox'
+            },createWinSize())
+          })
+        }
+        return btn
       })
       return h('div',{
         class: 'btnBox'
@@ -120,24 +177,26 @@ export default {
      * 创建左侧标题
      */
     function createLeft(){
+      if(slots.default){
+        return slots.default()
+      }
       // 没有插槽的节点
       return h('div',{
         class: 'titleBlockLeft'
-      },props.name)
+      },props.title)
     }
 
     return () =>
       h('div',{
           style: {
-            backgroundColor: props.bgColor?props.bgColor:'--global-bg-color',
-            zIndex
+            backgroundColor: props.bgColor?props.bgColor:'--global-bg-color'
           },
           class: 'titleBlock',
-          onClick: navBarClick
+          onDblclick: ()=>rightBtn()
         },[
           createLeft(),
           createRight()
         ]
       )
   }
-}
+})
