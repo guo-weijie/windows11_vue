@@ -1,4 +1,4 @@
-import { h, defineComponent, getCurrentInstance, onMounted } from 'vue'
+import { h, defineComponent, getCurrentInstance, onMounted, resolveDirective, withDirectives } from 'vue'
 import store from '@/store'
 import './style.scss'
 import { Subtract16Regular, Dismiss20Regular, SquareMultiple16Regular } from '@vicons/fluent'
@@ -186,8 +186,9 @@ export default defineComponent({
       },props.title)
     }
 
-    return () =>
-      h('div',{
+    return () =>{
+      const dragable = resolveDirective('drag')
+      return withDirectives(h('div',{
           style: {
             backgroundColor: props.bgColor?props.bgColor:'--global-bg-color'
           },
@@ -197,6 +198,7 @@ export default defineComponent({
           createLeft(),
           createRight()
         ]
-      )
+      ),[[dragable]])
+    }
   }
 })

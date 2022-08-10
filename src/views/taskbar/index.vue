@@ -85,6 +85,7 @@ import { KeyboardArrowUpTwotone, KeyboardArrowDownTwotone } from '@vicons/materi
 import { NIcon } from 'naive-ui'
 import store from '@/store'
 import bus from '@/utils/bus'
+import { String } from 'lodash';
 
 const props = defineProps({
   currentTime: Object as PropType<timeType>
@@ -125,7 +126,7 @@ const openStart = computed(()=>noUnderLineApp[0].open)
 const openSearch = computed(()=>noUnderLineApp[1].open)
 
 // 无下划线应用点击事件
-const taskBarLeftNoLine=(value,clear:string)=>{
+const taskBarLeftNoLine=(value?: { name: string; } | undefined,clear?:string)=>{
   if(clear){
     taskBarRight()
   }
@@ -138,33 +139,101 @@ const taskBarLeftNoLine=(value,clear:string)=>{
   })
 }
 // 有下划线应用 -> 包括常驻和打开时驻留的
-const underLineApp = computed(()=>store.getters.app.filter(item=>item.isTaskBar))
+const underLineApp = computed(()=>store.getters.app.filter((item: { isTaskBar: any; })=>item.isTaskBar))
 // 有下划线应用点击事件
-const taskBarLeftHaveLine = value => {
+const taskBarLeftHaveLine = (value: { name: string; }) => {
   taskbarEvent()
-  underLineApp.value.forEach(item=>{
+  /**
+   * 应用为打开状态时，若
+   *  mini: true, hidden: true -> 应用为最小化状态，应处理为：
+   *  mini: false, hidden: false；若
+   *  mini: 
+   * 
+   * 
+   */
+  underLineApp.value.forEach((item: { name: string; open: boolean; mini: boolean; hidden: boolean; isTop: boolean; })=>{
     if(item.name===value?.name){
       if(item.open){
-        store.dispatch('changeAppStatus',{
-          name: item.name,
-          key: 'mini',
-          value: !item.mini
-        })
-        store.dispatch('changeAppStatus',{
-          name: item.name,
-          key: 'hidden',
-          value: item.mini
-        })
+        if(item.isTop){
+          store.dispatch('changeAppStatus',{
+            name: item.name,
+            key: 'hidden',
+            value: true
+          })
+          store.dispatch('changeAppStatus',{
+            name: item.name,
+            key: 'mini',
+            value: true
+          })
+        }else{
+          if(!item.hidden){
+            store.dispatch('changeAppStatus',{
+              name: item.name,
+              key: 'mini',
+              value: false
+            })
+            bus.emit(value.name)
+          }else{
+            store.dispatch('changeAppStatus',{
+              name: item.name,
+              key: 'hidden',
+              value: false
+            })
+            store.dispatch('changeAppStatus',{
+              name: item.name,
+              key: 'mini',
+              value: false
+            })
+            bus.emit(value.name)
+          }
+        }
       }else{
         store.dispatch('changeAppStatus',{
           name: item.name,
           key: 'open',
           value: true
         })
+        bus.emit(value.name)
       }
-      bus.emit(value.name)
+
+      // if(item.open){
+
+      //   if(!item.mini&&!item.hidden){
+      //     if(item.isTop){
+      //       store.dispatch('changeAppStatus',{
+      //         name: item.name,
+      //         key: 'hidden',
+      //         value: true
+      //       })
+      //       store.dispatch('changeAppStatus',{
+      //         name: item.name,
+      //         key: 'mini',
+      //         value: true
+      //       })
+      //     }
+      //   }else{
+      //     if(item.isTop){
+      //       store.dispatch('changeAppStatus',{
+      //         name: item.name,
+      //         key: 'hidden',
+      //         value: false
+      //       })
+      //       store.dispatch('changeAppStatus',{
+      //         name: item.name,
+      //         key: 'mini',
+      //         value: false
+      //       })
+      //     }
+      //   }
+      // }else{
+      //   store.dispatch('changeAppStatus',{
+      //     name: item.name,
+      //     key: 'open',
+      //     value: true
+      //   })
+      // }
     }else{
-      if(item.open){
+      if(item.open && !item.mini){
         store.dispatch('changeAppStatus',{
           name: item.name,
           key: 'mini',
