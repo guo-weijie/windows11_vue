@@ -1,7 +1,7 @@
 <template>
-  <div class="appContainer" v-drag ref="setupBox" @click.stop="setupFn">
+  <div class="appContainer" ref="setupBox" @click.stop="setupFn">
     <!-- 标题栏 -->
-    <TitleBlock title="设置" ></TitleBlock>
+    <TitleBlock title="设置"></TitleBlock>
     <!-- 主体 -->
     <div class="mainBox">
       <n-layout has-sider>
@@ -638,7 +638,6 @@ const setupBox = ref()
 
 const setupFn = async () => {
   await nextTick()
-  console.log(setupBox.value)
   setupBox.value.style.zIndex = store.getters.zIndex
   store.dispatch('changeZIndex')
 }

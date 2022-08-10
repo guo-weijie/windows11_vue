@@ -177,6 +177,7 @@ const openSet = () => {
   store.dispatch('changeAppStatus', closeMini)
   store.dispatch('changeAppStatus', obj)
   bus.emit('closeTaskbar')
+  bus.emit('设置')
 }
 // eslint-disable-next-line no-undef
 const emits = defineEmits(['pleaseOpenSearch'])
@@ -262,18 +263,39 @@ const changeMenuBodyStatus = () => {
 }
 const selectLetter = ref(false)
 const pinnedOpenApp = data => {
-  const obj = {
-    name: data.name
-  }
-  if(data.mini){
-    obj.key = 'mini'
-    obj.value = false
+  if(!data.open){
+    store.dispatch('changeAppStatus',{
+      name: data.name,
+      key: 'open',
+      value: true
+    })
   }else{
-    obj.key = 'open'
-    obj.value = true
+    if(data.mini){
+      store.dispatch('changeAppStatus',{
+        name: data.name,
+        key: 'mini',
+        value: false
+      })
+      store.dispatch('changeAppStatus',{
+        name: data.name,
+        key: 'hidden',
+        value: false
+      })
+    }
   }
-  store.dispatch('changeAppStatus',obj)
   bus.emit('closeTaskbar')
+  bus.emit(data.name)
+  // const obj = {
+  //   name: data.name
+  // }
+  // if(data.mini){
+  //   obj.key = 'mini'
+  //   obj.value = false
+  // }else{
+  //   obj.key = 'open'
+  //   obj.value = true
+  // }
+  // store.dispatch('changeAppStatus',obj)
 }
 // 获取固定应用列表 -----------------------
 const pinnedList = computed(() => store.getters.app.filter((item) => item.isPinned))

@@ -1,5 +1,5 @@
 <template>
-  <div class="appContainer" v-drag ref="edgeBox" @click.stop="edgeFn">
+  <div class="appContainer" ref="edgeBox" @click.stop="edgeFn">
     <!-- 标题栏 -->
     <TitleBlock title="Edge" bgColor="#cdcdcd">
       <div class="titleLeft">
@@ -125,18 +125,16 @@ watch(step, () => {
 const onInput = () => {
   inputBarIcon.value = Search20Regular
 }
-
+const edgeBox = ref()
 // 点击窗口时显示在上层
 const edgeFn = async () => {
+  console.log(1)
   await nextTick()
-  console.log(edgeBox.value)
   edgeBox.value.style.zIndex = store.getters.zIndex
   store.dispatch('changeZIndex')
 }
 
 bus.on('Edge',edgeFn)
-
-const edgeBox = ref()
 
 
 </script>

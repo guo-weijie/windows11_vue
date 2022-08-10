@@ -1,13 +1,13 @@
 export class Draggable {
-  ele:HTMLElement;
+  ele: HTMLElement;
   startLeft: number | undefined;
   startTop: number | undefined;
   startY:number | undefined;
   startX: number | undefined;
   dragStyle: string | undefined;
   constructor(el:HTMLElement) {
-    this.ele = el
-    el.onmousedown = this.down.bind(this)
+    this.ele = (el.parentElement) as HTMLElement
+    ((el.parentElement) as HTMLElement).onmousedown = this.down.bind(this)
   }
   down(e:MouseEvent) {
     this.dragStyle = this.ele.className
