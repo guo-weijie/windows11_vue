@@ -1,4 +1,4 @@
-import { h, defineComponent, getCurrentInstance, onMounted, resolveDirective, withDirectives } from 'vue'
+import { h, defineComponent, onMounted, resolveDirective, withDirectives } from 'vue'
 import store from '@/store'
 import './style.scss'
 import { Subtract16Regular, Dismiss20Regular, SquareMultiple16Regular } from '@vicons/fluent'
@@ -19,7 +19,7 @@ export default defineComponent({
      */
     let parentInstance
     onMounted(()=>{
-      parentInstance = getCurrentInstance().parent.ctx.$el
+      parentInstance = document.querySelector('.titleBlock').parentElement
     })
     /**
      * 生成标题栏右侧
