@@ -10,7 +10,7 @@
     <!-- app -->
     <Edge v-if="edgeStatus.open" v-show="!edgeStatus.hidden" />
     <Setup v-if="setStatus.open" v-show="!setStatus.hidden" />
-    <!-- <TerminalApp v-show="appIsOpen['终端']" /> -->
+    <TerminalApp v-if="terminalStatus.open" v-show="!terminalStatus.hidden" />
   </div>
 </template>
 
@@ -18,7 +18,7 @@
 import { computed } from 'vue';
 import Edge from './app/edge.vue'
 import Setup from '@/views/setUp/index.vue'
-// import TerminalApp from './app/terminal.vue'
+import TerminalApp from './app/terminal.vue'
 import store from '@/store'
 import bus from '@/utils/bus'
 
@@ -44,6 +44,7 @@ const openApp = value => {
 
 const edgeStatus = computed(()=>store.getters.app.filter(item => item.name === 'Edge')[0])
 const setStatus = computed(()=>store.getters.app.filter(item => item.name === '设置')[0])
+const terminalStatus = computed(()=>store.getters.app.filter(item => item.name === '终端')[0])
 
 // 点击桌面时关闭所有任务栏打开的窗口
 const claseTaskbarAll = () => {

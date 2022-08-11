@@ -1,11 +1,11 @@
 <template>
-  <div class="terminal" :class="[myClass]" ref="terminalBox" @click.stop="terminalFn">
+  <div class="appContainer centerCenter" ref="terminalBox" @click.stop="terminalFn">
     <!-- 标题栏 -->
-    <div class="edgeTitle">
+    <TitleBlock title="终端" bgColor="#cdcdcd">
       <div class="titleLeft">
         <div class="leftTagName">
-          <img :src="require('@/assets/icon/appIcon/home.png')" alt="windows11" />
-          Windows 11
+          <img :src="require('@/assets/icon/appIcon/powershell.jpg')" alt="windows11" />
+          Windows PowerShell
         </div>
         <n-button size="tiny" :bordered="false">
           <template #icon>
@@ -15,39 +15,25 @@
           </template>
         </n-button>
       </div>
-      <NavBarRight name="终端" @changeSize="changeSize" />
-    </div>
+    </TitleBlock>
     <!-- 主体 -->
     <div class="terminalContainer">
-      <Terminal name="g-terminal" @execCmd="onExecCmd"></Terminal>
+      <Terminal name="gTerminal" @execCmd="onExecCmd" context="ghosie"></Terminal>
     </div>
   </div>
 </template>
 
 <script lang='ts' setup>
-import NavBarRight from '@/components/navBarRight/index.vue'
-import { NButton, NIcon } from 'naive-ui'
+import TitleBlock from '@/components/titleBlock'
 import { Dismiss20Filled } from '@vicons/fluent'
-import { nextTick, onMounted, ref } from 'vue'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+import { nextTick, ref } from 'vue'
 import Terminal from 'vue-web-terminal'
-import {Draggable} from '@/utils/draggable'
-import {useStore} from 'vuex'
+import store from '@/store'
 import bus from '@/utils/bus'
+import { NIcon, NButton } from 'naive-ui'
 
-const store = useStore()
 const terminalBox = ref()
-const myClass = ref('')
-const changeSize = (name: string) => {
-  terminalBox.value.style.left = ''
-  terminalBox.value.style.top = ''
-  if (!name && !myClass.value) {
-    myClass.value = 'centerCenter'
-    return
-  }
-  myClass.value = name
-}
+
 const onExecCmd = (key: string, command: any, success: (arg0: { type: string; class?: string; content: any; tag?: string; }) => void, failed: (arg0: string) => void) => {
   if (key === 'fail') {
     failed('Something wrong!!!')
@@ -95,11 +81,6 @@ const onExecCmd = (key: string, command: any, success: (arg0: { type: string; cl
   }
 }
 
-// 页面加载完成后绑定移动事件
-onMounted(()=>{
-  new Draggable(terminalBox.value)
-})
-
 // 点击窗口时显示在上层
 const terminalFn = async () => {
   await nextTick()
@@ -112,44 +93,26 @@ bus.on('终端',terminalFn)
 
 <style lang='scss' scoped>
 @import "@/style/public";
-
-.terminal {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #f7f7f7;
-  transition: all 200ms ease-in;
-
-  .edgeTitle {
-    width: 100%;
+  .titleLeft {
+    box-sizing: border-box;
     height: 40px;
-    background-color: #d7ae46;
-    @include flex(space-between, flex-end);
+    padding: 0 12px;
+    margin-left: 8px;
+    background-color: #f7f7f7;
+    border-radius: 4px 4px 0 0;
+    @include flex(space-between, center);
 
-    .titleLeft {
-      box-sizing: border-box;
-      width: 12.5%;
-      height: 32px;
-      padding: 0 12px;
-      margin-left: 8px;
-      background-color: #f7f7f7;
-      border-radius: 4px 4px 0 0;
-      @include flex(space-between, center);
+    .leftTagName {
+      width: calc(100% - 26px);
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 12px;
+      color: #a24d4d;
+      @include flex(flex-start, center);
 
-      .leftTagName {
-        width: calc(100% - 26px);
-        white-space: nowrap;
-        overflow: hidden;
-        font-size: 12px;
-        color: #a24d4d;
-        @include flex(flex-start, center);
-
-        img {
-          width: 16px;
-          margin-right: 10px;
-        }
+      img {
+        width: 16px;
+        margin-right: 10px;
       }
     }
   }
@@ -158,7 +121,7 @@ bus.on('终端',terminalFn)
     width: 100%;
     height: calc(100% - 40px);
   }
-}
+
 
 :deep(.terminal-header){
   display: none;
