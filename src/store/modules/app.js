@@ -147,6 +147,8 @@ const mutations = {
           if(state.alwaysTaskBar.indexOf(name)===-1){
             item.isTaskBar = value
           }
+          item.mini = false
+          item.hidden = false
         }else{
           item.isTop = !item.mini && !item.hidden
         }

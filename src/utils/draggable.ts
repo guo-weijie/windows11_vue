@@ -2,14 +2,16 @@ export class Draggable {
   ele: HTMLElement;
   startLeft: number | undefined;
   startTop: number | undefined;
-  startY:number | undefined;
+  startY: number | undefined;
   startX: number | undefined;
   dragStyle: string | undefined;
-  constructor(el:HTMLElement) {
+  constructor(el: HTMLElement) {
     this.ele = (el.parentElement) as HTMLElement
     ((el.parentElement) as HTMLElement).onmousedown = this.down.bind(this)
   }
-  down(e:MouseEvent) {
+  down(e: MouseEvent) {
+    const target = e.target as Element
+    if (target.className !== 'titleBlock') return
     this.dragStyle = this.ele.className
     this.ele.style.transition = 'none'
     this.startLeft = this.ele.offsetLeft
@@ -19,8 +21,8 @@ export class Draggable {
     document.onmousemove = this.move.bind(this)
     document.onmouseup = this.up.bind(this)
   }
-  move(e:MouseEvent) {
-    if(this.dragStyle==='appContainer'){
+  move(e: MouseEvent) {
+    if (this.dragStyle === 'appContainer') {
       this.ele.className = 'appContainer dragStyle'
     }
     const curLeft = e.pageX - (this.startX as number) + (this.startLeft as number),

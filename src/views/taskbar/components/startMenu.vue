@@ -285,17 +285,6 @@ const pinnedOpenApp = data => {
   }
   bus.emit('closeTaskbar')
   bus.emit(data.name)
-  // const obj = {
-  //   name: data.name
-  // }
-  // if(data.mini){
-  //   obj.key = 'mini'
-  //   obj.value = false
-  // }else{
-  //   obj.key = 'open'
-  //   obj.value = true
-  // }
-  // store.dispatch('changeAppStatus',obj)
 }
 // 获取固定应用列表 -----------------------
 const pinnedList = computed(() => store.getters.app.filter((item) => item.isPinned))

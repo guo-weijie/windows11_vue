@@ -69,7 +69,7 @@
 import { NIcon, NLayout, NLayoutContent, NLayoutSider, NInput, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
 import { ChevronRight20Regular } from '@vicons/fluent'
 // import NavBarRight from '@/components/navBarRight/index.vue'
-import { reactive, ref, shallowReactive, nextTick, computed } from 'vue';
+import { reactive, ref, shallowReactive, nextTick, computed, onMounted } from 'vue';
 import MenuItemList from './components/menuItemList.vue'
 import bus from '@/utils/bus'
 import store from '@/store'
@@ -641,6 +641,10 @@ const setupFn = async () => {
   setupBox.value.style.zIndex = store.getters.zIndex
   store.dispatch('changeZIndex')
 }
+
+onMounted(()=>{
+  setupFn()
+})
 
 bus.on('设置',setupFn)
 
