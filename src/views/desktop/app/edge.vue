@@ -62,7 +62,7 @@
 <script lang='ts' setup>
 import { ArrowLeft24Regular, ArrowRight24Regular, ArrowClockwise48Regular, LockClosed20Regular, Search20Regular, Dismiss20Filled } from '@vicons/fluent'
 import { NIcon, NButton, NInput } from 'naive-ui'
-import { ref, shallowRef, watch, nextTick } from 'vue'
+import { ref, shallowRef, watch, nextTick, onMounted } from 'vue'
 import bus from '@/utils/bus'
 import store from '@/store'
 import TitleBlock from '@/components/titleBlock'
@@ -128,11 +128,16 @@ const onInput = () => {
 const edgeBox = ref()
 // 点击窗口时显示在上层
 const edgeFn = async () => {
-  console.log(1)
   await nextTick()
   edgeBox.value.style.zIndex = store.getters.zIndex
   store.dispatch('changeZIndex')
 }
+
+onMounted(()=>{
+  edgeFn()
+})
+
+
 
 bus.on('Edge',edgeFn)
 
@@ -144,7 +149,6 @@ bus.on('Edge',edgeFn)
 
   .titleLeft {
       box-sizing: border-box;
-      width: 12.5%;
       height: 40px;
       padding: 0 12px;
       margin-left: 8px;

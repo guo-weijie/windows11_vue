@@ -18,7 +18,7 @@
     </TitleBlock>
     <!-- 主体 -->
     <div class="terminalContainer">
-      <Terminal name="gTerminal" @execCmd="onExecCmd" context="ghosie"></Terminal>
+      <Terminal name="gTerminal" @execCmd="onExecCmd" context="ghosie" :initLog="initData"></Terminal>
     </div>
   </div>
 </template>
@@ -26,7 +26,7 @@
 <script lang='ts' setup>
 import TitleBlock from '@/components/titleBlock'
 import { Dismiss20Filled } from '@vicons/fluent'
-import { nextTick, ref } from 'vue'
+import { nextTick, ref, onMounted } from 'vue'
 import Terminal from 'vue-web-terminal'
 import store from '@/store'
 import bus from '@/utils/bus'
@@ -34,7 +34,7 @@ import { NIcon, NButton } from 'naive-ui'
 
 const terminalBox = ref()
 
-const onExecCmd = (key: string, command: any, success: (arg0: { type: string; class?: string; content: any; tag?: string; }) => void, failed: (arg0: string) => void) => {
+const onExecCmd = (key: string, command: any, success: any, failed: (arg0: string) => void) => {
   if (key === 'fail') {
     failed('Something wrong!!!')
   } else if (key === 'json') {
@@ -81,13 +81,29 @@ const onExecCmd = (key: string, command: any, success: (arg0: { type: string; cl
   }
 }
 
+// 初始化时消息日志
+const initData=[{
+  "type": "normal",
+  "content": "Windows PowerShell"
+},{
+  "type": "normal",
+  "content": "版权所有 (C) Microsoft Corporation。保留所有权利。"
+},{
+  "type": "normal",
+  "content": "尝试新的跨平台 PowerShell <a href='https://aka.ms/pscore6'>https://aka.ms/pscore6</a>"
+}]
+
 // 点击窗口时显示在上层
 const terminalFn = async () => {
   await nextTick()
-  terminalBox.value.style.zIndex = store.state.zIndex
+  terminalBox.value.style.zIndex = store.getters.zIndex
   store.dispatch('changeZIndex')
 }
 bus.on('终端',terminalFn)
+
+onMounted(()=>{
+  terminalFn()
+})
 
 </script>
 
@@ -95,11 +111,12 @@ bus.on('终端',terminalFn)
 @import "@/style/public";
   .titleLeft {
     box-sizing: border-box;
-    height: 40px;
+    height: 32px;
     padding: 0 12px;
     margin-left: 8px;
     background-color: #f7f7f7;
     border-radius: 4px 4px 0 0;
+    margin-top: 6px;
     @include flex(space-between, center);
 
     .leftTagName {
