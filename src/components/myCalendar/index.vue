@@ -2,10 +2,9 @@
   <div class="myCalendar">
     <div class="calendarNow">
       <div class="nowSolar">
-        <div
-          class="solarDate"
-          @click.stop="isCurrentTime"
-        >{{ flagTime.month }}月{{ flagTime.date }}日，星期{{ dayList[flagTime.day] }}</div>
+        <div class="solarDate" @click.stop="isCurrentTime">{{ flagTime.month }}月{{ flagTime.date }}日，星期{{
+            dayList[flagTime.day]
+        }}</div>
         <n-button @click.stop="changeCalendarBoxStatus">
           <template #icon>
             <n-icon color="#3c3d3e">
@@ -19,10 +18,10 @@
     </div>
     <div class="calendarListBox" ref="calendarBoxRef">
       <div class="boxHeader">
-        <div
-          :class="{ headerDate: true, headerDateEnd: calendarFlag === 3 }"
-          @click.stop="changeCalendar"
-        >{{ calendarFlag === 2 ? `${year}年` : calendarFlag === 1 ? `${year}年${month}月` : `${integerTenYear.before}-${integerTenYear.after}` }}</div>
+        <div :class="{ headerDate: true, headerDateEnd: calendarFlag === 3 }" @click.stop="changeCalendar">{{
+            calendarFlag === 2 ? `${year}年` : calendarFlag === 1 ? `${year}年${month}月` :
+              `${integerTenYear.before}-${integerTenYear.after}`
+        }}</div>
         <div>
           <n-button style="font-size: 30px;margin-right: 15px;" @click.stop="getCalendar(-1)">
             <n-icon color="#81868b">
@@ -46,33 +45,22 @@
         <div>六</div>
       </div>
       <div
-        :class="{ boxBody: true, bodyDate: calendarFlag === 1, bodyMonthYear: calendarFlag === 2 || calendarFlag === 3 }"
-      >
-        <div
-          v-show="calendarFlag === 1"
-          v-for="item in 42"
-          :key="item + 'd'"
-          :class="{ other: item <= monthFirstDay || item > monthAll + monthFirstDay, current: item - monthFirstDay === currentDate && flagTime.year === year && flagTime.month === month }"
-        >
+        :class="{ boxBody: true, bodyDate: calendarFlag === 1, bodyMonthYear: calendarFlag === 2 || calendarFlag === 3 }">
+        <div v-show="calendarFlag === 1" v-for="item in 42" :key="item + 'd'"
+          :class="{ other: item <= monthFirstDay || item > monthAll + monthFirstDay, current: item - monthFirstDay === currentDate && flagTime.year === year && flagTime.month === month }">
           <span>{{ dealTime(item) }}</span>
           <span>{{ dealTime(item, 'lunar') }}</span>
         </div>
 
-        <div
-          v-show="calendarFlag === 2"
-          v-for="item in 16"
-          :key="item + 'm'"
+        <div v-show="calendarFlag === 2" v-for="item in 16" :key="item + 'm'"
           :class="{ other: item > 12, current: item === flagTime.month && flagTime.year === year }"
-          @click.stop="selectMonth(item)"
-        >{{ item > 12 ? `${item - 12}月` : `${item}月` }}</div>
+          @click.stop="selectMonth(item)">{{ item > 12 ? `${item - 12}月` : `${item}月` }}</div>
 
-        <div
-          v-show="calendarFlag === 3"
-          v-for="item in 16"
-          :key="item + 'm'"
+        <div v-show="calendarFlag === 3" v-for="item in 16" :key="item + 'm'"
           :class="{ other: item <= ((Math.floor(year / 10) * 10) - 1970) % 4 || item > ((Math.floor(year / 10) * 10) - 1970) % 4 + 11, current: integerTenYear.before - (integerTenYear.before - 1970) % 4 + item - 1 === flagTime.year }"
-          @click.stop="selectYear(integerTenYear.before - (integerTenYear.before - 1970) % 4 + item - 1)"
-        >{{ integerTenYear.before - (integerTenYear.before - 1970) % 4 + item - 1 }}</div>
+          @click.stop="selectYear(integerTenYear.before - (integerTenYear.before - 1970) % 4 + item - 1)">{{
+              integerTenYear.before - (integerTenYear.before - 1970) % 4 + item - 1
+          }}</div>
       </div>
     </div>
   </div>
@@ -82,8 +70,7 @@
 import { ref, watchEffect, readonly, reactive } from 'vue'
 import { KeyboardArrowDownRound, KeyboardArrowUpRound, ArrowDropDownRound, ArrowDropUpRound } from '@vicons/material'
 import { NIcon, NButton } from 'naive-ui'
-import { Rboolean, REle } from '@/type/basic'
-import { timeObj, RintegerYear } from '@/type/index'
+import { timeObj, RintegerYear, Rboolean, REle } from '@/type/index'
 import { startOfMonth, endOfMonth, getDay, addMonths } from 'date-fns'
 import { getLunar } from 'chinese-lunar-calendar'
 // 控制箭头方向
@@ -231,10 +218,12 @@ function dealTime(item: number, flag = 'solar') {
 
 <style lang="scss" scoped>
 @import "@/style/public";
+
 .myCalendar {
   width: 334px;
   @include box_border;
 }
+
 .calendarNow {
   box-sizing: border-box;
   width: 100%;
@@ -243,10 +232,12 @@ function dealTime(item: number, flag = 'solar') {
   padding: 13px 17px 15px;
   background-color: var(--calendar-top-bg-color);
   border-bottom: 1px solid var(--global-window-division-color);
+
   .nowSolar {
     height: 22px;
     @include flex(space-between, center);
     margin-bottom: 6px;
+
     .n-button {
       width: 22px;
       height: 22px;
@@ -254,52 +245,64 @@ function dealTime(item: number, flag = 'solar') {
       box-shadow: 0 1px 1px #ced2d4;
     }
   }
+
   .nowLunar {
     height: 12px;
   }
 }
+
 .calendarListBox {
   height: 354px;
   background-color: var(--calendar-main-bg-color);
   transition: height 0.3s ease;
+
   .boxHeader {
     box-sizing: border-box;
     padding: 20px 10px 0 16px;
     @include flex(space-between, center);
     font-size: 14px;
     font-weight: bold;
+
     .headerDate:active {
       color: var(--calendar-font-color);
     }
+
     .headerDateEnd {
       color: var(--calendar-header-end-color);
     }
+
     .n-button {
       height: auto;
     }
   }
+
   .boxWeek {
     height: 38px;
     font-size: 10px;
     @include grid(7, 1);
+
     div {
       text-align: center;
     }
   }
+
   .boxBody {
     div {
       display: grid;
       justify-content: center;
       align-content: center;
       text-align: center;
+
       &:hover {
         border-radius: 50%;
         background-color: var(--calendar-date-hover-color);
       }
     }
+
     .other {
       color: var(--calendar-none-now-month-color);
     }
+
     .current {
       color: var(--calendar-now-day-color);
       background-color: var(--global-theme-color) !important;
@@ -307,6 +310,7 @@ function dealTime(item: number, flag = 'solar') {
     }
   }
 }
+
 .n-button {
   padding: 0;
 }
@@ -316,15 +320,18 @@ function dealTime(item: number, flag = 'solar') {
   height: 262px;
   font-size: 10px;
   @include grid(7, 6);
+
   div {
     width: 100%;
     height: 100%;
   }
 }
+
 // 月历样式
 .bodyMonthYear {
   height: 300px;
   @include grid(4, 4);
+
   div {
     width: 80%;
     height: 80%;

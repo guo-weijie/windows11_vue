@@ -28,13 +28,13 @@ import TitleBlock from '@/components/titleBlock'
 import { Dismiss20Filled } from '@vicons/fluent'
 import { nextTick, ref, onMounted } from 'vue'
 import Terminal from 'vue-web-terminal'
-import store from '@/store'
+import { appStore } from '@/store/app'
 import bus from '@/utils/bus'
 import { NIcon, NButton } from 'naive-ui'
 
+const store = appStore()
 const terminalBox = ref()
-
-const onExecCmd = (key: string, command: any, success: any, failed: (arg0: string) => void) => {
+const onExecCmd = (key: string, command: unknown, success: any, failed: (arg0: string) => void) => {
   if (key === 'fail') {
     failed('Something wrong!!!')
   } else if (key === 'json') {
@@ -82,13 +82,13 @@ const onExecCmd = (key: string, command: any, success: any, failed: (arg0: strin
 }
 
 // 初始化时消息日志
-const initData=[{
+const initData = [{
   "type": "normal",
   "content": "Windows PowerShell"
-},{
+}, {
   "type": "normal",
   "content": "版权所有 (C) Microsoft Corporation。保留所有权利。"
-},{
+}, {
   "type": "normal",
   "content": "尝试新的跨平台 PowerShell <a href='https://aka.ms/pscore6'>https://aka.ms/pscore6</a>"
 }]
@@ -96,12 +96,12 @@ const initData=[{
 // 点击窗口时显示在上层
 const terminalFn = async () => {
   await nextTick()
-  terminalBox.value.style.zIndex = store.getters.zIndex
-  store.dispatch('changeZIndex')
+  terminalBox.value.style.zIndex = store.zIndex
+  store.changeZIndex()
 }
-bus.on('终端',terminalFn)
+bus.on('终端', terminalFn)
 
-onMounted(()=>{
+onMounted(() => {
   terminalFn()
 })
 
@@ -109,41 +109,43 @@ onMounted(()=>{
 
 <style lang='scss' scoped>
 @import "@/style/public";
-  .titleLeft {
-    box-sizing: border-box;
-    height: 32px;
-    padding: 0 12px;
-    margin-left: 8px;
-    background-color: #f7f7f7;
-    border-radius: 4px 4px 0 0;
-    margin-top: 6px;
-    @include flex(space-between, center);
 
-    .leftTagName {
-      width: calc(100% - 26px);
-      white-space: nowrap;
-      overflow: hidden;
-      font-size: 12px;
-      color: #a24d4d;
-      @include flex(flex-start, center);
+.titleLeft {
+  box-sizing: border-box;
+  height: 32px;
+  padding: 0 12px;
+  margin-left: 8px;
+  background-color: #f7f7f7;
+  border-radius: 4px 4px 0 0;
+  margin-top: 6px;
+  @include flex(space-between, center);
 
-      img {
-        width: 16px;
-        margin-right: 10px;
-      }
+  .leftTagName {
+    width: calc(100% - 26px);
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 12px;
+    color: #a24d4d;
+    @include flex(flex-start, center);
+
+    img {
+      width: 16px;
+      margin-right: 10px;
     }
   }
+}
 
-  .terminalContainer {
-    width: 100%;
-    height: calc(100% - 40px);
-  }
+.terminalContainer {
+  width: 100%;
+  height: calc(100% - 40px);
+}
 
 
-:deep(.terminal-header){
+:deep(.terminal-header) {
   display: none;
 }
-:deep(.terminal-window){
+
+:deep(.terminal-window) {
   padding: 0;
 }
 </style>

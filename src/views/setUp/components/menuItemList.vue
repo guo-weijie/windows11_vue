@@ -1,9 +1,9 @@
 <template>
   <div class="menuItemList">
     <!-- 系统 -->
-    <div class="system" v-show="(props.menuItemListData as Record<string, any>).name==='系统'">
+    <div class="system" v-show="(props.menuItemListData as Record<string, any>).name === '系统'">
       <div class="systemLeft">
-        <img :src="require('@/assets/wallpaper'+ bgImg)" alt="windows11 背景图片">
+        <img :src="require('@/assets/wallpaper' + bgImg)" alt="windows11 背景图片">
         <div>
           <div class="first">Windows 11</div>
           <div class="second">My PC</div>
@@ -20,7 +20,7 @@
     </div>
 
     <!-- 网络和 Internet -->
-    <div class="network" v-show="(props.menuItemListData as Record<string, any>).name==='网络和 Internet'">
+    <div class="network" v-show="(props.menuItemListData as Record<string, any>).name === '网络和 Internet'">
       <div class="networkLeft">
         <n-icon size="92" color="#138fdb">
           <TvUsb20Regular />
@@ -59,28 +59,30 @@
     </div>
 
     <!-- 个性化 -->
-    <div class="personalize" v-show="(props.menuItemListData as Record<string, any>).name==='个性化'">
-      <img :src="require('@/assets/wallpaper'+ bgImg)" class="viewBox" alt="windows11 背景图片" />
+    <div class="personalize" v-show="(props.menuItemListData as Record<string, any>).name === '个性化'">
+      <img :src="require('@/assets/wallpaper' + bgImg)" class="viewBox" alt="windows11 背景图片" />
       <div class="selectBox">
         <div class="boxTitle">选择要应用的主题</div>
         <div class="bgImgBox">
-          <img v-for="(item,index) in imgListData" :class="{selected: item.select}" :src="require('@/assets/wallpaper'+ item.url)" :key="item.url" alt="windows11 桌面背景图片" @click.stop="changeBgImg(index)">
+          <img v-for="(item, index) in imgListData" :class="{ selected: item.select }"
+            :src="require('@/assets/wallpaper' + item.url)" :key="item.url" alt="windows11 桌面背景图片"
+            @click.stop="changeBgImg(index)">
         </div>
       </div>
     </div>
 
     <!-- 账户 -->
-    <div class="account" v-show="(props.menuItemListData as Record<string, any>).name==='账户'">
-      <img :src="require('@/assets'+userAva)" :alt="userName" />
+    <div class="account" v-show="(props.menuItemListData as Record<string, any>).name === '账户'">
+      <img :src="require('@/assets' + userAva)" :alt="userName" />
       <div>
-        <div class="userName">{{userName}}</div>
+        <div class="userName">{{  userName  }}</div>
         <div class="accountType">本地账户</div>
         <div class="accountAuth">管理员</div>
       </div>
     </div>
 
     <!-- windows 更新 -->
-    <div class="update" v-show="(props.menuItemListData as Record<string, any>).name==='Windows 更新'">
+    <div class="update" v-show="(props.menuItemListData as Record<string, any>).name === 'Windows 更新'">
       <div class="updateLeft">
         <img :src="require('@/assets/icon/systemIcon/updatec.png')" alt="windows11 更新">
         <div>
@@ -92,21 +94,22 @@
     </div>
 
     <!-- windows 更新 -->
-    <div class="updateLess" v-show="(props.menuItemListData as Record<string, any>).name==='Windows 更新'">
+    <div class="updateLess" v-show="(props.menuItemListData as Record<string, any>).name === 'Windows 更新'">
       <n-icon size="16" color="#191a1a">
         <ChatBubblesQuestion20Filled />
       </n-icon>
       获取帮助
     </div>
 
-    <div v-for="(item, index) in (props.menuItemListData as Record<string, any>).children" :key="item + index" class="listContainer">
-      <div class="listTitle" v-if="item.title">{{ item.title }}</div>
+    <div v-for="(item, index) in (props.menuItemListData as Record<string, any>).children" :key="item + index"
+      class="listContainer">
+      <div class="listTitle" v-if="item.title">{{  item.title  }}</div>
       <div class="listContent" v-for="iten in item.itemList" :key="iten.name">
         <div class="contentList">
           <img :src="iten.url" class="fontIcon" :alt="item.name" />
           <div>
-            <div class="contentTitle">{{ iten.name }}</div>
-            <div class="contentDesc">{{ iten.desc }}</div>
+            <div class="contentTitle">{{  iten.name  }}</div>
+            <div class="contentDesc">{{  iten.desc  }}</div>
           </div>
         </div>
         <n-icon color="#484848">
@@ -120,12 +123,13 @@
 <script lang='ts' setup>
 import { NIcon, NButton } from 'naive-ui'
 import { ChevronRight20Regular, ChatBubblesQuestion20Filled, Info20Regular, DataPie20Regular, Globe20Regular, TvUsb20Regular } from '@vicons/fluent'
-import store from '@/store'
+import { userStore } from '@/store/user'
 import { reactive, computed } from 'vue'
 
-const bgImg = computed(()=>store.getters.backgroundImgUrl)
-const userName = computed(()=>store.getters.userName)
-const userAva = computed(()=>store.getters.userAvatar)
+const store = userStore()
+const bgImg = computed(() => store.getBackgroundImgUrl)
+const userName = computed(() => store.getUserName)
+const userAva = computed(() => store.getUserAvatar)
 
 
 const props = defineProps({
@@ -133,36 +137,36 @@ const props = defineProps({
 })
 const emit = defineEmits(['changeItem'])
 
-const toItem = (name:string,num: number) => {
-  emit('changeItem', name,num)
+const toItem = (name: string, num: number) => {
+  emit('changeItem', name, num)
 }
 
 const imgListData = reactive([{
   url: '/default/img0.jpg',
   select: true
-},{
+}, {
   url: '/ThemeC/img0.jpg',
   select: false
-},{
+}, {
   url: '/ThemeA/img0.jpg',
   select: false
-},{
+}, {
   url: '/default/img1.jpg',
   select: false
-},{
+}, {
   url: '/ThemeB/img0.jpg',
   select: false
-},{
+}, {
   url: '/ThemeD/img0.jpg',
   select: false
 }])
 
-const changeBgImg = (num:number) => {
-  imgListData.forEach((item,index)=>{
-    if(index===num){
+const changeBgImg = (num: number) => {
+  imgListData.forEach((item, index) => {
+    if (index === num) {
       item.select = true
-      store.dispatch('changeBackgroundImgUrl',item['url'])
-    }else{
+      store.changeBackgroundImgUrl(item['url'])
+    } else {
       item.select = false
     }
   })
@@ -178,23 +182,28 @@ const changeBgImg = (num:number) => {
   // height: 100%;
   height: calc(100% - 70px);
   overflow-y: auto;
+
   &::-webkit-scrollbar {
     width: 2px;
     height: 303px;
   }
+
   &::-webkit-scrollbar-thumb {
     background-color: #7c7e86;
     border-radius: 1px;
   }
-  .listContainer{
+
+  .listContainer {
     padding-bottom: 40px;
-    .listTitle{
+
+    .listTitle {
       font-size: 14px;
       font-weight: bold;
       color: #1a1a1a;
       margin-bottom: 10px;
     }
   }
+
   .listContent {
     max-width: 1000px;
     height: 67px;
@@ -203,172 +212,206 @@ const changeBgImg = (num:number) => {
     border: 1px solid #e0e6ea;
     border-radius: 5px;
     @include flex(space-between, center);
+
     &:hover {
       background-color: #f4f7f9;
     }
-    .n-icon{
+
+    .n-icon {
       margin-right: 20px;
     }
-    .contentList{
+
+    .contentList {
       @include flex(flex-start, center);
     }
-    .contentTitle{
+
+    .contentTitle {
       font-size: 12px;
       color: #1b1b1b;
       font-weight: bold;
     }
-    .contentDesc{
+
+    .contentDesc {
       font-size: 12px;
       color: #757575;
     }
   }
 }
+
 .fontIcon {
   width: 20px;
   margin-left: 18px;
   margin-right: 20px;
 }
 
-.system{
+.system {
   max-width: 1000px;
   height: 68px;
   margin-bottom: 26px;
-  @include flex(space-between,center);
-  .systemLeft{
-    @include flex(flex-start,flex-end);
-    img{
+  @include flex(space-between, center);
+
+  .systemLeft {
+    @include flex(flex-start, flex-end);
+
+    img {
       width: 112px;
       height: 60px;
       border: 4px solid #000000;
       border-radius: 5px;
       margin-right: 16px;
     }
-    .first{
+
+    .first {
       color: #1a1a1a;
       font-weight: bold;
       font-size: 12px;
     }
-    .second{
+
+    .second {
       color: #565656;
       font-size: 13px;
     }
-    .rename{
+
+    .rename {
       color: #003e92;
       font-size: 14px;
     }
   }
-  .systemRight{
-    @include flex(flex-end,center);
-    img{
+
+  .systemRight {
+    @include flex(flex-end, center);
+
+    img {
       width: 20px;
       height: 20px;
       margin-right: 16px;
     }
-    .updated{
+
+    .updated {
       font-weight: bold;
       font-size: 14px;
       color: #101010;
     }
-    .lastTimeUpdate{
+
+    .lastTimeUpdate {
       font-size: 12px;
       color: #616161;
     }
   }
 }
 
-.network{
+.network {
   max-width: 1000px;
-  @include flex(space-between,center);
+  @include flex(space-between, center);
   margin-bottom: 20px;
-  &Left{
-    @include flex(flex-start,center);
-    &>.n-icon{
+
+  &Left {
+    @include flex(flex-start, center);
+
+    &>.n-icon {
       margin-right: 24px;
     }
   }
-  &Center{
+
+  &Center {
     padding: 11px 8px;
     border-radius: 5px;
-    @include flex(flex-start,center);
-    &>.n-icon{
+    @include flex(flex-start, center);
+
+    &>.n-icon {
       margin-right: 12px;
     }
   }
-  &Right{
+
+  &Right {
     width: 192px;
     height: 56px;
     border-radius: 5px;
-    @include flex(space-around,center);
+    @include flex(space-around, center);
   }
-  &Title{
+
+  &Title {
     font-size: 14px;
     color: #191a1a;
     font-weight: bold;
   }
-  &Desc{
-    @include flex(flex-start,center);
+
+  &Desc {
+    @include flex(flex-start, center);
     font-size: 12px;
     color: #5b5d5f;
-    .n-icon{
+
+    .n-icon {
       margin-right: 6px;
     }
   }
+
   .hoverStyle:hover {
     background-color: #e7ebf0;
   }
 }
 
-.account{
+.account {
   max-width: 1000px;
   height: 92px;
   margin-bottom: 30px;
-  @include flex(flex-start,center);
-  img{
+  @include flex(flex-start, center);
+
+  img {
     height: 100%;
     margin-right: 16px;
   }
-  .userName{
+
+  .userName {
     font-size: 14px;
     font-weight: bold;
     color: #000000;
   }
-  &Type{
+
+  &Type {
     font-size: 12px;
     color: #5f6264;
   }
-  &Auth{
+
+  &Auth {
     font-size: 12px;
     color: #5f6264;
   }
 }
 
-.personalize{
-  @include flex(flex-start,center);
+.personalize {
+  @include flex(flex-start, center);
   max-width: 1000px;
   margin-bottom: 20px;
-  .viewBox{
+
+  .viewBox {
     width: 335px;
     height: 188px;
     border-radius: 5px;
     margin-right: 48px;
   }
-  .selectBox{
+
+  .selectBox {
     font-size: 14px;
     color: #191a1a;
     font-weight: bold;
-    .boxTitle{
+
+    .boxTitle {
       margin-bottom: 16px;
     }
-    .bgImgBox{
+
+    .bgImgBox {
       width: 352px;
       height: 190px;
-      @include grid(3,2);
+      @include grid(3, 2);
       grid-gap: 8px;
-      img{
+
+      img {
         width: 100%;
         height: 100%;
         border-radius: 5px;
       }
+
       .selected {
         box-sizing: border-box;
         padding: 1px;
@@ -378,31 +421,37 @@ const changeBgImg = (num:number) => {
   }
 }
 
-.update{
+.update {
   max-width: 1000px;
-  @include flex(space-between,center);
+  @include flex(space-between, center);
   margin-bottom: 26px;
-  &Less{
-    @include flex(flex-start,center);
+
+  &Less {
+    @include flex(flex-start, center);
     color: #003e92;
     font-size: 12px;
-    .n-icon{
+
+    .n-icon {
       margin-right: 14px;
     }
   }
-  &Left{
-    @include flex(flex-start,center);
-    img{
+
+  &Left {
+    @include flex(flex-start, center);
+
+    img {
       width: 84px;
       margin-left: 12px;
       margin-right: 18px;
     }
-    .lastedVer{
+
+    .lastedVer {
       font-size: 17px;
       font-weight: bold;
       color: #191a1a;
     }
-    .lastCheck{
+
+    .lastCheck {
       font-size: 12px;
       color: #5f6264;
     }

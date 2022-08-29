@@ -4,7 +4,7 @@
       <!-- 任务栏左侧 -->
       <div class="taskBarLeft">
         <!-- 无下划线应用 -->
-        <div v-for="item in noUnderLineApp" :key="item.name" @click.stop="taskBarLeftNoLine(item,'clear')">
+        <div v-for="item in noUnderLineApp" :key="item.name" @click.stop="taskBarLeftNoLine(item, 'clear')">
           <img :src="item.url" alt="item.name" v-click-animal />
         </div>
         <!-- 有下划线应用 -->
@@ -16,33 +16,33 @@
       <!-- 任务栏右侧 -->
       <div class="taskRight">
         <!-- 隐藏的图标 -->
-        <div class="hideIcon" @click.stop="taskBarRight('hideIcon','clear')">
+        <div class="hideIcon" @click.stop="taskBarRight('hideIcon', 'clear')">
           <n-icon size="22">
             <KeyboardArrowUpTwotone v-show="hideIcon === 'up'" />
             <KeyboardArrowDownTwotone v-show="hideIcon === 'down'" />
           </n-icon>
         </div>
         <!-- 语言 -->
-        <div class="language" @click.stop="taskBarRight('language','clear')">{{ lang }}</div>
+        <div class="language" @click.stop="taskBarRight('language', 'clear')">{{  lang  }}</div>
         <!-- 控制中心 -->
-        <div class="controlCenter" @click.stop="taskBarRight('controlCenter','clear')">
+        <div class="controlCenter" @click.stop="taskBarRight('controlCenter', 'clear')">
           <img class="centerWifi" :src="controlCenterIcon.wifi" alt="网络连接" />
           <img class="centerAudio" :src="controlCenterIcon.audio" alt="音量" />
         </div>
         <!-- 时间 -->
-        <div class="time_noti" @click.stop="taskBarRight('calendar','clear')">
-          <div>{{ upTime }}</div>
-          <div>{{ btmTime }}</div>
+        <div class="time_noti" @click.stop="taskBarRight('calendar', 'clear')">
+          <div>{{  upTime  }}</div>
+          <div>{{  btmTime  }}</div>
         </div>
       </div>
     </div>
 
     <!-- 开始菜单 -->
-    <div class="startMenu center" :class="{startMenuHeight:openStart}">
-      <StartMenu @pleaseOpenSearch = "taskBarLeftNoLine({name:'search', open:flase})" />
+    <div class="startMenu center" :class="{ startMenuHeight: openStart }">
+      <StartMenu @pleaseOpenSearch="taskBarLeftNoLine({ name: 'search', open: false })" />
     </div>
     <!-- 搜索 -->
-    <div class="search center" :class="{searchHeight:openSearch}">
+    <div class="search center" :class="{ searchHeight: openSearch }">
       <Search />
     </div>
     <!-- 日历 -->
@@ -56,26 +56,18 @@
     <!-- 隐藏的图标 -->
     <div class="hideIconBox" ref="hideIconBox">
       <div class="iconBoxItem">
-        <img
-          :src="require('@/assets/icon/appIcon/security.png')"
-          alt="microsoft defender"
-          title="Windows 安全中心 - 不需要执行操作"
-        />
+        <img :src="require('@/assets/icon/appIcon/security.png')" alt="microsoft defender"
+          title="Windows 安全中心 - 不需要执行操作" />
       </div>
       <div class="iconBoxItem">
-        <img
-          :src="require('@/assets/icon/appIcon/oneDrive.png')"
-          alt="microsoft oneDrive"
-          title="oneDrive 最新"
-        />
+        <img :src="require('@/assets/icon/appIcon/oneDrive.png')" alt="microsoft oneDrive" title="oneDrive 最新" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { timeType } from '@/type'
-import { Rstring } from '@/type/basic'
+import { timeType, Rstring } from '@/type'
 import { PropType, ref, watchEffect, reactive, computed } from 'vue';
 import MyCalendar from '@/components/myCalendar/index.vue'
 import ControlCenter from './components/controlCenter.vue'
@@ -83,10 +75,10 @@ import StartMenu from './components/startMenu.vue'
 import Search from './components/search.vue'
 import { KeyboardArrowUpTwotone, KeyboardArrowDownTwotone } from '@vicons/material'
 import { NIcon } from 'naive-ui'
-import store from '@/store'
+import { appStore, appItem } from '@/store/app'
 import bus from '@/utils/bus'
-import { String } from 'lodash';
 
+const store = appStore()
 const props = defineProps({
   currentTime: Object as PropType<timeType>
 })
@@ -100,7 +92,7 @@ const taskbarEvent = () => {
   taskBarLeftNoLine()
   taskBarRight()
 }
-bus.on('closeTaskbar', ()=>{
+bus.on('closeTaskbar', () => {
   taskbarEvent()
 })
 
@@ -122,24 +114,24 @@ const noUnderLineApp = reactive([{
   open: false
 }])
 
-const openStart = computed(()=>noUnderLineApp[0].open)
-const openSearch = computed(()=>noUnderLineApp[1].open)
+const openStart = computed(() => noUnderLineApp[0].open)
+const openSearch = computed(() => noUnderLineApp[1].open)
 
 // 无下划线应用点击事件
-const taskBarLeftNoLine=(value?: { name: string; } | undefined,clear?:string)=>{
-  if(clear){
+const taskBarLeftNoLine = (value?: { name: string, open: boolean } | undefined, clear?: string) => {
+  if (clear) {
     taskBarRight()
   }
-  noUnderLineApp.forEach(item=>{
-    if(item.name===value?.name){
+  noUnderLineApp.forEach(item => {
+    if (item.name === value?.name) {
       item.open = !item.open
-    }else{
+    } else {
       item.open = false
     }
   })
 }
 // 有下划线应用 -> 包括常驻和打开时驻留的
-const underLineApp = computed(()=>store.getters.app.filter((item: { isTaskBar: any; })=>item.isTaskBar))
+const underLineApp = computed(() => store.getApp.filter((item: appItem) => item.isTaskBar))
 // 有下划线应用点击事件
 const taskBarLeftHaveLine = (value: { name: string; }) => {
   taskbarEvent()
@@ -151,35 +143,35 @@ const taskBarLeftHaveLine = (value: { name: string; }) => {
    * 
    * 
    */
-  underLineApp.value.forEach((item: { name: string; open: boolean; mini: boolean; hidden: boolean; isTop: boolean; })=>{
-    if(item.name===value?.name){
-      if(item.open){
-        if(item.isTop){
-          store.dispatch('changeAppStatus',{
+  underLineApp.value.forEach((item: { name: string; open: boolean; mini: boolean; hidden: boolean; isTop: boolean; }) => {
+    if (item.name === value?.name) {
+      if (item.open) {
+        if (item.isTop) {
+          store.changeAppStatus({
             name: item.name,
             key: 'hidden',
             value: true
           })
-          store.dispatch('changeAppStatus',{
+          store.changeAppStatus({
             name: item.name,
             key: 'mini',
             value: true
           })
-        }else{
-          if(!item.hidden){
-            store.dispatch('changeAppStatus',{
+        } else {
+          if (!item.hidden) {
+            store.changeAppStatus({
               name: item.name,
               key: 'mini',
               value: false
             })
             bus.emit(value.name)
-          }else{
-            store.dispatch('changeAppStatus',{
+          } else {
+            store.changeAppStatus({
               name: item.name,
               key: 'hidden',
               value: false
             })
-            store.dispatch('changeAppStatus',{
+            store.changeAppStatus({
               name: item.name,
               key: 'mini',
               value: false
@@ -187,8 +179,8 @@ const taskBarLeftHaveLine = (value: { name: string; }) => {
             bus.emit(value.name)
           }
         }
-      }else{
-        store.dispatch('changeAppStatus',{
+      } else {
+        store.changeAppStatus({
           name: item.name,
           key: 'open',
           value: true
@@ -232,9 +224,9 @@ const taskBarLeftHaveLine = (value: { name: string; }) => {
       //     value: true
       //   })
       // }
-    }else{
-      if(item.open && !item.mini){
-        store.dispatch('changeAppStatus',{
+    } else {
+      if (item.open && !item.mini) {
+        store.changeAppStatus({
           name: item.name,
           key: 'mini',
           value: true
@@ -265,8 +257,8 @@ const hideIconBox = ref()
 const hideIcon: Rstring = ref('up')
 const lang: Rstring = ref('中')
 // 任务栏弹窗状态更改
-const taskBarRight = (id?:string,clear?:string) => {
-  if(clear){
+const taskBarRight = (id?: string, clear?: string) => {
+  if (clear) {
     taskBarLeftNoLine()
   }
   let boxDom
@@ -302,7 +294,7 @@ const taskBarRight = (id?:string,clear?:string) => {
   } else {
     hideIconBox.value.style.height = '0px'
   }
-  if(id==='language'){
+  if (id === 'language') {
     lang.value = lang.value === '中' ? '英' : '中'
   }
 }
@@ -330,15 +322,18 @@ watchEffect(() => {
   height: 80%;
   box-sizing: border-box;
   padding: 6px 6px 7px;
+
   &:hover {
     background-color: #f1f7fc;
     border-radius: 3px;
   }
 }
+
 .taskbar {
   // overflow: hidden;
   position: relative;
   z-index: 9999;
+
   &Box {
     width: 100%;
     height: 100%;
@@ -349,20 +344,24 @@ watchEffect(() => {
     position: absolute;
   }
 }
+
 .taskBarLeft {
   height: 100%;
   line-height: normal;
   grid-area: center;
   @include flex(center, center);
+
   div {
     position: relative;
     margin-right: 6px;
     @include taskbarFnStyle;
     transition: all 0.5s;
+
     &:hover {
       background: #fff;
     }
   }
+
   .underLine {
     position: absolute;
     bottom: 0;
@@ -373,19 +372,23 @@ watchEffect(() => {
     height: 3px;
     border-radius: 1px;
   }
+
   .fullLine {
     width: 16px;
     background-color: #0078d4;
   }
+
   .shortLine {
     width: 6px;
     background-color: #7e848a;
   }
+
   img {
     height: 24px;
     vertical-align: middle;
   }
 }
+
 .taskRight {
   height: 100%;
   grid-area: right;
@@ -394,25 +397,31 @@ watchEffect(() => {
   line-height: normal;
   text-align: right;
   @include flex(flex-end, center);
+
   .hideIcon {
     @include taskbarFnStyle;
     @include flex(center, center);
   }
+
   .language {
     @extend .hideIcon;
     font-size: 14px;
   }
+
   .controlCenter {
     @include taskbarFnStyle;
     @include flex(flex-end, center);
+
     .centerWifi {
       height: 16px;
       margin-right: 6px;
     }
+
     .centerAudio {
       height: 19px;
     }
   }
+
   .time_noti {
     @include taskbarFnStyle;
     @include flex(center, flex-end, column);
@@ -424,10 +433,12 @@ watchEffect(() => {
   @include icon;
   right: -500px;
 }
+
 .controlCenterBox {
   @include icon;
   right: -500px;
 }
+
 .hideIconBox {
   @include icon;
   @include box_border;
@@ -437,11 +448,13 @@ watchEffect(() => {
   background-color: #e3eef9;
   @include flex(flex-start, center);
   flex-wrap: wrap;
+
   .iconBoxItem {
     width: 40px;
     height: 40px;
     line-height: 40px;
     text-align: center;
+
     img {
       height: 16px;
       vertical-align: middle;
@@ -456,23 +469,28 @@ watchEffect(() => {
   height: 0;
   transition: height 150ms ease-in;
 }
+
 .startMenuHeight {
   height: 725px;
 }
-.search{
+
+.search {
   @include icon;
   @include box_border;
   width: 774px;
   height: 0;
   transition: height 150ms ease-in;
 }
-.searchHeight{
+
+.searchHeight {
   height: 724px;
 }
+
 .center {
   left: 50%;
   transform: translateX(-50%);
 }
+
 .left {
   left: 12px;
 }
@@ -482,13 +500,16 @@ watchEffect(() => {
   transition: all 200ms;
   transform: scale(0.8);
 }
+
 .clickAniamtion {
   animation: clickAniamtion 500ms ease-in-out;
 }
+
 @keyframes clickAniamtion {
   0% {
     transform: scale(0.8);
   }
+
   50% {
     transform: scale(1);
   }

@@ -1,4 +1,9 @@
-import { ComputedRef } from "vue"
+import { ComputedRef, Ref } from "vue"
+
+type Rstring = Ref<string>
+type Rnumber = Ref<number>
+type Rboolean = Ref<boolean>
+type REle = Ref<HTMLElement | null>
 
 interface appItem {
   name: string,
@@ -52,6 +57,10 @@ type fnItemTypeCom = ComputedRef<fnItemType>
 type allAppListBySort = dealAppList[]
 
 export {
+  Rstring,
+  Rnumber,
+  Rboolean,
+  REle,
   app,
   timeObj,
   timeType,

@@ -1,8 +1,9 @@
-@mixin flex($j, $a:center, $d:row) {
+@mixin flex($j, $a: center, $d: row, $fw: nowrap) {
   display: flex;
   justify-content: $j;
   align-items: $a;
   flex-direction: $d;
+  flex-wrap: $fw;
 }
 
 // 小于12像素的字 -> 参数为想要设置的字体大小
@@ -12,10 +13,10 @@
   -webkit-transform: scale($size/12);
 }
 
-@mixin grid($col,$row) {
+@mixin grid($col, $row) {
   display: grid;
-  grid-template-columns: repeat($col,1fr);
-  grid-template-rows: repeat($row,1fr);
+  grid-template-columns: repeat($col, 1fr);
+  grid-template-rows: repeat($row, 1fr);
   justify-items: center;
   align-items: center;
 }

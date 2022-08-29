@@ -39,14 +39,8 @@
           </n-icon>
         </template>
       </n-button>
-      <n-input
-        v-model:value="inputValue"
-        type="text"
-        autofocus
-        maxlength="8182"
-        @input="onInput"
-        @keydown.enter="inputComplete"
-      >
+      <n-input v-model:value="inputValue" type="text" autofocus maxlength="8182" @input="onInput"
+        @keydown.enter="inputComplete">
         <template #prefix>
           <n-icon color="#000" :component="inputBarIcon"></n-icon>
         </template>
@@ -64,9 +58,10 @@ import { ArrowLeft24Regular, ArrowRight24Regular, ArrowClockwise48Regular, LockC
 import { NIcon, NButton, NInput } from 'naive-ui'
 import { ref, shallowRef, watch, nextTick, onMounted } from 'vue'
 import bus from '@/utils/bus'
-import store from '@/store'
+import { appStore } from '@/store/app'
 import TitleBlock from '@/components/titleBlock'
 
+const store = appStore()
 // 记录浏览器历史记录
 const historyData = ['https://www.bing.com']
 // 当前所在的历史记录的位置
@@ -129,17 +124,17 @@ const edgeBox = ref()
 // 点击窗口时显示在上层
 const edgeFn = async () => {
   await nextTick()
-  edgeBox.value.style.zIndex = store.getters.zIndex
-  store.dispatch('changeZIndex')
+  edgeBox.value.style.zIndex = store.zIndex
+  store.changeZIndex()
 }
 
-onMounted(()=>{
+onMounted(() => {
   edgeFn()
 })
 
 
 
-bus.on('Edge',edgeFn)
+bus.on('Edge', edgeFn)
 
 
 </script>
@@ -147,49 +142,56 @@ bus.on('Edge',edgeFn)
 <style lang='scss' scoped>
 @import "@/style/public";
 
-  .titleLeft {
-      box-sizing: border-box;
-      height: 40px;
-      padding: 0 12px;
-      margin-left: 8px;
-      background-color: #f7f7f7;
-      border-radius: 4px 4px 0 0;
-      @include flex(space-between, center);
-      .leftTagName {
-        width: calc(100% - 26px);
-        white-space: nowrap;
-        overflow: hidden;
-        font-size: 12px;
-        color: #a24d4d;
-        @include flex(flex-start, center);
-        img {
-          width: 16px;
-          margin-right: 10px;
-        }
-      }
-    }
-  .edgeNav {
-    width: 100%;
-    height: 38px;
-    border-bottom: 1px solid #bfbfbf;
+.titleLeft {
+  box-sizing: border-box;
+  height: 40px;
+  padding: 0 12px;
+  margin-left: 8px;
+  background-color: #f7f7f7;
+  border-radius: 4px 4px 0 0;
+  @include flex(space-between, center);
+
+  .leftTagName {
+    width: calc(100% - 26px);
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 12px;
+    color: #a24d4d;
     @include flex(flex-start, center);
-    .n-input {
-      width: 80%;
-      height: 80%;
-      background-color: #ffffff;
-      :deep(.n-input__input-el) {
-        color: #000000;
-        height: 100%;
-        font-size: 12px;
-      }
+
+    img {
+      width: 16px;
+      margin-right: 10px;
     }
   }
-  .edgeBody {
-    width: 100%;
-    height: calc(100% - 40px - 39px);
-    iframe {
-      width: 100%;
+}
+
+.edgeNav {
+  width: 100%;
+  height: 38px;
+  border-bottom: 1px solid #bfbfbf;
+  @include flex(flex-start, center);
+
+  .n-input {
+    width: 80%;
+    height: 80%;
+    background-color: #ffffff;
+
+    :deep(.n-input__input-el) {
+      color: #000000;
       height: 100%;
+      font-size: 12px;
     }
   }
+}
+
+.edgeBody {
+  width: 100%;
+  height: calc(100% - 40px - 39px);
+
+  iframe {
+    width: 100%;
+    height: 100%;
+  }
+}
 </style>
