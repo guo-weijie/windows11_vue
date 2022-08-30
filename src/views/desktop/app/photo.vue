@@ -2,7 +2,7 @@
   <div class="appContainer" ref="photoBox" @click.stop="photoFn">
     <TitleBlock title="照片" bgColor="#e6e6e6"></TitleBlock>
     <n-tabs type="line" v-model:value="photoType" @update:value="typeChange" :bar-width="16" :tabs-padding="16">
-      <n-tab v-for="item in typeList" :key="item.value" :name="item.value">{{ item.label }}</n-tab>
+      <n-tab v-for="item in typeList" :key="item.value" :name="item.value">{{  item.label  }}</n-tab>
     </n-tabs>
     <div class="changeSize">
       <n-space>
@@ -79,7 +79,8 @@ const photoListBox = ref()
 const show = ref(false)
 let photoListBoxHeight: number
 let scrollEleHeight: number
-onMounted(() => {
+onMounted(async () => {
+  await photoFn()
   photoListBoxHeight = photoListBox.value.clientHeight
   photoListBox.value.addEventListener('scroll', function () {
     if (show.value) return

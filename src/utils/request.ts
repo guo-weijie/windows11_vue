@@ -1,8 +1,7 @@
 import axios from 'axios'
 
 const server = axios.create({
-  // baseURL: 'https://api.muxiaoguo.cn/api/',
-  baseURL: '/api',
+  baseURL: process.env.VUE_APP_BASE_API,
   timeout: 10000
 })
 

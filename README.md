@@ -10,7 +10,9 @@
 开发人员：[我](https://github.com/guo-weijie) & [Ha aaaaaaaa666](https://github.com/xiaoxianxv666)
 
 ## 技术栈
-- vue3 全家桶
+- vue3
+- vue-router
+- pinia
 - typescript
 - sass
 - naive-ui
