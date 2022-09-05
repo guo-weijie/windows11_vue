@@ -23,7 +23,7 @@
           </n-icon>
         </div>
         <!-- 语言 -->
-        <div class="language" @click.stop="taskBarRight('language', 'clear')">{{  lang  }}</div>
+        <div class="language" @click.stop="taskBarRight('language', 'clear')">{{ lang }}</div>
         <!-- 控制中心 -->
         <div class="controlCenter" @click.stop="taskBarRight('controlCenter', 'clear')">
           <img class="centerWifi" :src="controlCenterIcon.wifi" alt="网络连接" />
@@ -31,8 +31,8 @@
         </div>
         <!-- 时间 -->
         <div class="time_noti" @click.stop="taskBarRight('calendar', 'clear')">
-          <div>{{  upTime  }}</div>
-          <div>{{  btmTime  }}</div>
+          <div>{{ upTime }}</div>
+          <div>{{ btmTime }}</div>
         </div>
       </div>
     </div>
@@ -131,7 +131,8 @@ const taskBarLeftNoLine = (value?: { name: string, open: boolean } | undefined, 
   })
 }
 // 有下划线应用 -> 包括常驻和打开时驻留的
-const underLineApp = computed(() => store.getApp.filter((item: appItem) => item.isTaskBar))
+// const underLineApp = computed(() => store.getApp.filter((item: appItem) => item.isTaskBar))
+const underLineApp = computed(() => store.getTypeApp('isTaskBar'))
 // 有下划线应用点击事件
 const taskBarLeftHaveLine = (value: { name: string; }) => {
   taskbarEvent()
@@ -143,7 +144,7 @@ const taskBarLeftHaveLine = (value: { name: string; }) => {
    * 
    * 
    */
-  underLineApp.value.forEach((item: { name: string; open: boolean; mini: boolean; hidden: boolean; isTop: boolean; }) => {
+  underLineApp.value.forEach((item: appItem) => {
     if (item.name === value?.name) {
       if (item.open) {
         if (item.isTop) {
@@ -187,43 +188,6 @@ const taskBarLeftHaveLine = (value: { name: string; }) => {
         })
         bus.emit(value.name)
       }
-
-      // if(item.open){
-
-      //   if(!item.mini&&!item.hidden){
-      //     if(item.isTop){
-      //       store.dispatch('changeAppStatus',{
-      //         name: item.name,
-      //         key: 'hidden',
-      //         value: true
-      //       })
-      //       store.dispatch('changeAppStatus',{
-      //         name: item.name,
-      //         key: 'mini',
-      //         value: true
-      //       })
-      //     }
-      //   }else{
-      //     if(item.isTop){
-      //       store.dispatch('changeAppStatus',{
-      //         name: item.name,
-      //         key: 'hidden',
-      //         value: false
-      //       })
-      //       store.dispatch('changeAppStatus',{
-      //         name: item.name,
-      //         key: 'mini',
-      //         value: false
-      //       })
-      //     }
-      //   }
-      // }else{
-      //   store.dispatch('changeAppStatus',{
-      //     name: item.name,
-      //     key: 'open',
-      //     value: true
-      //   })
-      // }
     } else {
       if (item.open && !item.mini) {
         store.changeAppStatus({

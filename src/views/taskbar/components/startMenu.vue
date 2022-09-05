@@ -54,10 +54,10 @@
             <div v-for="item in allAppList_sorted" :key="item.id" :id="item.id">
               <div class="itemBodyPublic itemBodyIndex" @click.stop="selectLetter = true">{{  item.id.toUpperCase()  }}
               </div>
-              <div v-for="appList in item.list" :key="appList.name" class="itemBodyPublic itemBodyBox"
-                @click.stop="pinnedOpenApp(appList)">
-                <img :src="appList.url" alt="appList.name" />
-                <span>{{  appList.name  }}</span>
+              <div v-for="app in item.list" :key="app.name" class="itemBodyPublic itemBodyBox"
+                @click.stop="pinnedOpenApp(app)">
+                <img :src="app.url" alt="app.name" />
+                <span>{{  app.name  }}</span>
               </div>
             </div>
           </div>
@@ -125,7 +125,7 @@ import { useRouter } from 'vue-router'
 import bus from '@/utils/bus'
 import { getSpell } from 'jian-pinyin'
 import { userStore } from '@/store/user'
-import { appStore, appItem } from '@/store/app'
+import { appStore, appItem, appList } from '@/store/app'
 import { storeToRefs } from 'pinia'
 const router = useRouter()
 
@@ -167,7 +167,7 @@ const openSet = () => {
   bus.emit('closeTaskbar')
   bus.emit('设置')
 }
-// eslint-disable-next-line no-undef
+
 const emits = defineEmits(['pleaseOpenSearch'])
 // 跳转搜索框
 const openSearch = () => {
@@ -195,7 +195,7 @@ const letterData: letterType[] = []
 
 interface allAppListBySort {
   id: string,
-  list: appItem[]
+  list: appList
 }
 let allAppList_sorted: allAppListBySort[] = []
 // DOM加载完成后获取 appItemBody 的高度
@@ -280,7 +280,7 @@ const pinnedOpenApp = (data: appItem) => {
   bus.emit(data.name)
 }
 // 获取固定应用列表 -----------------------
-const pinnedList = aStore.getApp.filter((item) => item.isPinned)
+const pinnedList = aStore.getTypeApp('isPinned')
 </script>
 
 <style lang='scss' scoped>

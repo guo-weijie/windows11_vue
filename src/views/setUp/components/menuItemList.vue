@@ -3,7 +3,7 @@
     <!-- 系统 -->
     <div class="system" v-show="(props.menuItemListData as Record<string, any>).name === '系统'">
       <div class="systemLeft">
-        <img :src="require('@/assets/wallpaper' + bgImg)" alt="windows11 背景图片">
+        <img :src="require('@/assets/wallpaper' + backgroundImgUrl)" alt="windows11 背景图片">
         <div>
           <div class="first">Windows 11</div>
           <div class="second">My PC</div>
@@ -60,7 +60,7 @@
 
     <!-- 个性化 -->
     <div class="personalize" v-show="(props.menuItemListData as Record<string, any>).name === '个性化'">
-      <img :src="require('@/assets/wallpaper' + bgImg)" class="viewBox" alt="windows11 背景图片" />
+      <img :src="require('@/assets/wallpaper' + backgroundImgUrl)" class="viewBox" alt="windows11 背景图片" />
       <div class="selectBox">
         <div class="boxTitle">选择要应用的主题</div>
         <div class="bgImgBox">
@@ -73,9 +73,9 @@
 
     <!-- 账户 -->
     <div class="account" v-show="(props.menuItemListData as Record<string, any>).name === '账户'">
-      <img :src="require('@/assets' + userAva)" :alt="userName" />
+      <img :src="require('@/assets' + userAvatar)" :alt="userName" />
       <div>
-        <div class="userName">{{  userName  }}</div>
+        <div class="userName">{{ userName }}</div>
         <div class="accountType">本地账户</div>
         <div class="accountAuth">管理员</div>
       </div>
@@ -103,13 +103,13 @@
 
     <div v-for="(item, index) in (props.menuItemListData as Record<string, any>).children" :key="item + index"
       class="listContainer">
-      <div class="listTitle" v-if="item.title">{{  item.title  }}</div>
+      <div class="listTitle" v-if="item.title">{{ item.title }}</div>
       <div class="listContent" v-for="iten in item.itemList" :key="iten.name">
         <div class="contentList">
           <img :src="iten.url" class="fontIcon" :alt="item.name" />
           <div>
-            <div class="contentTitle">{{  iten.name  }}</div>
-            <div class="contentDesc">{{  iten.desc  }}</div>
+            <div class="contentTitle">{{ iten.name }}</div>
+            <div class="contentDesc">{{ iten.desc }}</div>
           </div>
         </div>
         <n-icon color="#484848">
@@ -124,12 +124,11 @@
 import { NIcon, NButton } from 'naive-ui'
 import { ChevronRight20Regular, ChatBubblesQuestion20Filled, Info20Regular, DataPie20Regular, Globe20Regular, TvUsb20Regular } from '@vicons/fluent'
 import { userStore } from '@/store/user'
-import { reactive, computed } from 'vue'
+import { reactive } from 'vue'
+import { storeToRefs } from 'pinia'
 
 const store = userStore()
-const bgImg = computed(() => store.getBackgroundImgUrl)
-const userName = computed(() => store.getUserName)
-const userAva = computed(() => store.getUserAvatar)
+const { userName, userAvatar, backgroundImgUrl } = storeToRefs(store)
 
 
 const props = defineProps({

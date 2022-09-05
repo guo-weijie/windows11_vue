@@ -18,7 +18,6 @@ interface appListType {
   url: string
 }
 
-// eslint-disable-next-line no-undef
 const props = defineProps({
   title: String
 })

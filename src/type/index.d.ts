@@ -5,18 +5,6 @@ type Rnumber = Ref<number>
 type Rboolean = Ref<boolean>
 type REle = Ref<HTMLElement | null>
 
-interface appItem {
-  name: string,
-  url: string,
-  isDesktop: boolean,
-  isPinned: boolean,
-  isTaskBar: boolean,
-  open: boolean,
-  mini: boolean
-}
-
-type app = appItem[]
-
 interface timeObj {
   year: number | undefined,
   month: number | undefined,

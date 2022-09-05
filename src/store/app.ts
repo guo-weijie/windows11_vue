@@ -11,8 +11,11 @@ interface appItem {
   hidden: boolean,
   isTop: boolean
 }
+
+type appList = appItem[]
+
 interface appState {
-  app: appItem[],
+  app: appList,
   zIndex: number,
   alwaysTaskBar: string[]
 }
@@ -21,6 +24,8 @@ interface statusObjType {
   key: string,
   value: boolean
 }
+
+type appKey = keyof appItem
 
 /**
    * 应用程序
@@ -147,8 +152,14 @@ const appStore = defineStore({
     }
   },
   getters: {
-    getApp(): appItem[] {
+    getApp(): appList {
       return this.app
+    },
+    getTypeApp() {
+      return (appType: appKey) => this.app.filter((item) => item[appType])
+    },
+    getMyApp() {
+      return (appName: string) => this.app.filter(item => item.name === appName)[0]
     },
     getZIndex(): number {
       return this.zIndex
@@ -194,5 +205,6 @@ const appStore = defineStore({
 
 export {
   appItem,
+  appList,
   appStore
 }

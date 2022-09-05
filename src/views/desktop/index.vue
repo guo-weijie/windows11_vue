@@ -3,7 +3,7 @@
     <div class="desktopAppContainer">
       <div v-for="item in desktopApp" :key="item.name" class="desktopApp" @dblclick="openApp(item)">
         <img :src="item.url" :alt="item.name" />
-        <p>{{  item.name  }}</p>
+        <p>{{ item.name }}</p>
       </div>
     </div>
 
@@ -16,7 +16,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
 import Edge from './app/edge.vue'
 import Setup from '@/views/setUp/index.vue'
 import TerminalApp from './app/terminal.vue'
@@ -25,7 +24,7 @@ import { appStore, appItem } from '@/store/app'
 import bus from '@/utils/bus'
 
 const store = appStore()
-const desktopApp = computed(() => store.app.filter(item => item.isDesktop))
+const desktopApp = store.getTypeApp('isDesktop')
 
 /**
  * 如果应用为关闭状态 提交 open 为 true
@@ -47,10 +46,10 @@ const openApp = (value: appItem) => {
   store.changeAppStatus(obj)
 }
 
-const edgeStatus = computed(() => store.app.filter(item => item.name === 'Edge')[0])
-const setStatus = computed(() => store.app.filter(item => item.name === '设置')[0])
-const terminalStatus = computed(() => store.app.filter(item => item.name === '终端')[0])
-const photoStatus = computed(() => store.app.filter(item => item.name === '照片')[0])
+const edgeStatus = store.getMyApp('Edge')
+const setStatus = store.getMyApp('设置')
+const terminalStatus = store.getMyApp('终端')
+const photoStatus = store.getMyApp('照片')
 
 // 点击桌面时关闭所有任务栏打开的窗口
 const claseTaskbarAll = () => {
