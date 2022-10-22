@@ -1,15 +1,5 @@
 {
   "name": "win11_in_vue",
-  "author": {
-    "name": "Ghosie",
-    "url": "https://github.com/guo-weijie"
-  },
-  "contributors": [
-    {
-      "name": "Ha aaaaaaaa666",
-      "url": "https://github.com/xiaoxianxv666"
-    }
-  ],
   "description ": "使用Vue仿windows11",
   "homepage": "https://win11.keep-silence.com",
   "repository": "https://github.com/guo-weijie/windows11_vue",

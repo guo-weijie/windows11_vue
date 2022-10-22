@@ -12,6 +12,7 @@
     <Setup v-if="setStatus.open" v-show="!setStatus.hidden" />
     <TerminalApp v-if="terminalStatus.open" v-show="!terminalStatus.hidden" />
     <Photo v-if="photoStatus.open" v-show="!photoStatus.hidden" />
+    <Snake v-if="snakeStatus.open" v-show="!snakeStatus.hidden" />
   </div>
 </template>
 
@@ -20,6 +21,7 @@ import Edge from './app/edge.vue'
 import Setup from '@/views/setUp/index.vue'
 import TerminalApp from './app/terminal.vue'
 import Photo from './app/photo.vue'
+import Snake from './app/snake.vue'
 import { appStore, appItem } from '@/store/app'
 import bus from '@/utils/bus'
 
@@ -50,6 +52,7 @@ const edgeStatus = store.getMyApp('Edge')
 const setStatus = store.getMyApp('设置')
 const terminalStatus = store.getMyApp('终端')
 const photoStatus = store.getMyApp('照片')
+const snakeStatus = store.getMyApp('贪吃蛇')
 
 // 点击桌面时关闭所有任务栏打开的窗口
 const claseTaskbarAll = () => {
@@ -106,6 +109,10 @@ const claseTaskbarAll = () => {
   height: 100%;
   background-color: var(--set-bg-color);
   transition: all 100ms ease-in;
+  :deep(.appBody){
+    width: 100%;
+    height: calc(100% - 40px);
+  }
 }
 
 .dragStyle {

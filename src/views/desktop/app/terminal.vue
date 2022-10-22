@@ -17,7 +17,7 @@
       </div>
     </TitleBlock>
     <!-- 主体 -->
-    <div class="terminalContainer">
+    <div class="appBody">
       <Terminal name="gTerminal" @execCmd="onExecCmd" context="ghosie" :initLog="initData"></Terminal>
     </div>
   </div>
@@ -134,12 +134,6 @@ onMounted(() => {
     }
   }
 }
-
-.terminalContainer {
-  width: 100%;
-  height: calc(100% - 40px);
-}
-
 
 :deep(.terminal-header) {
   display: none;

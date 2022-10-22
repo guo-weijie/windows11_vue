@@ -146,6 +146,16 @@ const appStore = defineStore({
         mini: false,
         hidden: false,
         isTop: false
+      }, {
+        name: '贪吃蛇',
+        url: require('@/assets/icon/appIcon/snake.jpg'),
+        isDesktop: true,
+        isPinned: true,
+        isTaskBar: false,
+        open: false,
+        mini: false,
+        hidden: false,
+        isTop: false
       }],
       zIndex: 2,
       alwaysTaskBar: ['文件资源管理器', 'Edge', 'Microsoft Store']
