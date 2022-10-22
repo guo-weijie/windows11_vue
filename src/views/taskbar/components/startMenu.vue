@@ -44,6 +44,13 @@
               <span>欢迎使用 Windows</span>
             </div>
           </div>
+          <div class="listItem">
+            <img :src="require('@/assets/icon/appIcon/visitor.png')" alt="访客数" />
+            <div class="itemDesc">
+              <div>访客数</div>
+              <span id="busuanzi_value_site_uv"></span>
+            </div>
+          </div>
         </div>
       </div>
       <!-- 所有应用 -->
@@ -437,6 +444,7 @@ const pinnedList = aStore.getTypeApp('isPinned')
     height: 84px;
     @include grid(6, 1);
     margin-bottom: 200px;
+    row-gap: 15px;
   }
 
   .pinnedList {
