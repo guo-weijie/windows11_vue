@@ -1,5 +1,5 @@
 <template>
-  <div class="appContainer">
+  <div class="appContainer" ref="snakeBox">
     <TitleBlock title="贪吃蛇"></TitleBlock>
     <div class="appBody game">
       <div class="gameBody" ref="gameBody">
@@ -15,14 +15,14 @@
         <div class="fraction">
           分数：<span>{{length}}</span>
         </div>
-        <!-- <n-switch v-model:value="border">
+        <n-switch v-model:value="border" @update:value="handleChange">
           <template #checked>
             有边界
           </template>
           <template #unchecked>
             无边界
           </template>
-        </n-switch> -->
+        </n-switch>
         <!-- 开始、结束、重置 -->
         <div class="gameStatus">
           <n-button v-show="statusFlag" text style="font-size: 24px" @click="gameStatus(true)">
@@ -72,12 +72,15 @@
     </div>
     <n-modal v-model:show="showModal" :mask-closable="false" preset="dialog" title="提示" :content="content"
       positive-text="确定" @positive-click="showModal=false" />
+
+    <n-modal v-model:show="modelStatus" :mask-closable="false" preset="dialog" title="提示" content="更改模式需要重启游戏，是否继续？"
+      positive-text="确定" negative-text="取消" @positive-click="changeModel" @negative-click="cancelOpt" />
   </div>
 </template>
 
 <script lang='ts' setup>
 import TitleBlock from '@/components/titleBlock'
-import { onMounted, reactive, ref, onUnmounted } from 'vue';
+import { onMounted, reactive, ref, onUnmounted, nextTick, onBeforeUnmount } from 'vue';
 import { NSwitch, NIcon, NButton, NModal } from 'naive-ui'
 import { ChevronLeft16Regular, ChevronRight16Regular, ChevronDown16Regular, ChevronUp16Regular, Play16Regular, Pause16Regular, ArrowReset20Regular } from '@vicons/fluent'
 
@@ -85,19 +88,40 @@ import { ChevronLeft16Regular, ChevronRight16Regular, ChevronDown16Regular, Chev
 const showModal = ref(false)
 const content = ref('游戏结束，分数：')
 
+// 监听游戏窗口尺寸变化
+const boxSizeChange = async () => {
+  await nextTick()
+  initGame()
+}
+const observe = new ResizeObserver(boxSizeChange)
+
 // 应用关闭后清理定时器、移除键盘事件
+onBeforeUnmount(() => {
+  observe.unobserve(snakeBox.value)
+})
 onUnmounted(() => {
   clearInterval(timer)
   document.removeEventListener('keydown', kbdOpera)
 })
 
+const snakeBox = ref()
 const gameBody = ref()
 
 // 有无边界切换
-// let border = ref(false)
-// const handleChange = (value) => {
-//   console.log(value)
-// }
+const modelStatus = ref(false)
+const border = ref(false)
+const handleChange = () => {
+  clearInterval(timer)
+  timer = undefined
+  modelStatus.value = true
+}
+const changeModel = () => {
+  initGame()
+}
+const cancelOpt = () => {
+  border.value = false
+  gameStatus(true)
+}
 
 /**
  * 键盘事件
@@ -128,6 +152,14 @@ document.addEventListener('keydown', kbdOpera)
  */
 let forwardDirection = 'right'
 let time = 1000
+
+// 游戏结束提示
+const gameOver = () => {
+  content.value = '游戏结束，分数：' + length.value
+  showModal.value = true
+  initGame()
+}
+
 const snakeMove = () => {
   const oneStep = {
     left: -1,
@@ -147,21 +179,35 @@ const snakeMove = () => {
   const leftRightFlag = snakeSpace.snakeBody[snakeSpace.snakeBody.length - 1] % columnLength > currentCoorNumber % columnLength
 
   if (forwardDirection === 'bottom' && currentCoorNumber >= allGrid) {
+    if (border.value) {
+      gameOver()
+      return
+    }
     currentCoorNumber = currentCoorNumber - allGrid
   } else if (forwardDirection === 'top' && currentCoorNumber < 0) {
+    if (border.value) {
+      gameOver()
+      return
+    }
     currentCoorNumber = allGrid + currentCoorNumber
   } else if (forwardDirection === 'right' && leftRightFlag) {
+    if (border.value) {
+      gameOver()
+      return
+    }
     currentCoorNumber = currentCoorNumber - columnLength
   } else if (forwardDirection === 'left' && !leftRightFlag) {
+    if (border.value) {
+      gameOver()
+      return
+    }
     if (flag) {
       currentCoorNumber = currentCoorNumber + columnLength
     }
   }
   snakeSpace.snakeBody[snakeSpace.snakeBody.length] = currentCoorNumber
   if (snakeSpace.snakeBody.filter(item => item === currentCoorNumber).length > 1) {
-    content.value = '游戏结束，分数：' + length.value
-    showModal.value = true
-    initGame()
+    gameOver()
     return
   }
 
@@ -290,6 +336,7 @@ const initGame = () => {
 onMounted(() => {
   createGrid()
   createApple()
+  observe.observe(snakeBox.value)
 })
 </script>
 
@@ -299,10 +346,14 @@ onMounted(() => {
 .game {
   display: grid;
   grid-template-columns: 7.5fr 2.5fr;
+  overflow: hidden;
 }
 
 .gameBody {
   background-color: #2fd;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 
   div {
     background-color: #666;
