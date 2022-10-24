@@ -99,6 +99,8 @@ export default defineComponent({
 
     // 窗口点击事件
     const changeWinSize = (className: string) => {
+      parentInstance.style.left = ''
+      parentInstance.style.top = ''
       parentInstance.className = `appContainer ${className}`
     }
     /**
