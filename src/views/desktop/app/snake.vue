@@ -13,9 +13,9 @@
       <div class="gameOpe">
         <!-- 分数 -->
         <div class="fraction">
-          分数：<span>{{length}}</span>
+          分数：<span>{{length-1}}</span>
         </div>
-        <n-switch v-model:value="border" @update:value="handleChange">
+        <n-switch v-model:value="border" v-show="showBorder">
           <template #checked>
             有边界
           </template>
@@ -43,25 +43,25 @@
         </div>
         <div class="keyBoardTips">
           <div></div>
-          <div>
+          <div @click="changePosition('top')">
             <n-icon size="40" color="#0e7a0d">
               <ChevronUp16Regular />
             </n-icon>
           </div>
           <div></div>
-          <div>
+          <div @click="changePosition('left')">
             <n-icon size="40" color="#0e7a0d">
               <ChevronLeft16Regular />
             </n-icon>
           </div>
           <div></div>
-          <div>
+          <div @click="changePosition('right')">
             <n-icon size="40" color="#0e7a0d">
               <ChevronRight16Regular />
             </n-icon>
           </div>
           <div></div>
-          <div>
+          <div @click="changePosition('bottom')">
             <n-icon size="40" color="#0e7a0d">
               <ChevronDown16Regular />
             </n-icon>
@@ -72,9 +72,6 @@
     </div>
     <n-modal v-model:show="showModal" :mask-closable="false" preset="dialog" title="提示" :content="content"
       positive-text="确定" @positive-click="showModal=false" />
-
-    <n-modal v-model:show="modelStatus" :mask-closable="false" preset="dialog" title="提示" content="更改模式需要重启游戏，是否继续？"
-      positive-text="确定" negative-text="取消" @positive-click="changeModel" @negative-click="cancelOpt" />
   </div>
 </template>
 
@@ -108,19 +105,11 @@ const snakeBox = ref()
 const gameBody = ref()
 
 // 有无边界切换
-const modelStatus = ref(false)
 const border = ref(false)
-const handleChange = () => {
-  clearInterval(timer)
-  timer = undefined
-  modelStatus.value = true
-}
-const changeModel = () => {
-  initGame()
-}
-const cancelOpt = () => {
-  border.value = false
-  gameStatus(true)
+
+// 方向按钮点击事件
+const changePosition = (position: string) =>{
+  kbdOpera(position)
 }
 
 /**
@@ -133,7 +122,7 @@ const keyList = {
   ArrowLeft: 'left'
 }
 const keyAry = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft']
-const kbdOpera = (e: KeyboardEvent | void) => {
+const kbdOpera = (e: KeyboardEvent | void | string) => {
   if ((e as KeyboardEvent).code && keyAry.indexOf((e as KeyboardEvent).code) === -1) return
   let code = keyList[e.code] ?? e
 
@@ -157,6 +146,7 @@ let time = 1000
 const gameOver = () => {
   content.value = '游戏结束，分数：' + length.value
   showModal.value = true
+  showBorder.value = true
   initGame()
 }
 
@@ -306,11 +296,18 @@ const createGrid = () => {
   blockList.blocks = tempAry
 }
 
+/**
+ * 边界选择状态
+ * 如果游戏已经开始，隐藏切换功能
+ */
+const showBorder = ref(true)
+
 // 开始/暂停游戏
 const statusFlag = ref(true)
 const gameStatus = (flag: boolean) => {
   statusFlag.value = !flag
   if (flag) {
+    showBorder.value = false
     timer = setInterval(() => {
       snakeMove()
     }, time)
@@ -329,6 +326,7 @@ const initGame = () => {
   forwardDirection = 'right'
   time = 1000
   snakeSpace.snakeBody = [0]
+  showBorder.value = true
   createGrid()
   createApple()
 }
